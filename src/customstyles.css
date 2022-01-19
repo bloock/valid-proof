@@ -1,0 +1,165 @@
+
+.main-margin {
+    margin-left: 10rem;
+    margin-right: 10rem;
+}
+
+.float-right {
+    float: right;
+}
+
+.button {
+    background-color: grey;
+    color: white;
+    margin: 0 20px 0 20px;
+    padding: 8px 0 8px 0;
+    border-radius: 10px;
+}
+
+.button:hover {
+    background-color: rgb(59, 53, 53);
+}
+
+.line {
+    margin-bottom:8px !important;
+}
+
+.container {
+    position: relative;
+}
+
+.vertical-center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.horizontal-center {
+    text-align: center;
+}
+
+.black-text {
+    color: black;
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
+div {
+    font-family: 'Roboto', sans-serif;
+}
+
+.title {
+    font-size: 50px;
+    margin-bottom: -10px;
+}
+
+.top-margin {
+    height: 10rem;
+}
+
+.little-top-margin {
+    height: 4rem;
+}
+
+.header-text {
+    font-size: 14px;
+}
+
+.header-title {
+    font-size: 20px;
+}
+
+.text-main-page {
+    font-size: 18px;
+}
+
+button.nav-link {
+    font-weight: 501 !important;
+}
+
+.circle {
+    border-radius: 50px;
+}
+
+.click-icon {
+    color: white;
+    font-weight: bold;
+}
+
+.half-right {
+    transform: translateX(-45%);
+}
+
+.double-width {
+    width: 200%;
+}
+
+.grey-title {
+    color: grey;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.success-color {
+    color: #36b37e;
+}
+
+.failure-color {
+    color: #f75531;
+}
+
+.check-success {
+    background-color: #36b37e;
+}
+
+.check-failure {
+    background-color: #f75531;
+}
+
+.icon-small {
+    font-size: 10px;
+}
+
+.card-files-width {
+    margin-left: 12rem;
+    margin-right: 12rem;
+}
+
+.grey-background {
+    background-color: #FAFAFA;
+}
+
+textarea {
+    background-color: #FAFAFA !important;
+    border: none !important;
+    resize: none !important;
+}
+
+::placeholder {
+    margin: 0;
+    position: absolute;
+    top: 46%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    left: 50%;
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+.underline {
+    border-bottom: 20px solid #dddddd;
+    line-height: 0.4;
+    display: inline-block;
+}
+
+.underline-right {
+    padding-right: 1rem;
+}
+
+.underline-more-right {
+    padding-right: 2rem;
+}
