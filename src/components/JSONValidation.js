@@ -9,7 +9,7 @@ const JSONValidation = () => {
     return(
         <div>
             <Form>
-                <Form.Group className="mb-3">
+                <Form.Group className="mb-3 ">
                     <Form.Control as="textarea" placeholder="Paste your JSON here" rows={10} />
                 </Form.Group>
             </Form>

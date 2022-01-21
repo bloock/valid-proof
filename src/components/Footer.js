@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const Footer = () => {
     return(
         <footer>
-            <div className='main-margin my-4 py-5 header-text'>
+            <div className='container-lg my-4 py-5 header-text'>
                 <span>Powered by Ethereum</span>
                 <span className='float-right'>This website uses cookies to improve your experience and has and updated Privacy Policy</span>
             </div>

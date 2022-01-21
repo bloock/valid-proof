@@ -1,4 +1,23 @@
 
+h1{
+    font-size: 52px!important;
+    line-height: 3.5rem;
+}
+h2{
+    font-size: 44px!important;
+    line-height: 3.5rem;
+}
+
+h3{
+    font-size: 20px!important;
+    font-weight: 400;
+}
+
+h4{
+    font-size: 18px!important;
+
+}
+
 .main-margin {
     margin-left: 10rem;
     margin-right: 10rem;
@@ -8,12 +27,25 @@
     float: right;
 }
 
+li{
+   display: flex;
+   align-items: center;
+}
+
+ul {
+    padding: 0;
+}
+
+p{
+    margin: 0;
+}
+
 .button {
-    background-color: grey;
+    background-color: #06D7BE;
     color: white;
     margin: 0 20px 0 20px;
     padding: 8px 0 8px 0;
-    border-radius: 10px;
+    border-radius: 5px;
 }
 
 .button:hover {
@@ -49,7 +81,7 @@
 }
 
 div {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Work Sans', sans-serif;
 }
 
 .title {
@@ -77,6 +109,21 @@ div {
     font-size: 18px;
 }
 
+.nav-link {
+color: black;
+font-weight: 400;
+
+}
+
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active{
+    border-color: transparent;
+}
+
+.nav-link.active{
+    font-weight: 700;
+    border-bottom: 2px solid #06D7BE!important;
+}
+
 button.nav-link {
     font-weight: 501 !important;
 }
@@ -98,10 +145,10 @@ button.nav-link {
     width: 200%;
 }
 
-.grey-title {
-    color: grey;
+.green-title {
+    color: #06D7BE;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 20px;
 }
 
 .success-color {
@@ -163,3 +210,4 @@ textarea {
 .underline-more-right {
     padding-right: 2rem;
 }
+
