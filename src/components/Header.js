@@ -10,7 +10,7 @@ import logo from "../images/validProof_logo.jpg";
 const Header = () => {
   return (
     <Fragment>
-      <div className="container-lg py-2 pt-4 d-flex align-items-center justify-content-between ">
+      <div className="container-md py-2 pt-4 d-flex align-items-center justify-content-between ">
         <img alt="Card" src={logo} />
 
         <span className="float-right">

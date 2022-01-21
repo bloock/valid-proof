@@ -12,12 +12,12 @@ import "../customstyles.css";
 const HowItWorksSection = () => {
   return (
     <div className="bg-light">
-      <div className="container-lg pt-10">
+      <div className="container-md pt-10 ">
         <h2 className="bold-text title mb-5 text-center pt-5">How it works</h2>
         <Row>
-          <Col>
+          <Col className="text-center text-lg-start text-break"  style={{ width: "45%" }} >
             <h4 className="bold-text">Select your proof type</h4>
-            <div className="mb-4">
+            <div className="mb-4 ">
               Select if you want text format or if you have the data in JSON.
             </div>
             <img
@@ -27,7 +27,7 @@ const HowItWorksSection = () => {
               className="shadow-sm p-3 mb-5 bg-body rounded"
             />
           </Col>
-          <Col>
+          <Col className="text-center text-lg-start text-break" >
             <h4 className="bold-text">Load your proof</h4>
             <div className="mb-4">
               Select from your system the proof to load and the system will
@@ -40,7 +40,7 @@ const HowItWorksSection = () => {
               className="shadow-sm p-3 mb-5 bg-body rounded"
             />
           </Col>
-          <Col>
+          <Col className="text-center text-lg-start text-break" >
             <h4 className="bold-text">Get your results</h4>
             <div className="mb-4">
               Obtain the validation status of your proof identification.

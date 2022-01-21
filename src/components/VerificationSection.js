@@ -101,7 +101,7 @@ const VerificationSection = () => {
                 </div>
             </div> */}
       <div className="mt-5">
-        <Card className=" px-4 py-2" style={{ width: "46rem" }}>
+        <Card className=" px-4 py-2" style={{ width: "46rem", margin:"0 auto"}}>
           <div className="pb-5">
             <span>
               <i className="pi pi-file"></i>

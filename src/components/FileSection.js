@@ -13,8 +13,8 @@ import "../customstyles.css";
 
 const FileSection = () => {
   return (
-    <div className="container-lg ">
-      <Row className="flex-column flex-lg-row align-items-center container-md">
+    <div className="container-md">
+      <Row className="flex-column flex-lg-row align-items-center">
         <Col style={{ paddingRight: "50px"}}>
           <h1 className="bold-text title">
             Easy validation of blockchain data records
@@ -50,7 +50,7 @@ const FileSection = () => {
           </ul>
         </Col>
         <Col>
-          <Tabs justify defaultActiveKey="text" className="mb-3">
+          <Tabs justify defaultActiveKey="text" className="mb-3 ">
             <Tab eventKey="text" title="Text format">
               <TextValidation />
             </Tab>
