@@ -9,13 +9,13 @@ import Tab from "react-bootstrap/Tab";
 import JSONValidation from "./JSONValidation";
 import TextValidation from "./TextValidation";
 import "../customstyles.css";
-import listIcon from "../images/tick.png";
+
 
 const FileSection = () => {
   return (
-    <div className="container-lg">
-      <Row className="align-items-center">
-        <Col style={{ paddingRight: "50px" }}>
+    <div className="container-lg ">
+      <Row className="flex-column flex-lg-row align-items-center container-md">
+        <Col style={{ paddingRight: "50px"}}>
           <h1 className="bold-text title">
             Easy validation of blockchain data records
           </h1>
@@ -25,30 +25,26 @@ const FileSection = () => {
           </h3>
           <ul className="mt-4">
             <li className="mt-2">
-              <img
-                alt="list-item"
-                src={listIcon}
-                width={"30px"}
-                style={{ marginRight: "6px" }}
-              />
+              <i
+                className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
+                style={{ marginRight: "10px", backgroundColor: "#06D7BE" }}
+              ></i>
               <p>Simple and easy to use</p>
             </li>
-            <li className="mt-2">
-              <img
-                alt="list-item"
-                src={listIcon}
-                width={"30px"}
-                style={{ marginRight: "6px" }}
-              />
+            <li className="mt-3">
+              <i
+                className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
+                style={{ marginRight: "10px", backgroundColor: "#06D7BE" }}
+              ></i>
+
               <p>Inmediate results in just seconds</p>
             </li>
-            <li className="mt-2">
-              <img
-                alt="list-item"
-                src={listIcon}
-                width={"30px"}
-                style={{ marginRight: "6px" }}
-              />
+            <li className="mt-3">
+              <i
+                className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
+                style={{ marginRight: "10px", backgroundColor: "#06D7BE" }}
+              ></i>
+
               <p>Completely transparent and open source</p>
             </li>
           </ul>

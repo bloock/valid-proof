@@ -66,8 +66,8 @@ const TextValidation = (props) => {
             <div className='container' {...getRootProps({style})}>
               <div className='vertical-center horizontal-center'>
                 <input {...getInputProps()} />
-                <p className='line black-text bold-text'>Drag and drop your file</p>
-                <p className='line black-text'>or</p> 
+                <p className='line text-black-50'>Drag and drop your file</p>
+                <p className='line text-black-50'>or</p> 
                 <p className='button line'>Select file</p>
               </div>
             </div>

@@ -119,13 +119,26 @@ font-weight: 400;
     border-color: transparent;
 }
 
+.nav-link .nav-tabs {
+    border-color: transparent;
+}
+
 .nav-link.active{
     font-weight: 700;
     border-bottom: 2px solid #06D7BE!important;
 }
 
+.nav-fill .nav-item .nav-link, .nav-justified .nav-item .nav-link {
+    border-color: transparent;
+    color: black;
+}
+
 button.nav-link {
-    font-weight: 501 !important;
+    font-weight: 401 !important;
+}
+
+button.nav-link.active {
+    font-weight: 601 !important;
 }
 
 .circle {
@@ -176,9 +189,6 @@ button.nav-link {
     margin-right: 12rem;
 }
 
-.grey-background {
-    background-color: #FAFAFA;
-}
 
 textarea {
     background-color: #FAFAFA !important;

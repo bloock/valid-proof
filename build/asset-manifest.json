@@ -1,0 +1,29 @@
+{
+  "files": {
+    "main.css": "./static/css/main.3c69a638.chunk.css",
+    "main.js": "./static/js/main.8a5461f7.chunk.js",
+    "main.js.map": "./static/js/main.8a5461f7.chunk.js.map",
+    "runtime-main.js": "./static/js/runtime-main.b9b46e8b.js",
+    "runtime-main.js.map": "./static/js/runtime-main.b9b46e8b.js.map",
+    "static/css/2.6553aebf.chunk.css": "./static/css/2.6553aebf.chunk.css",
+    "static/js/2.6c487b64.chunk.js": "./static/js/2.6c487b64.chunk.js",
+    "static/js/2.6c487b64.chunk.js.map": "./static/js/2.6c487b64.chunk.js.map",
+    "static/js/3.a08858d5.chunk.js": "./static/js/3.a08858d5.chunk.js",
+    "static/js/3.a08858d5.chunk.js.map": "./static/js/3.a08858d5.chunk.js.map",
+    "index.html": "./index.html",
+    "static/css/2.6553aebf.chunk.css.map": "./static/css/2.6553aebf.chunk.css.map",
+    "static/css/main.3c69a638.chunk.css.map": "./static/css/main.3c69a638.chunk.css.map",
+    "static/js/2.6c487b64.chunk.js.LICENSE.txt": "./static/js/2.6c487b64.chunk.js.LICENSE.txt",
+    "static/media/howitworks-2.00e665a3.jpg": "./static/media/howitworks-2.00e665a3.jpg",
+    "static/media/howitworks-3.21e18c49.jpg": "./static/media/howitworks-3.21e18c49.jpg",
+    "static/media/primeicons.css": "./static/media/primeicons.e61f3495.woff",
+    "static/media/tick.ca3257c5.png": "./static/media/tick.ca3257c5.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.b9b46e8b.js",
+    "static/css/2.6553aebf.chunk.css",
+    "static/js/2.6c487b64.chunk.js",
+    "static/css/main.3c69a638.chunk.css",
+    "static/js/main.8a5461f7.chunk.js"
+  ]
+}
