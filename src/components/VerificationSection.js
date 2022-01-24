@@ -71,7 +71,7 @@ const VerificationSection = () => {
 
   return (
     <div className="container-lg">
-      <div className="horizontal-center mx-5 px-5">
+      <div className="horizontal-center timeline-margins">
         <div className="bold-text header-title mb-4 mt-4">
           Your verification
         </div>
@@ -101,7 +101,7 @@ const VerificationSection = () => {
                 </div>
             </div> */}
       <div className="mt-5">
-        <Card className=" px-4 py-2" style={{ width: "46rem", margin:"0 auto"}}>
+        <Card className=" px-4 py-2" style={{ }}>
           <div className="pb-5">
             <span>
               <i className="pi pi-file"></i>
@@ -109,7 +109,7 @@ const VerificationSection = () => {
             <span className="mx-2 bold-text">Test.pdf</span>
           </div>
           <div className="bold-text">Document hash</div>
-          <div>
+          <div className="" style={{ overflowWrap: "break-word"}}>
             0x29d9eabaf4387459664aa23bbf1a81c20c8e71517642508445d70f9ec768ca3a
           </div>
           <Divider className="my-4" />
@@ -119,7 +119,7 @@ const VerificationSection = () => {
           <div className="bold-text">Block number</div>
           <div>0x5EE4Ec3Cbee909050E68c7FF7a8b422cfbd72244</div>
           <Divider className="my-4" />
-          <div className="bold-text mt-4">Issute time</div>
+          <div className="bold-text mt-4">Issue time</div>
           <div>June 19, 2021, 09:29:59 AM</div>
           <Divider className="my-4" />
           <div className="bold-text">Issuer</div>

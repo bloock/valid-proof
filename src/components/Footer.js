@@ -9,11 +9,10 @@ const Footer = () => {
   return (
     <footer className="bg-light">
       <Divider className="my-0 py-2" />
-      <div className="container-lg py-5 header-text">
+      <div className="container-md py-5 header-text">
         <span>Powered by Ethereum</span>
         <span className="float-right">
-          This website uses cookies to improve your experience and has and
-          updated Privacy Policy
+          Privacy policy
         </span>
       </div>
     </footer>

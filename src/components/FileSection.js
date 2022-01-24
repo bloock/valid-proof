@@ -15,7 +15,7 @@ const FileSection = () => {
   return (
     <div className="container-md">
       <Row className="flex-column flex-lg-row align-items-center">
-        <Col style={{ paddingRight: "50px"}}>
+        <Col className="mb-10" style={{ paddingRight: "50px", marginBottom:"30px"}}>
           <h1 className="bold-text title">
             Easy validation of blockchain data records
           </h1>
@@ -49,7 +49,7 @@ const FileSection = () => {
             </li>
           </ul>
         </Col>
-        <Col>
+        <Col className="mb-10" style={{ marginBottom:"30px"}} >
           <Tabs justify defaultActiveKey="text" className="mb-3 ">
             <Tab eventKey="text" title="Text format">
               <TextValidation />

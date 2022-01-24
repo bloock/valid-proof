@@ -13,7 +13,7 @@ const Body = () => {
         <Fragment>
             <div className='top-margin'></div>
             <FileSection />
-            <div className='top-margin'></div>
+            <div ></div>
             <VerificationSection />
             <div className='top-margin'></div>
             <HowItWorksSection />
