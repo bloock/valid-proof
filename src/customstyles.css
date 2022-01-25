@@ -42,7 +42,7 @@ p {
   background-color: #06d7be;
   color: white;
   margin: 0 20px 0 20px;
-  padding: 8px 0 8px 0;
+  padding: 8px 12px;
   border-radius: 5px;
 }
 
@@ -230,5 +230,12 @@ textarea {
     padding: 0 20px;
     margin: 0 auto;
   }
+}
+
+#file {
+  opacity: 0;
+  width: 0.1px;
+  height: 0.1px;
+  position: absolute;
 }
 
