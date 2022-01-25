@@ -1,29 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Form from "react-bootstrap/Form";
 
-
 const JSONValidation = () => {
+  const [formData, setFormData] = useState("");
 
-
-
-    const handleChange = (e) =>{
-        console.log(e.target.value)
+  const validateData = (str) => {
+    try {
+      JSON.parse(str);
+    } catch (e) {
+      return false;
     }
-    const handleSubmission = (e) =>{
-        function isJsonString(str) {
-            try {
-                JSON.parse();
-            } catch (e) {
-                return false;
-            }
-            return true;
-        }
-        console.log(isJsonString({"first_name":"Tony","last_name":"Hawk","age":31}))
-    }
+    return true;
+  };
+  console.log(validateData(formData));
+  console.log(formData);
+
+  const handleChange = (e) => {
+    console.log(e.target.value);
+    setFormData(e.target.value);
+  };
+  console.log(formData);
+
+  const handleSubmit = () => {
+      //prepare to integrate with SDK
+    validateData(formData) === true
+      ? console.log(formData, "JSON validated to be sent")
+      : console.log("No JSON data ready");
+  };
 
   return (
     <div>
@@ -38,7 +45,7 @@ const JSONValidation = () => {
           <button
             className="button mt-3"
             style={{ width: "30%" }}
-            onClick={handleSubmission}
+            onClick={handleSubmit}
           >
             Validate JSON
           </button>
