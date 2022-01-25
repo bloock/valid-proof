@@ -5,8 +5,7 @@ import "primeicons/primeicons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useDropzone } from "react-dropzone";
 import "../customstyles.css";
-import { Button } from "bootstrap";
-import DragAndDrop from "./DragAndDrop";
+
 
 const baseStyle = {
   flex: 1,
@@ -103,8 +102,8 @@ const TextValidation = (props) => {
                 </span>
 
                 <div className="mt-3">
-                  <button className="button" onClick={handleSubmission}>
-                    Certificate
+                  <button className="button" onClick={handleSubmission} style={{border:"none"}}>
+                   Validate file
                   </button>
                 </div>
 
