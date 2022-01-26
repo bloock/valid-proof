@@ -18,7 +18,6 @@ const JSONValidation = () => {
   };
 
   const handleChange = (e) => {
-    console.log(e.target.value);
     setFormData(e.target.value);
   };
 
