@@ -16,17 +16,14 @@ const JSONValidation = () => {
     }
     return true;
   };
-  console.log(validateData(formData));
-  console.log(formData);
 
   const handleChange = (e) => {
     console.log(e.target.value);
     setFormData(e.target.value);
   };
-  console.log(formData);
 
   const handleSubmit = () => {
-      //prepare to integrate with SDK
+    //prepare to integrate with SDK
     validateData(formData) === true
       ? console.log(formData, "JSON validated to be sent")
       : console.log("No JSON data ready");
@@ -34,23 +31,21 @@ const JSONValidation = () => {
 
   return (
     <div>
-      <Form>
-        <Form.Group className="mb-3 d-flex flex-column align-items-center">
-          <Form.Control
-            as="textarea"
-            placeholder="Paste your JSON here"
-            rows={10}
-            onChange={handleChange}
-          />
-          <button
-            className="button mt-3"
-            style={{ width: "30%" }}
-            onClick={handleSubmit}
-          >
-            Validate JSON
-          </button>
-        </Form.Group>
-      </Form>
+      <div className="mb-3 d-flex flex-column align-items-center">
+        <Form.Control
+          as="textarea"
+          placeholder="Paste your JSON here"
+          rows={10}
+          onChange={handleChange}
+        />
+        <button
+          className="button mt-3"
+          style={{ width: "30%", border: "none" }}
+          onClick={handleSubmit}
+        >
+          Validate JSON
+        </button>
+      </div>
     </div>
   );
 };
