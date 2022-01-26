@@ -14,8 +14,8 @@ import "../customstyles.css";
 const FileSection = () => {
   return (
     <div className="container-md">
-      <Row className="flex-column flex-lg-row align-items-center">
-        <Col className="mb-10" style={{ paddingRight: "50px", marginBottom:"30px"}}>
+      <Row className="flex-column flex-lg-row align-items-center pt-8">
+        <Col  style={{ paddingRight: "50px", marginBottom:"30px"}}>
           <h1 className="bold-text title">
             Easy validation of blockchain data records
           </h1>

@@ -9,8 +9,9 @@ import logo from "../images/validProof_logo.jpg";
 
 const Header = () => {
   return (
-    <Fragment>
-      <div className="container-md py-2 pt-4 d-flex align-items-center justify-content-between">
+    <Fragment >
+    <div className="fixed-top bg-white">
+      <div className="container-md  py-2 pt-4 d-flex align-items-center justify-content-between">
         <img alt="Card" src={logo} />
 
         <span className="float-right">
@@ -18,7 +19,8 @@ const Header = () => {
           <span className="header-text ">Resources</span>
         </span>
       </div>
-      <Divider />
+      <Divider className="mb-0"/>
+      </div>
     </Fragment>
   );
 };

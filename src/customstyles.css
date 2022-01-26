@@ -1,19 +1,25 @@
+
+* {
+  font-family: "Work Sans", sans-serif;
+}
+
 h1 {
   font-size: 52px !important;
   line-height: 3.5rem;
 }
+
 h2 {
-  font-size: 44px !important;
+  font-size: 44px ;
   line-height: 3.5rem;
 }
 
 h3 {
-  font-size: 20px !important;
+  font-size: 20px ;
   font-weight: 400;
 }
 
 h4 {
-  font-size: 18px !important;
+  font-size: 18px;
 }
 
 .main-margin {
@@ -21,8 +27,12 @@ h4 {
   margin-right: 10rem;
 }
 
-.float-right {
-  float: right;
+.pt-6 {
+  padding-top: 6rem;
+}
+
+.pt-8 {
+  padding-top: 8rem;
 }
 
 li {
@@ -38,7 +48,7 @@ p {
   margin: 0;
 }
 
-.button {
+.button ,  .button:focus {
   background-color: #06d7be;
   color: white;
   margin: 0 20px 0 20px;
@@ -70,41 +80,15 @@ p {
   text-align: center;
 }
 
-.black-text {
-  color: black;
-}
-
 .bold-text {
   font-weight: bold;
 }
 
-div {
-  font-family: "Work Sans", sans-serif;
-}
 
-.title {
-  font-size: 50px;
-  margin-bottom: -10px;
-}
-
-.top-margin {
-  height: 10rem;
-}
-
-.little-top-margin {
-  height: 4rem;
-}
-
-.header-text {
-  font-size: 14px;
-}
-
-.header-title {
-  font-size: 20px;
-}
-
-.text-main-page {
-  font-size: 18px;
+@media (min-width: 750px) {
+  .top-margin {
+    height: 10rem;
+  }
 }
 
 .nav-link {
@@ -157,12 +141,6 @@ button.nav-link.active {
   width: 200%;
 }
 
-.green-title {
-  color: #06d7be;
-  font-weight: bold;
-  font-size: 20px;
-}
-
 .success-color {
   color: #36b37e;
 }
@@ -177,15 +155,6 @@ button.nav-link.active {
 
 .check-failure {
   background-color: #f75531;
-}
-
-.icon-small {
-  font-size: 10px;
-}
-
-.card-files-width {
-  margin-left: 12rem;
-  margin-right: 12rem;
 }
 
 textarea {
@@ -203,20 +172,6 @@ textarea {
   left: 50%;
   -ms-transform: translateX(-50%);
   transform: translateX(-50%);
-}
-
-.underline {
-  border-bottom: 20px solid #dddddd;
-  line-height: 0.4;
-  display: inline-block;
-}
-
-.underline-right {
-  padding-right: 1rem;
-}
-
-.underline-more-right {
-  padding-right: 2rem;
 }
 
 .p-timeline-event {
