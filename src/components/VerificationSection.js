@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
@@ -8,31 +8,62 @@ import "../customstyles.css";
 import { Card } from "primereact/card";
 import { Divider } from "primereact/divider";
 
-const VerificationSection = () => {
+const VerificationSection = (props) => {
+  const [firstColor, setFirstColor] = useState("#dddddd");
+  const [secondColor, setSecondColor] = useState("#dddddd");
+  const [thirdColor, setThirdColor] = useState("#dddddd");
+  const [fourthColor, setFourthColor] = useState("#dddddd");
+  const [successMessage, setSuccessMessage] = useState(false);
+
+  useEffect(() => {
+    setInterval(() => {
+      setFirstColor("#06d7be");
+    }, 1500);
+  });
+  useEffect(() => {
+    setInterval(() => {
+      setSecondColor("#06d7be");
+    }, 3000);
+  });
+  useEffect(() => {
+    setInterval(() => {
+      setThirdColor("#06d7be");
+    }, 4500);
+  });
+  useEffect(() => {
+    setInterval(() => {
+      setFourthColor("#06d7be");
+    }, 6000);
+  });
+  useEffect(() => {
+    setInterval(() => {
+      setSuccessMessage(true);
+    }, 7000);
+  });
   const events = [
     {
       status: "Validate hash",
       description: "",
       icon: "pi pi-check px-2 py-2 click-icon",
-      color: "#555555",
+      color: firstColor,
     },
     {
       status: "Validate integrity proof",
       description: "",
       icon: "pi pi-check px-2 py-2 click-icon",
-      color: "#555555",
+      color: secondColor,
     },
     {
       status: "Validate blockchain registrations ",
       description: "",
       icon: "pi pi-check px-2 py-2 click-icon",
-      color: "#555555",
+      color: thirdColor,
     },
     {
       status: "Validate issuer",
       description: "",
       icon: "pi pi-check px-2 py-2 click-icon",
-      color: "#555555",
+      color: fourthColor,
     },
   ];
 
@@ -51,7 +82,7 @@ const VerificationSection = () => {
     if (item.status === "Validate issuer") {
       return (
         <div className="horizontal-center half-right double-width">
-          <div className="bold-text">{item.status}</div>
+          <div>{item.status}</div>
           <div className="px-4">
             <span>{item.description}</span>
           </div>
@@ -60,7 +91,7 @@ const VerificationSection = () => {
     } else {
       return (
         <div className="horizontal-center half-right">
-          <div className="bold-text">{item.status}</div>
+          <div>{item.status}</div>
           <div className="px-4">
             <span>{item.description}</span>
           </div>
@@ -73,8 +104,9 @@ const VerificationSection = () => {
     <div className="container-lg">
       <div className="horizontal-center timeline-margins">
         <div className="bold-text header-title mb-4 mt-4">
-          Your verification
+          Please wait while your file is being validated.
         </div>
+
         <Timeline
           value={events}
           layout="horizontal"
@@ -85,12 +117,22 @@ const VerificationSection = () => {
       </div>
       <div className="little-top-margin"></div>
       <div className="horizontal-center">
-        <div className="success-color">
-          <span>
-            <i className="circle check-success pi pi-check px-1 py-1 click-icon icon-small"></i>
-          </span>
-          <span className="mx-2">Your document has been verified</span>
-        </div>
+        {successMessage === true ? (
+          <div className="pt-4">
+            <span>
+              <i className="pi pi-check" style={{ fontSize: " 2rem" }}></i>
+            </span>
+            <div className="bold-text">
+              <h3>Done!</h3>
+              <h4 className="mx-2">Your document has been verified</h4>
+            </div>
+
+           {/*  place here the details of the proof response */}
+
+          </div>
+        ) : (
+          ""
+        )}
       </div>
       {/*   <div className="horizontal-center">
                 <div className='failure-color'>
@@ -100,7 +142,7 @@ const VerificationSection = () => {
                     <span className="mx-2">Your document can't be verified</span>
                 </div>
             </div> */}
-      <div className="mt-5">
+      {/* <div className="mt-5">
         <Card className=" px-4 py-2" style={{ }}>
           <div className="pb-5">
             <span>
@@ -132,7 +174,7 @@ const VerificationSection = () => {
             </span>
           </div>
         </Card>
-      </div>
+      </div> */}
     </div>
   );
 };

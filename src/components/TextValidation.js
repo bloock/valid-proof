@@ -6,8 +6,18 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useDropzone } from "react-dropzone";
-import VerificationSection from "./VerificationSection";
+import { Timeline } from "primereact/timeline";
 import "../customstyles.css";
+import { Card } from "primereact/card";
+import { Divider } from "primereact/divider";
+import VerificationSection from "./VerificationSection";
+
+const items = [
+  {label: 'Validate hash'},
+  {label: 'Validate integrity proof'},
+  {label: 'Validate blockchain registrations'},
+  {label: 'Validate issuer'}
+];
 
 const baseStyle = {
   flex: 1,
@@ -37,6 +47,7 @@ const rejectStyle = {
 };
 
 const TextValidation = (props) => {
+  console.log(props)
   const { isDragActive, isDragAccept, isDragReject } = useDropzone({
     accept: "image/*",
   });
@@ -54,13 +65,41 @@ const TextValidation = (props) => {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
   const [selectedFile, setSelectedFile] = useState();
   const [isFilePicked, setIsFilePicked] = useState(false);
+  const [getProof, setGetProof] = useState([])
+  const [getRecord, setGetRecord] = useState([])
 
+  let stringFromUrl = "";
   async function handleSubmit() {
-    const apiKey = process.env.API_KEY;
-    const data = { prova: "Hola" };
-    const client = new BloockClient(apiKey);
-    const records = [Record.fromObject(data)];
+    function toDataURL(url, callback) {
+      var xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        var reader = new FileReader();
+        reader.onloadend = function () {
+          callback(reader.result);
+        };
+        reader.readAsDataURL(xhr.response);
+      };
+      xhr.open("GET", url);
+      xhr.responseType = "blob";
+      xhr.send();
+    }
 
+    await toDataURL(selectedFile, function (url) {
+      console.log(url, "stringgg");
+      stringFromUrl = url;
+      console.log(stringFromUrl, "aviamm");
+    });
+
+    const apiKey =
+      "test_7XVZZd0O3Nc164DQRxc3MkCkbXRcEq7od4R-WDOdWppXA4rgGEmvT24-BurHkrri";
+    const data = { prova: "Hola" };
+
+    const client = new BloockClient(apiKey);
+    /*     const data = stringFromUrl
+     */ const records = [Record.fromObject(data)];
+     setGetRecord(records)
+     console.log(records, "records")
+    //set up networks
     client.setApiHost("https://api.bloock.dev");
 
     client.setNetworkConfiguration(Network.BLOOCK_CHAIN, {
@@ -72,9 +111,22 @@ const TextValidation = (props) => {
       HTTP_PROVIDER: "https://bloockchain.bloock.dev",
     });
 
+    /*   // send data
+    console.time("SEND_DATA");
+  const sendReceipt = await client.sendRecords([records]);
+  console.timeEnd("SEND_DATA");
+
+  console.log(sendReceipt);
+
+  console.time("WAIT_DATA");
+  let anchor = await client.waitAnchor(sendReceipt[0].anchor, 3000);
+  console.log(anchor);
+  console.timeEnd("WAIT_DATA"); */
+
     //Get proof
     const proof = await client.getProof(records);
-    console.log(proof);
+setGetProof([proof])
+    console.log(proof)
 
     //Verify record
     let timestamp = await client.verifyRecords(records, Network.BLOOCK_CHAIN);
@@ -105,6 +157,16 @@ const TextValidation = (props) => {
     setIsFilePicked(false);
   };
 
+  console.log(getProof)
+  console.log(getProof !== undefined && getProof[0])
+
+let unix_timestamp = getProof[0] !== undefined &&  getProof[0]["anchor"]["networks"][0]["created_at"]
+var date = new Date(unix_timestamp).toLocaleDateString("en-US")
+
+console.log(date);
+
+let documentHash = getRecord[0] !== undefined && getRecord[0].getHash()
+console.log(documentHash)
   return (
     <section>
       <div className="container" {...getRootProps({ style })}>
@@ -163,8 +225,54 @@ const TextValidation = (props) => {
           </div>
         </div>
       </div>
-
-      {selectedFile ? <VerificationSection /> : null}
+      {selectedFile && getProof[0] !== undefined? ( <div>
+<VerificationSection />
+       
+     <div className="mt-5">
+        <Card className=" px-4 py-2" style={{ }}>
+          <div className="pb-5">
+            <span>
+              <i className="pi pi-file"></i>
+            </span>
+            <span className="mx-2 bold-text">{selectedFile.name}</span>
+          </div>
+          <div className="bold-text">Document hash</div>
+          <div className="" style={{ overflowWrap: "break-word"}}>
+          {documentHash && documentHash}
+          </div>
+          <Divider className="my-4" />
+          <div className="bold-text mt-4">Blockchain:</div>
+          <div>{getProof[0]["anchor"]["networks"][0]["name"]}</div>
+          <Divider className="my-4" />
+          <div className="bold-text">Tx hash</div>
+          <div className="" style={{ overflowWrap: "break-word"}}>
+          {getProof[0]["anchor"]["networks"][0]["tx_hash"]}
+          </div>
+          <div className="bold-text mt-4">Issue time</div>
+          <div>{date}</div>
+          <Divider className="my-4" />
+          <div className="bold-text">Issuer</div>
+          <div>BLOOCK</div>
+          <Divider className="my-4" />
+          <div className="">
+           
+          </div>
+        </Card>
+      </div>
+      </div>
+      ) : (
+        null
+      /*  <div className="pt-4">
+            <span>
+              <i className="pi pi-cross" style={{ fontSize: " 2rem" }}></i>
+            </span>
+            <div className="bold-text">
+              <h3>Ups!</h3>
+              <h4 className="mx-2">Your document couldn't be verified</h4>
+            </div>
+          </div> */
+      )} 
+      
     </section>
   );
 };
