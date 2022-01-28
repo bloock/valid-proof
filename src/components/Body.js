@@ -6,14 +6,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import FileSection from "./FileSection";
 import HowItWorksSection from "./HowItWorksSection";
 import "../customstyles.css";
-import VerificationSection from "./VerificationSection";
+
 
 const Body = () => {
+
   return (
     <Fragment>
       <div className="top-margin"></div>
       <FileSection />
-      <VerificationSection />
       <div className="top-margin"></div>
       <HowItWorksSection />
     </Fragment>

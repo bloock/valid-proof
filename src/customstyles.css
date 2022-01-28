@@ -194,3 +194,9 @@ textarea {
   position: absolute;
 }
 
+
+  @media (min-width: 970px) {
+    .verification-section{
+      width: 80%;
+    }
+}
