@@ -14,14 +14,13 @@ const VerificationSection = ({
   getProof,
   documentHash,
   date,
+  isError,
 }) => {
   const [firstColor, setFirstColor] = useState("#dddddd");
   const [secondColor, setSecondColor] = useState("#dddddd");
   const [thirdColor, setThirdColor] = useState("#dddddd");
   const [fourthColor, setFourthColor] = useState("#dddddd");
-  const [errorColor, setErrorColor] = useState("")
   const [successMessage, setSuccessMessage] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(false);
 
   console.log(getProof);
 
@@ -45,6 +44,7 @@ const VerificationSection = ({
       setFourthColor("#06d7be");
     }, 6000);
   });
+
   useEffect(() => {
     setInterval(() => {
       setSuccessMessage(true);
@@ -111,7 +111,7 @@ const VerificationSection = ({
   };
 
   return (
-    <div className="container-md mt-5 verification-section‹">
+    <div className="container-md mt-5 verification-section">
       <div className=" horizontal-center timeline-margins mb-5">
         <div className="bold-text header-title mb-4 mt-4">
           Your verification:
@@ -129,21 +129,23 @@ const VerificationSection = ({
         {successMessage === true ? (
           <>
             <div className="pt-4">
+            <div className="d-flex flex-row justify-content-center align-items-center">
               <span>
-                <i className="pi pi-check" style={{ fontSize: " 1.5rem" }}></i>
+                <i className="mr-1 circle check-success pi pi-check px-1 py-1 click-icon icon-small"></i>
               </span>
-                <h3>Done!</h3>
+              <p className="px-2 fs-2">Done!</p>
+            </div>
               <div className="bold-text">
                 <h4 className="mx-2">Your document has been verified</h4>
               </div>
 
               <div className="pt-2">
-                <Card className="mt-4 px-4 py-2" style={{textAlign: "left"}}>
+                <Card className="mt-4 px-4 py-2" style={{ textAlign: "left" }}>
                   <div className="pb-5">
                     <span>
                       <i className="pi pi-file"></i>
                     </span>
-                    <span className="mx-2 bold-text">{selectedFile.name}</span>
+                    <span className="mx-2 bold-text">{selectedFile && selectedFile.name}</span>
                   </div>
                   <div className="bold-text">Document hash</div>
                   <div className="" style={{ overflowWrap: "break-word" }}>
@@ -155,10 +157,10 @@ const VerificationSection = ({
                   <Divider className="my-4" />
                   <div className="bold-text">Tx hash</div>
                   <div className="" style={{ overflowWrap: "break-word" }}>
-                    {getProof[0]["anchor"]["networks"][0]["tx_hash"]}
+                    {getProof && getProof[0]["anchor"]["networks"][0]["tx_hash"]}
                   </div>
                   <div className="bold-text mt-4">Issue time</div>
-                  <div>{date}</div>
+                  <div>{date && date}</div>
                   <Divider className="my-4" />
                   <div className="bold-text">Issuer</div>
                   <div>BLOOCK</div>
@@ -169,7 +171,7 @@ const VerificationSection = ({
             </div>
           </>
         ) : (
-          ""
+         null
         )}
       </div>
     </div>

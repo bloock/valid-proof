@@ -3,6 +3,7 @@
   font-family: "Work Sans", sans-serif;
 }
 
+
 h1 {
   font-size: 52px !important;
   line-height: 3.5rem;
@@ -141,20 +142,9 @@ button.nav-link.active {
   width: 200%;
 }
 
-.success-color {
-  color:  #06d7be;
-}
 
-.failure-color {
-  color: #f75531;
-}
-
-.check-success {
-  background-color: #36b37e;
-}
-
-.check-failure {
-  background-color: #f75531;
+.check-failure, .check-success {
+  background-color: #222222;
 }
 
 textarea {
@@ -197,6 +187,6 @@ textarea {
 
   @media (min-width: 970px) {
     .verification-section{
-      width: 80%;
+      width: 70%;
     }
 }

@@ -11,6 +11,7 @@ import Form from "react-bootstrap/Form";
 import "../customstyles.css";
 import { useDropzone } from "react-dropzone";
 import VerificationSection from "./VerificationSection";
+import { Divider } from "primereact/divider";
 
 const baseStyle = {
   flex: 1,
@@ -75,6 +76,8 @@ const FileSection = () => {
   const [getProof, setGetProof] = useState([]);
   const [getRecord, setGetRecord] = useState([]);
   const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [errorCatched, setErrorCatched] = useState("");
 
   let stringFromUrl = "";
 
@@ -111,7 +114,6 @@ const FileSection = () => {
 
     const records = [Record.fromObject(data)];
     setGetRecord(records);
-    console.log(records, "records");
 
     //set up networks
     client.setApiHost("https://api.bloock.dev");
@@ -152,7 +154,8 @@ const FileSection = () => {
         console.log(`Record is invalid`);
       }
     } catch (error) {
-      setIsError(true)
+      setIsError(true);
+      setErrorCatched(error);
       console.log(error);
     }
 
@@ -176,6 +179,72 @@ const FileSection = () => {
     getProof[0]["anchor"]["networks"][0]["created_at"];
   var date = new Date(unix_timestamp).toLocaleDateString("en-US");
   let documentHash = getRecord[0] !== undefined && getRecord[0].getHash();
+
+  useEffect(() => {
+    errorCatched &&
+      setErrorMessage(
+        <section className="container-md pt-6 verification-section">
+          <div className="pt-1 horizontal-center">
+            <div className="d-flex flex-row justify-content-center align-items-center">
+              <span>
+                <i className="mr-1 circle check-failure pi pi-times px-1 py-1 click-icon icon-small"></i>
+              </span>
+              <p className="px-2 fs-2">Oops!</p>
+            </div>
+            <div className="bold-text">
+              <h4 className="mx-2">Your document couldn't be verified</h4>
+            </div>
+
+            <div className="pt-2">
+              <Card className="mt-4 px-5 py-5" style={{ textAlign: "left" }}>
+                <div>
+                  <span>
+                    <i className="pi pi-file"></i>
+                  </span>
+                  <span className="mx-2 bold-text">
+                    {selectedFile && selectedFile.name}
+                  </span>
+                </div>
+                <Divider className="my-4" />
+                <div>
+                  <span>
+                    This document is not known to us. It is possible that it was
+                    modified unintentionally.
+                  </span>
+                  <p>
+                    Potential error sources:
+                    <ul>
+                      <li>
+                        - The issuer distributed the wrong version of the
+                        document.
+                      </li>
+                      <li>
+                        - The document owner sent you the wrong version of the
+                        document.
+                      </li>
+                      <li>
+                        - The file was unintentionally altered: by printing it
+                        as a PDF by saving it with a PDF writer that ignored the
+                        protection by printing and scanning it.
+                      </li>
+                    </ul>
+                  </p>
+                  <span>
+                    If you have any questions, please contact the issuer of the
+                    document directly or get in touch with our support.
+                  </span>
+                </div>
+                <Divider className="my-4" />
+                <div style={{ overflowWrap: "break-word" }}>
+                  <div className="bold-text">Request response:</div>
+                  {errorCatched.message && errorCatched.message}
+                </div>
+              </Card>
+            </div>
+          </div>
+        </section>
+      );
+  }, [errorCatched, selectedFile]);
 
   return (
     <div className="container-md">
@@ -314,18 +383,17 @@ const FileSection = () => {
 
       {selectedFile && getProof[0] !== undefined ? (
         <div>
-          {isError ? (
-            "Error validating!"
-          ) : (
-            <VerificationSection
-              selectedFile={selectedFile}
-              date={date}
-              getProof={getProof}
-              documentHash={documentHash}
-            />
-          )}
+          <VerificationSection
+            selectedFile={selectedFile}
+            date={date}
+            getProof={getProof}
+            documentHash={documentHash}
+            error={isError}
+          />
         </div>
       ) : null}
+
+      {selectedFile !== undefined && isError ? <div>{errorMessage}</div> : null}
     </div>
   );
 };
