@@ -41,7 +41,18 @@ const rejectStyle = {
 };
 
 const FileSection = () => {
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState();
+  const [isFilePicked, setIsFilePicked] = useState(false);
+  const [getProof, setGetProof] = useState([]);
+  const [getRecord, setGetRecord] = useState([]);
+  const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [errorCatched, setErrorCatched] = useState("");
+
+  let stringFromUrl = "";
+  const formDataValidated = validateData(formData);
 
   //JSON validator
   const [formData, setFormData] = useState("");
@@ -55,7 +66,6 @@ const FileSection = () => {
   };
 
   //text validator
-
   const { isDragActive, isDragAccept, isDragReject } = useDropzone({
     accept: "image/*",
   });
@@ -70,49 +80,33 @@ const FileSection = () => {
     [isDragActive, isDragReject, isDragAccept]
   );
 
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
-  const [selectedFile, setSelectedFile] = useState();
-  const [isFilePicked, setIsFilePicked] = useState(false);
-  const [getProof, setGetProof] = useState([]);
-  const [getRecord, setGetRecord] = useState([]);
-  const [isError, setIsError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [errorCatched, setErrorCatched] = useState("");
+  const convertBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
 
-  let stringFromUrl = "";
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
 
   async function handleSubmit() {
     setIsLoading(true);
-    validateData(formData) === true
-      ? console.log(formData, "JSON validated to be sent")
-      : console.log("No JSON data ready");
 
-    function toDataURL(url, callback) {
-      var xhr = new XMLHttpRequest();
-      xhr.onload = function () {
-        var reader = new FileReader();
-        reader.onloadend = function () {
-          callback(reader.result);
-        };
-        reader.readAsDataURL(xhr.response);
-      };
-      xhr.open("GET", url);
-      xhr.responseType = "blob";
-      xhr.send();
-    }
-
-    await toDataURL(selectedFile, function (url) {
-      stringFromUrl = url;
-    });
-
-    const apiKey =
-      "test_7XVZZd0O3Nc164DQRxc3MkCkbXRcEq7od4R-WDOdWppXA4rgGEmvT24-BurHkrri";
-    const data = { prova: "Holas" };
-
+    const apiKey = "";
+    /* const data = { prova: "Hola" };  */
     const client = new BloockClient(apiKey);
-    /*     const data = stringFromUrl*/
+    stringFromUrl = selectedFile && (await convertBase64(selectedFile));
+    const data = stringFromUrl ? stringFromUrl : formDataValidated;
 
-    const records = [Record.fromObject(data)];
+    const records = stringFromUrl
+      ? [Record.fromString(data)]
+      : [Record.fromObject(data)];
     setGetRecord(records);
 
     //set up networks
@@ -127,27 +121,13 @@ const FileSection = () => {
       HTTP_PROVIDER: "https://bloockchain.bloock.dev",
     });
 
-    /*   // send data
-    console.time("SEND_DATA");
-  const sendReceipt = await client.sendRecords([records]);
-  console.timeEnd("SEND_DATA");
-
-  console.log(sendReceipt);
-
-  console.time("WAIT_DATA");
-  let anchor = await client.waitAnchor(sendReceipt[0].anchor, 3000);
-  console.log(anchor);
-  console.timeEnd("WAIT_DATA"); */
-
     //Get proof
     try {
       const proof = await client.getProof(records);
       setGetProof([proof]);
-      console.log(proof);
 
       //Verify proof
       let timestamp = await client.verifyProof(proof, Network.BLOOCK_CHAIN);
-      console.log(timestamp);
       if (timestamp) {
         console.log(`Record is valid - Timestamp: ${timestamp}`);
       } else {
@@ -164,9 +144,13 @@ const FileSection = () => {
     }, 500);
   }
 
-  const handleChange = (e) => {
-    setFormData(e.target.value);
+  const handleTextChange = (e) => {
     setSelectedFile(e.target.files[0]);
+    setIsFilePicked(true);
+  };
+
+  const handleJSONChange = (e) => {
+    setFormData(e.target.value);
     setIsFilePicked(true);
   };
 
@@ -194,57 +178,72 @@ const FileSection = () => {
             <div className="bold-text">
               <h4 className="mx-2">Your document couldn't be verified</h4>
             </div>
-
-            <div className="pt-2">
-              <Card className="mt-4 px-5 py-5" style={{ textAlign: "left" }}>
-                <div>
-                  <span>
-                    <i className="pi pi-file"></i>
-                  </span>
-                  <span className="mx-2 bold-text">
-                    {selectedFile && selectedFile.name}
-                  </span>
-                </div>
-                <Divider className="my-4" />
-                <div>
-                  <span>
-                    This document is not known to us. It is possible that it was
-                    modified unintentionally.
-                  </span>
-                  <p>
-                    Potential error sources:
-                    <ul>
-                      <li>
-                        - The issuer distributed the wrong version of the
-                        document.
-                      </li>
-                      <li>
-                        - The document owner sent you the wrong version of the
-                        document.
-                      </li>
-                      <li>
-                        - The file was unintentionally altered: by printing it
-                        as a PDF by saving it with a PDF writer that ignored the
-                        protection by printing and scanning it.
-                      </li>
-                    </ul>
-                  </p>
-                  <span>
-                    If you have any questions, please contact the issuer of the
-                    document directly or get in touch with our support.
-                  </span>
-                </div>
-                <Divider className="my-4" />
-                <div style={{ overflowWrap: "break-word" }}>
-                  <div className="bold-text">Request response:</div>
-                  {errorCatched.message && errorCatched.message}
-                </div>
-              </Card>
-            </div>
+            {selectedFile ? (
+              <div className="pt-2">
+                <Card className="mt-4 px-5 py-5" style={{ textAlign: "left" }}>
+                  <div>
+                    <span>
+                      <i className="pi pi-file"></i>
+                    </span>
+                    <span className="mx-2 bold-text">
+                      {selectedFile && selectedFile.name}
+                    </span>
+                  </div>
+                  <Divider className="my-4" />
+                  <div>
+                    <span>
+                      This document is not known to us. It is possible that it
+                      was modified unintentionally.
+                    </span>
+                    <p>
+                      Potential error sources:
+                      <ul>
+                        <li>
+                          - The issuer distributed the wrong version of the
+                          document.
+                        </li>
+                        <li>
+                          - The document owner sent you the wrong version of the
+                          document.
+                        </li>
+                        <li>
+                          - The file was unintentionally altered: by printing it
+                          as a PDF by saving it with a PDF writer that ignored
+                          the protection by printing and scanning it.
+                        </li>
+                      </ul>
+                    </p>
+                    <span>
+                      If you have any questions, please contact the issuer of
+                      the document directly or get in touch with our support.
+                    </span>
+                  </div>
+                  <Divider className="my-4" />
+                  <div style={{ overflowWrap: "break-word" }}>
+                    <div className="bold-text">Request response:</div>
+                    {errorCatched.message && errorCatched.message}
+                  </div>
+                </Card>
+              </div>
+            ) : (
+              <div className="pt-2">
+                <Card className="mt-4 px-5 py-5" style={{ textAlign: "left" }}>
+                  <div style={{ overflowWrap: "break-word" }}>
+                    <div className="bold-text">JSON</div>
+                    {formData && formData}
+                  </div>
+                  <Divider className="my-4" />
+                  <div style={{ overflowWrap: "break-word" }}>
+                    <div className="bold-text">Request response:</div>
+                    {errorCatched.message && errorCatched.message}
+                  </div>
+                </Card>
+              </div>
+            )}
           </div>
         </section>
       );
-  }, [errorCatched, selectedFile]);
+  }, [errorCatched, selectedFile, formData]);
 
   return (
     <div className="container-md">
@@ -294,9 +293,9 @@ const FileSection = () => {
                         <div>
                           <span>
                             {" "}
-                            {selectedFile
+                            {selectedFile !== undefined
                               ? selectedFile.name
-                              : acceptedFiles[0].name}{" "}
+                              : null}{" "}
                           </span>
                           <span onClick={handleDeleteSelected}>
                             <svg
@@ -347,7 +346,7 @@ const FileSection = () => {
                               type="file"
                               name="file"
                               id="file"
-                              onChange={handleChange}
+                              onChange={handleTextChange}
                             />
                             <label for="file">Select file</label>
                           </div>
@@ -365,7 +364,7 @@ const FileSection = () => {
                     as="textarea"
                     placeholder="Paste your JSON here"
                     rows={10}
-                    onChange={handleChange}
+                    onChange={handleJSONChange}
                   />
                   <button
                     className="button mt-3"
@@ -381,7 +380,8 @@ const FileSection = () => {
         </Col>
       </Row>
 
-      {selectedFile && getProof[0] !== undefined ? (
+      {(selectedFile && getProof[0] !== undefined) ||
+      (formData && getProof[0] !== undefined) ? (
         <div>
           <VerificationSection
             selectedFile={selectedFile}
@@ -394,6 +394,7 @@ const FileSection = () => {
       ) : null}
 
       {selectedFile !== undefined && isError ? <div>{errorMessage}</div> : null}
+      {formData !== undefined && isError ? <div>{errorMessage}</div> : null}
     </div>
   );
 };

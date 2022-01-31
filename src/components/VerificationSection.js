@@ -14,15 +14,12 @@ const VerificationSection = ({
   getProof,
   documentHash,
   date,
-  isError,
 }) => {
   const [firstColor, setFirstColor] = useState("#dddddd");
   const [secondColor, setSecondColor] = useState("#dddddd");
   const [thirdColor, setThirdColor] = useState("#dddddd");
   const [fourthColor, setFourthColor] = useState("#dddddd");
   const [successMessage, setSuccessMessage] = useState(false);
-
-  console.log(getProof);
 
   useEffect(() => {
     setInterval(() => {
@@ -129,12 +126,12 @@ const VerificationSection = ({
         {successMessage === true ? (
           <>
             <div className="pt-4">
-            <div className="d-flex flex-row justify-content-center align-items-center">
-              <span>
-                <i className="mr-1 circle check-success pi pi-check px-1 py-1 click-icon icon-small"></i>
-              </span>
-              <p className="px-2 fs-2">Done!</p>
-            </div>
+              <div className="d-flex flex-row justify-content-center align-items-center">
+                <span>
+                  <i className="mr-1 circle check-success pi pi-check px-1 py-1 click-icon icon-small"></i>
+                </span>
+                <p className="px-2 fs-2">Done!</p>
+              </div>
               <div className="bold-text">
                 <h4 className="mx-2">Your document has been verified</h4>
               </div>
@@ -145,7 +142,9 @@ const VerificationSection = ({
                     <span>
                       <i className="pi pi-file"></i>
                     </span>
-                    <span className="mx-2 bold-text">{selectedFile && selectedFile.name}</span>
+                    <span className="mx-2 bold-text">
+                      {selectedFile && selectedFile.name}
+                    </span>
                   </div>
                   <div className="bold-text">Document hash</div>
                   <div className="" style={{ overflowWrap: "break-word" }}>
@@ -157,7 +156,8 @@ const VerificationSection = ({
                   <Divider className="my-4" />
                   <div className="bold-text">Tx hash</div>
                   <div className="" style={{ overflowWrap: "break-word" }}>
-                    {getProof && getProof[0]["anchor"]["networks"][0]["tx_hash"]}
+                    {getProof &&
+                      getProof[0]["anchor"]["networks"][0]["tx_hash"]}
                   </div>
                   <div className="bold-text mt-4">Issue time</div>
                   <div>{date && date}</div>
@@ -170,9 +170,7 @@ const VerificationSection = ({
               </div>
             </div>
           </>
-        ) : (
-         null
-        )}
+        ) : null}
       </div>
     </div>
   );

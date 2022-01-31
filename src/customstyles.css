@@ -1,8 +1,6 @@
-
 * {
   font-family: "Work Sans", sans-serif;
 }
-
 
 h1 {
   font-size: 52px !important;
@@ -10,12 +8,12 @@ h1 {
 }
 
 h2 {
-  font-size: 44px ;
+  font-size: 44px;
   line-height: 3.5rem;
 }
 
 h3 {
-  font-size: 20px ;
+  font-size: 20px;
   font-weight: 400;
 }
 
@@ -49,7 +47,8 @@ p {
   margin: 0;
 }
 
-.button ,  .button:focus {
+.button,
+.button:focus {
   background-color: #06d7be;
   color: white;
   margin: 0 20px 0 20px;
@@ -84,7 +83,6 @@ p {
 .bold-text {
   font-weight: bold;
 }
-
 
 @media (min-width: 750px) {
   .top-margin {
@@ -142,8 +140,8 @@ button.nav-link.active {
   width: 200%;
 }
 
-
-.check-failure, .check-success {
+.check-failure,
+.check-success {
   background-color: #222222;
 }
 
@@ -184,9 +182,8 @@ textarea {
   position: absolute;
 }
 
-
-  @media (min-width: 970px) {
-    .verification-section{
-      width: 70%;
-    }
+@media (min-width: 970px) {
+  .verification-section {
+    width: 70%;
+  }
 }
