@@ -42,27 +42,15 @@ const rejectStyle = {
 
 const FileSection = () => {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+  const [currentRecord, setCurrentRecord] = useState(null);
+  const [recordProof, setRecordProof] = useState(null);
+  const [recordTimestamp, setRecordTimestamp] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState();
-  const [isFilePicked, setIsFilePicked] = useState(false);
-  const [getProof, setGetProof] = useState([]);
-  const [getRecord, setGetRecord] = useState([]);
-  const [isError, setIsError] = useState(false);
+  const [formData, setFormData] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [errorCatched, setErrorCatched] = useState("");
 
-  //JSON validator
-  const [formData, setFormData] = useState("");
-  const validateData = (str) => {
-    try {
-      JSON.parse(str);
-    } catch (e) {
-      return false;
-    }
-    return true;
-  };
-
-  //text validator
   const { isDragActive, isDragAccept, isDragReject } = useDropzone({
     accept: "image/*",
   });
@@ -77,95 +65,102 @@ const FileSection = () => {
     [isDragActive, isDragReject, isDragAccept]
   );
 
-  const convertBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-
-      fileReader.onload = () => {
-        resolve(fileReader.result);
-      };
-
-      fileReader.onerror = (error) => {
-        reject(error);
-      };
-    });
+  const handleDeleteSelected = (e) => {
+    setCurrentRecord(null);
+    setRecordProof(null);
+    setRecordTimestamp(null);
   };
 
-  let stringFromUrl = "";
-  const formDataValidated = validateData(formData);
+  async function handleJSONSubmit(e) {
+    setFormData(e.target.value);
 
-  async function handleSubmit() {
+    function validateJSON(item) {
+      item = typeof item !== "string" ? JSON.stringify(item) : item;
+      try {
+        item = JSON.parse(item);
+      } catch (e) {
+        return false;
+      }
+      if (typeof item === "object" && item !== null) {
+        return true;
+      }
+      return false;
+    }
+    const JSONValidated = validateJSON(formData);
+
+    JSONValidated === true &&
+      setCurrentRecord([Record.fromObject(JSON.stringify(formData))]);
+  }
+
+  async function handleFileSubmit(e) {
+    const convertBase64 = (file) => {
+      return new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+        fileReader.onload = () => {
+          resolve(fileReader.result);
+        };
+        fileReader.onerror = (error) => {
+          reject(error);
+        };
+      });
+    };
+
+    /*  const base64File = { prova: "Hola" };
+    setSelectedFile(e.target.files[0])
+    setCurrentRecord([Record.fromObject(base64File)]); */
+
+    const base64File = await convertBase64(e.target.files[0]);
+    setSelectedFile(base64File);
+    setCurrentRecord([Record.fromString(base64File)]);
+  }
+
+  async function validateData() {
     setIsLoading(true);
-
-    const apiKey = "";
-    /*     const data = { prova: "Hola" };*/
+    const apiKey =
+      "test_7XVZZd0O3Nc164DQRxc3MkCkbXRcEq7od4R-WDOdWppXA4rgGEmvT24-BurHkrri";
     const client = new BloockClient(apiKey);
-    stringFromUrl = selectedFile && (await convertBase64(selectedFile));
-    const data = stringFromUrl ? stringFromUrl : formDataValidated;
-
-    const records = stringFromUrl
-      ? [Record.fromString(data)]
-      : [Record.fromObject(data)];
-    setGetRecord(records);
-
-    /*   const records = [Record.fromObject(data)];
-    setGetRecord(records); */
 
     //set up networks
     client.setApiHost("https://api.bloock.dev");
 
     client.setNetworkConfiguration(Network.BLOOCK_CHAIN, {
       CONTRACT_ADDRESS: "d2d1BBcbee7741f8C846826F55b7c17fc5cf969a",
-
       CONTRACT_ABI:
         '[{"inputs":[{"internalType":"address","name":"role_manager","type":"address"},{"internalType":"address","name":"state_manager","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"bytes32","name":"previousAdminRole","type":"bytes32"},{"indexed":true,"internalType":"bytes32","name":"newAdminRole","type":"bytes32"}],"name":"RoleAdminChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"address","name":"account","type":"address"},{"indexed":true,"internalType":"address","name":"sender","type":"address"}],"name":"RoleGranted","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"address","name":"account","type":"address"},{"indexed":true,"internalType":"address","name":"sender","type":"address"}],"name":"RoleRevoked","type":"event"},{"inputs":[],"name":"DEFAULT_ADMIN_ROLE","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"STATE_MANAGER","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"}],"name":"getRoleAdmin","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"state_root","type":"bytes32"}],"name":"getState","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"grantRole","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"hasRole","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"state_root","type":"bytes32"}],"name":"isStatePresent","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"renounceRole","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"revokeRole","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes4","name":"interfaceId","type":"bytes4"}],"name":"supportsInterface","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"state_root","type":"bytes32"}],"name":"updateState","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32[]","name":"content","type":"bytes32[]"},{"internalType":"bytes32[]","name":"hashes","type":"bytes32[]"},{"internalType":"bytes","name":"bitmap","type":"bytes"},{"internalType":"uint32[]","name":"depths","type":"uint32[]"}],"name":"verifyInclusionProof","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}]',
-
       HTTP_PROVIDER: "https://bloockchain.bloock.dev",
     });
 
     //Get proof
     try {
-      const proof = await client.getProof(records);
-      setGetProof([proof]);
+      const proof = await client.getProof(currentRecord);
+      setRecordProof(proof);
 
       //Verify proof
-      let timestamp = await client.verifyProof(proof, Network.BLOOCK_CHAIN);
+      const timestamp = await client.verifyProof(proof, Network.BLOOCK_CHAIN);
+      setRecordTimestamp(timestamp);
+
       if (timestamp) {
         console.log(`Record is valid - Timestamp: ${timestamp}`);
       } else {
         console.log(`Record is invalid`);
       }
     } catch (error) {
-      setIsError(true);
       setErrorCatched(error);
       console.log(error);
     }
-
-    setTimeout(() => {
-      setIsFilePicked(false);
-    }, 500);
   }
 
-  const handleTextChange = (e) => {
-    setSelectedFile(e.target.files[0]);
-    setIsFilePicked(true);
-  };
-
-  const handleJSONChange = (e) => {
-    setFormData(e.target.value);
-    setIsFilePicked(true);
-  };
-
-  const handleDeleteSelected = (e) => {
-    setIsFilePicked(false);
-  };
+  useEffect(() => {
+    (recordTimestamp || errorCatched) && setIsLoading(false);
+  }, [recordTimestamp, errorCatched]);
 
   let unix_timestamp =
-    getProof[0] !== undefined &&
-    getProof[0]["anchor"]["networks"][0]["created_at"];
+    recordProof !== null &&
+    recordProof.length > 0 &&
+    recordProof[0].anchor.anchor_id;
   var date = new Date(unix_timestamp).toLocaleDateString("en-US");
-  let documentHash = getRecord[0] !== undefined && getRecord[0].getHash();
+  let documentHash = currentRecord && currentRecord[0].getHash();
 
   useEffect(() => {
     errorCatched &&
@@ -173,15 +168,12 @@ const FileSection = () => {
         <section className="container-md pt-6 verification-section">
           <div className="pt-1 horizontal-center">
             <div className="d-flex flex-row justify-content-center align-items-center">
-              <span>
-                <i className="mr-1 circle check-failure pi pi-times px-1 py-1 click-icon icon-small"></i>
-              </span>
               <p className="px-2 fs-2">Oops!</p>
             </div>
             <div className="bold-text">
               <h4 className="mx-2">Your document couldn't be verified</h4>
             </div>
-            {selectedFile ? (
+            {currentRecord ? (
               <div className="pt-2">
                 <Card className="mt-4 px-5 py-5" style={{ textAlign: "left" }}>
                   <div>
@@ -192,7 +184,6 @@ const FileSection = () => {
                       {selectedFile && selectedFile.name}
                     </span>
                   </div>
-                  <Divider className="my-4" />
                   <div>
                     <span>
                       This document is not known to us. It is possible that it
@@ -222,31 +213,17 @@ const FileSection = () => {
                     </span>
                   </div>
                   <Divider className="my-4" />
-                  <div style={{ overflowWrap: "break-word" }}>
-                    <div className="bold-text">Request response:</div>
-                    {errorCatched.message && errorCatched.message}
+                  <div className="bold-text">Document hash</div>
+                  <div className="" style={{ overflowWrap: "break-word" }}>
+                    {documentHash && documentHash}
                   </div>
                 </Card>
               </div>
-            ) : (
-              <div className="pt-2">
-                <Card className="mt-4 px-5 py-5" style={{ textAlign: "left" }}>
-                  <div style={{ overflowWrap: "break-word" }}>
-                    <div className="bold-text">JSON</div>
-                    {formData && formData}
-                  </div>
-                  <Divider className="my-4" />
-                  <div style={{ overflowWrap: "break-word" }}>
-                    <div className="bold-text">Request response:</div>
-                    {errorCatched.message && errorCatched.message}
-                  </div>
-                </Card>
-              </div>
-            )}
+            ) : null}
           </div>
         </section>
       );
-  }, [errorCatched, selectedFile, formData]);
+  }, [errorCatched, currentRecord, formData, selectedFile, documentHash]);
 
   return (
     <div className="container-md">
@@ -292,7 +269,7 @@ const FileSection = () => {
                 <div className="container" {...getRootProps({ style })}>
                   <div className="vertical-center horizontal-center">
                     <div>
-                      {isFilePicked || acceptedFiles.length > 0 ? (
+                      {currentRecord ? (
                         <div>
                           <span>
                             {" "}
@@ -317,7 +294,6 @@ const FileSection = () => {
                             {isLoading ? (
                               <button
                                 className="button"
-                                onClick={handleSubmit}
                                 style={{ border: "none" }}
                               >
                                 Loading...
@@ -325,18 +301,14 @@ const FileSection = () => {
                             ) : (
                               <button
                                 className="button"
-                                onClick={handleSubmit}
+                                onClick={validateData}
                                 style={{ border: "none" }}
+                                type="submit"
                               >
                                 Validate file
                               </button>
                             )}
                           </div>
-
-                          <i
-                            className="bi bi-x bi-4x"
-                            onClick={handleDeleteSelected}
-                          ></i>
                         </div>
                       ) : (
                         <div>
@@ -349,7 +321,7 @@ const FileSection = () => {
                               type="file"
                               name="file"
                               id="file"
-                              onChange={handleTextChange}
+                              onChange={handleFileSubmit}
                             />
                             <label for="file">Select file</label>
                           </div>
@@ -367,12 +339,13 @@ const FileSection = () => {
                     as="textarea"
                     placeholder="Paste your JSON here"
                     rows={10}
-                    onChange={handleJSONChange}
+                    onChange={handleJSONSubmit}
                   />
                   <button
                     className="button mt-3"
                     style={{ width: "30%", border: "none" }}
-                    onClick={handleSubmit}
+                    onClick={validateData}
+                    type="submit"
                   >
                     Validate JSON
                   </button>
@@ -383,21 +356,20 @@ const FileSection = () => {
         </Col>
       </Row>
 
-      {(selectedFile && getProof[0] !== undefined) ||
-      (formData && getProof[0] !== undefined) ? (
+      {recordProof !== null ? (
         <div>
           <VerificationSection
             selectedFile={selectedFile}
             date={date}
-            getProof={getProof}
             documentHash={documentHash}
-            error={isError}
+            isBlockchainRegitrated={recordTimestamp}
+            isProofRetrieved={recordProof}
+            isProofValidated={recordTimestamp}
           />
         </div>
-      ) : null}
-
-      {selectedFile !== undefined && isError ? <div>{errorMessage}</div> : null}
-      {formData !== undefined && isError ? <div>{errorMessage}</div> : null}
+      ) : (
+        <div> {errorMessage} </div>
+      )}
     </div>
   );
 };

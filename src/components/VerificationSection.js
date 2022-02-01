@@ -10,67 +10,31 @@ import { Divider } from "primereact/divider";
 import FileSection from "./FileSection";
 
 const VerificationSection = ({
+  isProofRetrieved,
+  isProofValidated,
+  isBlockchainRegistrated,
   selectedFile,
-  getProof,
   documentHash,
   date,
 }) => {
-  const [firstColor, setFirstColor] = useState("#dddddd");
-  const [secondColor, setSecondColor] = useState("#dddddd");
-  const [thirdColor, setThirdColor] = useState("#dddddd");
-  const [fourthColor, setFourthColor] = useState("#dddddd");
-  const [successMessage, setSuccessMessage] = useState(false);
-
-  useEffect(() => {
-    setInterval(() => {
-      setFirstColor("#06d7be");
-    }, 1500);
-  });
-  useEffect(() => {
-    setInterval(() => {
-      setSecondColor("#06d7be");
-    }, 3000);
-  });
-  useEffect(() => {
-    setInterval(() => {
-      setThirdColor("#06d7be");
-    }, 4500);
-  });
-  useEffect(() => {
-    setInterval(() => {
-      setFourthColor("#06d7be");
-    }, 6000);
-  });
-
-  useEffect(() => {
-    setInterval(() => {
-      setSuccessMessage(true);
-    }, 7000);
-  });
   const events = [
     {
-      status: "Validate hash",
+      status: "Retrieve integrity proof",
       description: "",
       icon: "pi pi-check px-2 py-2 click-icon",
-      color: firstColor,
+      color: isProofRetrieved ? "#06d7be" : "#d94c12",
     },
     {
       status: "Validate integrity proof",
       description: "",
       icon: "pi pi-check px-2 py-2 click-icon",
-      color: secondColor,
+      color: isProofValidated ? "#06d7be" : "#d94c12",
     },
     {
-      status: "Validate blockchain registrations ",
+      status: "Validate blockchain registrations",
       description: "",
       icon: "pi pi-check px-2 py-2 click-icon",
-      color: thirdColor,
-    },
-    {
-      status: "Validate issuer",
-      description: "",
-      icon: "pi pi-check px-2 py-2 click-icon",
-      color: fourthColor,
+      color: isProofValidated ? "#06d7be" : "#d94c12",
     },
   ];
 
@@ -86,7 +50,7 @@ const VerificationSection = ({
   };
 
   const customizedContent = (item) => {
-    if (item.status === "Validate issuer") {
+    if (item.status === events[events.length - 1].status) {
       return (
         <div className="horizontal-center half-right double-width">
           <div>{item.status}</div>
@@ -123,13 +87,10 @@ const VerificationSection = ({
       </div>
       <div className="little-top-margin"></div>
       <div className="horizontal-center">
-        {successMessage === true ? (
+        {isProofRetrieved !== null ? (
           <>
             <div className="pt-4">
               <div className="d-flex flex-row justify-content-center align-items-center">
-                <span>
-                  <i className="mr-1 circle check-success pi pi-check px-1 py-1 click-icon icon-small"></i>
-                </span>
                 <p className="px-2 fs-2">Done!</p>
               </div>
               <div className="bold-text">
@@ -138,10 +99,10 @@ const VerificationSection = ({
 
               <div className="pt-2">
                 <Card className="mt-4 px-4 py-2" style={{ textAlign: "left" }}>
-                  <div className="pb-5">
-                    <span>
+                  <div>
+                    {/*  <span>
                       <i className="pi pi-file"></i>
-                    </span>
+                    </span> */}
                     <span className="mx-2 bold-text">
                       {selectedFile && selectedFile.name}
                     </span>
@@ -150,22 +111,22 @@ const VerificationSection = ({
                   <div className="" style={{ overflowWrap: "break-word" }}>
                     {documentHash && documentHash}
                   </div>
-                  <Divider className="my-4" />
+                  <Divider className="my-4 pb-2" />
                   <div className="bold-text mt-4">Blockchain:</div>
-                  <div>{getProof[0]["anchor"]["networks"][0]["name"]}</div>
-                  <Divider className="my-4" />
+
+                  <div>{isProofRetrieved.anchor.networks[0].name}</div>
+                  <Divider className="my-4 pb-2" />
                   <div className="bold-text">Tx hash</div>
                   <div className="" style={{ overflowWrap: "break-word" }}>
-                    {getProof &&
-                      getProof[0]["anchor"]["networks"][0]["tx_hash"]}
+                    {isProofRetrieved.anchor.networks[0].tx_hash}
                   </div>
+                  <Divider className="my-4 pb-2" />
+
                   <div className="bold-text mt-4">Issue time</div>
                   <div>{date && date}</div>
-                  <Divider className="my-4" />
+                  <Divider className="my-4 pb-2" />
                   <div className="bold-text">Issuer</div>
                   <div>BLOOCK</div>
-                  <Divider className="my-4" />
-                  <div className=""></div>
                 </Card>
               </div>
             </div>
