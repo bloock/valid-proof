@@ -51,8 +51,6 @@ const FileSection = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [errorCatched, setErrorCatched] = useState("");
 
- 
-
   //JSON validator
   const [formData, setFormData] = useState("");
   const validateData = (str) => {
@@ -94,28 +92,25 @@ const FileSection = () => {
     });
   };
 
-
   let stringFromUrl = "";
   const formDataValidated = validateData(formData);
-
 
   async function handleSubmit() {
     setIsLoading(true);
 
-    const apiKey = "test_7XVZZd0O3Nc164DQRxc3MkCkbXRcEq7od4R-WDOdWppXA4rgGEmvT24-BurHkrri";
-    const data = { prova: "Hola" }; 
+    const apiKey = "";
+    /*     const data = { prova: "Hola" };*/
     const client = new BloockClient(apiKey);
     stringFromUrl = selectedFile && (await convertBase64(selectedFile));
-/*     const data = stringFromUrl ? stringFromUrl : formDataValidated;
- */
-/*     const records = stringFromUrl
+    const data = stringFromUrl ? stringFromUrl : formDataValidated;
+
+    const records = stringFromUrl
       ? [Record.fromString(data)]
       : [Record.fromObject(data)];
     setGetRecord(records);
- */
- 
-    const records = [Record.fromObject(data)];
-    setGetRecord(records);
+
+    /*   const records = [Record.fromObject(data)];
+    setGetRecord(records); */
 
     //set up networks
     client.setApiHost("https://api.bloock.dev");
