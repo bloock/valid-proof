@@ -14,10 +14,10 @@ const Header = () => {
       <div className="container-md  py-2 pt-4 d-flex align-items-center justify-content-between">
         <img alt="Card" src={logo} />
 
-        <span className="float-right">
+        {/* <span className="float-right">
           <span className="header-text mx-5">Blockchain</span>
           <span className="header-text ">Resources</span>
-        </span>
+        </span> */}
       </div>
       <Divider className="mb-0"/>
       </div>

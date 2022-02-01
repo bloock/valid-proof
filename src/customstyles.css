@@ -187,3 +187,16 @@ textarea {
     width: 70%;
   }
 }
+
+
+@media (min-width: 970px) {
+  .verification-section {
+    width: 70%;
+  }
+}
+
+@media (max-width: 600px) {
+  .stepper {
+    display: none;
+  }
+}

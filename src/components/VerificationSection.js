@@ -109,7 +109,7 @@ const VerificationSection = ({
 
   return (
     <div className="container-md mt-5 verification-section">
-      <div className=" horizontal-center timeline-margins mb-5">
+      <div className=" horizontal-center timeline-margins mb-5 stepper">
         <div className="bold-text header-title mb-4 mt-4">
           Your verification:
         </div>
