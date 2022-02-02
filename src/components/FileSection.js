@@ -46,6 +46,7 @@ const FileSection = () => {
   const [currentRecord, setCurrentRecord] = useState(null);
   const [recordProof, setRecordProof] = useState(null);
   const [recordTimestamp, setRecordTimestamp] = useState(null);
+
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState();
   const [formData, setFormData] = useState("");
@@ -113,7 +114,8 @@ const FileSection = () => {
 
   async function validateData() {
     setIsLoading(true);
-    const apiKey = "";
+    const apiKey =
+      "test_7XVZZd0O3Nc164DQRxc3MkCkbXRcEq7od4R-WDOdWppXA4rgGEmvT24-BurHkrri";
     const client = new BloockClient(apiKey);
 
     //set up networks
@@ -148,7 +150,7 @@ const FileSection = () => {
 
   useEffect(() => {
     async function parseDropdown() {
-      if (acceptedFiles !== []) {
+      if (acceptedFiles && acceptedFiles !== []) {
         const base64File = await convertBase64(acceptedFiles[0]);
         setCurrentRecord([Record.fromString(base64File)]);
       }
@@ -170,18 +172,26 @@ const FileSection = () => {
       setErrorMessage(
         <section className="container-md pt-6 verification-section">
           <div className="pt-1 horizontal-center">
-            <div className="d-flex flex-row justify-content-center align-items-center">
-              <p className="px-2 fs-2">Oops!</p>
-            </div>
-            <div className="bold-text">
-              <h4 className="mx-2">Your document couldn't be verified</h4>
+            <div>
+              {currentRecord ? (
+                <div>
+                  <div className="d-flex flex-row justify-content-center align-items-center">
+                    <p className="px-2 fs-2">Oops!</p>
+                  </div>
+                  <div className="bold-text">
+                    <h4 className="mx-2">Your document couldn't be verified</h4>
+                  </div>
+                </div>
+              ) : null}
             </div>
             {currentRecord ? (
               <div className="pt-2">
                 <Card className="mt-4 px-5 py-5" style={{ textAlign: "left" }}>
-                  <div>
+                  <div className="mb-5">
                     <span className="mx-2 bold-text">
-                      {selectedFile && selectedFile.name}
+                      {(selectedFile && selectedFile.name) ||
+                        (acceptedFiles[0] !== undefined &&
+                          acceptedFiles[0].name)}
                     </span>
                   </div>
                   <div>
@@ -278,25 +288,29 @@ const FileSection = () => {
                     <div>
                       {currentRecord ? (
                         <div>
-                          <span>
-                            {" "}
-                            {selectedFile !== undefined
-                              ? selectedFile && selectedFile
-                              : null}{" "}
-                            {!selectedFile && "File"}
-                          </span>
-                          <span onClick={handleDeleteSelected}>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="24"
-                              height="24"
-                              fill="currentColor"
-                              class="bi bi-x"
-                              viewBox="0 0 16 16"
-                            >
-                              <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-                            </svg>
-                          </span>
+                          {!recordTimestamp && !errorMessage ? (
+                            <div>
+                              <span>
+                                {" "}
+                                {selectedFile !== undefined
+                                  ? selectedFile && selectedFile
+                                  : null}{" "}
+                                {(!selectedFile || !acceptedFiles) && "File"}
+                              </span>
+                              <span onClick={handleDeleteSelected}>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="24"
+                                  height="24"
+                                  fill="currentColor"
+                                  class="bi bi-x"
+                                  viewBox="0 0 16 16"
+                                >
+                                  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                </svg>
+                              </span>
+                            </div>
+                          ) : null}
 
                           <div className="mt-3">
                             {isLoading ? (
@@ -307,14 +321,26 @@ const FileSection = () => {
                                 Loading...
                               </button>
                             ) : (
-                              <button
-                                className="button"
-                                onClick={validateData}
-                                style={{ border: "none" }}
-                                type="submit"
-                              >
-                                Validate file
-                              </button>
+                              <div>
+                                {recordTimestamp || errorMessage ? (
+                                  <button
+                                    className="button"
+                                    onClick={handleDeleteSelected}
+                                    style={{ border: "none" }}
+                                  >
+                                    Validate another file
+                                  </button>
+                                ) : (
+                                  <button
+                                    className="button"
+                                    onClick={validateData}
+                                    style={{ border: "none" }}
+                                    type="submit"
+                                  >
+                                    Validate file
+                                  </button>
+                                )}
+                              </div>
                             )}
                           </div>
                         </div>
@@ -393,6 +419,7 @@ const FileSection = () => {
             isBlockchainRegitrated={recordTimestamp}
             isProofRetrieved={recordProof}
             isProofValidated={recordTimestamp}
+            acceptedFiles={acceptedFiles}
           />
         </div>
       ) : (

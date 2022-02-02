@@ -15,6 +15,7 @@ const VerificationSection = ({
   selectedFile,
   documentHash,
   date,
+  acceptedFiles
 }) => {
   const [firstStepColor, setFirstStepColor] = useState("#d7d7d7");
   const [secondStepColor, setSecondStepColor] = useState("#d7d7d7");
@@ -127,9 +128,11 @@ const VerificationSection = ({
               </div>
               <div className="pt-2">
                 <Card className="mt-4 px-4 py-2" style={{ textAlign: "left" }}>
-                  <div>
+                <div className="mb-5">
                     <span className="mx-2 bold-text">
-                      {selectedFile && selectedFile.name}
+                      {(selectedFile && selectedFile.name) ||
+                        (acceptedFiles[0] !== undefined &&
+                          acceptedFiles[0].name)}
                     </span>
                   </div>
                   <div className="bold-text">Document hash</div>
