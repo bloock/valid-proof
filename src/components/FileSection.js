@@ -12,6 +12,7 @@ import "../customstyles.css";
 import { useDropzone } from "react-dropzone";
 import VerificationSection from "./VerificationSection";
 import { Divider } from "primereact/divider";
+import moment from "moment";
 
 const baseStyle = {
   flex: 1,
@@ -50,6 +51,8 @@ const FileSection = () => {
   const [formData, setFormData] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [errorCatched, setErrorCatched] = useState("");
+  const [isJSONValidated, setIsJSONValidated] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const { isDragActive, isDragAccept, isDragReject } = useDropzone({
     accept: "image/*",
@@ -71,26 +74,29 @@ const FileSection = () => {
     setRecordTimestamp(null);
   };
 
-  async function handleJSONSubmit(e) {
-    setFormData(e.target.value);
-
-    function validateJSON(item) {
-      item = typeof item !== "string" ? JSON.stringify(item) : item;
-      try {
-        item = JSON.parse(item);
-      } catch (e) {
-        return false;
-      }
-      if (typeof item === "object" && item !== null) {
-        return true;
-      }
+  function validateJSON(item) {
+    try {
+      item = JSON.parse(item);
+    } catch (e) {
       return false;
     }
-    const JSONValidated = validateJSON(formData);
-
-    JSONValidated === true &&
-      setCurrentRecord([Record.fromObject(JSON.stringify(formData))]);
+    return true;
   }
+
+  async function handleJSONSubmit(e) {
+    setFormData(e.target.value);
+  }
+  useEffect(() => {
+    validateJSON(formData) && setIsJSONValidated(true);
+    isJSONValidated ? setIsError(false) : setIsError(true);
+    formData.length < 1 && setIsError(false);
+    isJSONValidated
+      ? setCurrentRecord([Record.fromString(formData)])
+      : console.log("Please introduce a valid JSON format");
+  }, [formData, isJSONValidated]);
+
+  console.log(isError);
+  console.log(isJSONValidated);
 
   async function handleFileSubmit(e) {
     const convertBase64 = (file) => {
@@ -106,13 +112,13 @@ const FileSection = () => {
       });
     };
 
-    /*  const base64File = { prova: "Hola" };
-    setSelectedFile(e.target.files[0])
-    setCurrentRecord([Record.fromObject(base64File)]); */
-
-    const base64File = await convertBase64(e.target.files[0]);
+    const base64File = { prova: "Hola" };
     setSelectedFile(base64File);
-    setCurrentRecord([Record.fromString(base64File)]);
+    setCurrentRecord([Record.fromObject(base64File)]);
+
+    /* const base64File = await convertBase64(e.target.files[0]); 
+    setSelectedFile(base64File);
+    setCurrentRecord([Record.fromString(base64File)]);  */
   }
 
   async function validateData() {
@@ -156,11 +162,13 @@ const FileSection = () => {
   }, [recordTimestamp, errorCatched]);
 
   let unix_timestamp =
-    recordProof !== null &&
-    recordProof.length > 0 &&
-    recordProof[0].anchor.anchor_id;
-  var date = new Date(unix_timestamp).toLocaleDateString("en-US");
-  let documentHash = currentRecord && currentRecord[0].getHash();
+    recordProof !== null && recordProof.anchor.networks[0].created_at;
+
+  console.log(recordProof);
+  const date = moment(unix_timestamp * 1000).format("DD-MM-YYYY HH:mm:ss");
+  const documentHash = currentRecord && currentRecord[0].getHash();
+
+  console.log(date);
 
   useEffect(() => {
     errorCatched &&
@@ -177,9 +185,6 @@ const FileSection = () => {
               <div className="pt-2">
                 <Card className="mt-4 px-5 py-5" style={{ textAlign: "left" }}>
                   <div>
-                    <span>
-                      <i className="pi pi-file"></i>
-                    </span>
                     <span className="mx-2 bold-text">
                       {selectedFile && selectedFile.name}
                     </span>
@@ -276,6 +281,7 @@ const FileSection = () => {
                             {selectedFile !== undefined
                               ? selectedFile.name
                               : null}{" "}
+                              {!selectedFile.name && "File"}
                           </span>
                           <span onClick={handleDeleteSelected}>
                             <svg
@@ -325,6 +331,8 @@ const FileSection = () => {
                             />
                             <label for="file">Select file</label>
                           </div>
+                          {/*   <br/> */}
+                          {/* <p>Png, jpg and pdf</p> */}
                         </div>
                       )}
                     </div>
@@ -339,16 +347,34 @@ const FileSection = () => {
                     as="textarea"
                     placeholder="Paste your JSON here"
                     rows={10}
-                    onChange={handleJSONSubmit}
+                    onChange={(e) => handleJSONSubmit(e)}
                   />
-                  <button
-                    className="button mt-3"
-                    style={{ width: "30%", border: "none" }}
-                    onClick={validateData}
-                    type="submit"
-                  >
-                    Validate JSON
-                  </button>
+
+                  {isError ? (
+                    <div>
+                      <br />
+                      <p>
+                        {" "}
+                        Please introduce a valid JSON for the validation{" "}
+                      </p>{" "}
+                    </div>
+                  ) : null}
+
+                  {isLoading ? (
+                    <button className="button" style={{ border: "none" }}>
+                      Loading...
+                    </button>
+                  ) : (
+                    <button
+                      className="button mt-3 validateButton"
+                      style={{ width: "30%", border: "none" }}
+                      onClick={validateData}
+                      type="submit"
+                      disabled={isJSONValidated === false}
+                    >
+                      Validate JSON
+                    </button>
+                  )}
                 </div>
               </div>
             </Tab>

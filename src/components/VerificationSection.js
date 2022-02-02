@@ -22,19 +22,19 @@ const VerificationSection = ({
       status: "Retrieve integrity proof",
       description: "",
       icon: "pi pi-check px-2 py-2 click-icon",
-      color: isProofRetrieved ? "#06d7be" : "#d94c12",
+      color: isProofRetrieved ? "#06d7be" : "#d7d7d7",
     },
     {
       status: "Validate integrity proof",
       description: "",
       icon: "pi pi-check px-2 py-2 click-icon",
-      color: isProofValidated ? "#06d7be" : "#d94c12",
+      color: isProofValidated ? "#06d7be" : "#d7d7d7",
     },
     {
       status: "Validate blockchain registrations",
       description: "",
       icon: "pi pi-check px-2 py-2 click-icon",
-      color: isProofValidated ? "#06d7be" : "#d94c12",
+      color: isProofValidated ? "#06d7be" : "#d7d7d7",
     },
   ];
 
