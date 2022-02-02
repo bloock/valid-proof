@@ -7,7 +7,6 @@ import { Timeline } from "primereact/timeline";
 import "../customstyles.css";
 import { Card } from "primereact/card";
 import { Divider } from "primereact/divider";
-import FileSection from "./FileSection";
 
 const VerificationSection = ({
   isProofRetrieved,
@@ -17,24 +16,54 @@ const VerificationSection = ({
   documentHash,
   date,
 }) => {
+  const [firstStepColor, setFirstStepColor] = useState("#d7d7d7");
+  const [secondStepColor, setSecondStepColor] = useState("#d7d7d7");
+  const [thirdStepColor, setThirdStepColor] = useState("#d7d7d7");
+  const [successMessage, setSuccessMessage] = useState(false);
+
+  function getRandomInterval(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+
+  useEffect(() => {
+    setInterval(() => {
+      setFirstStepColor("#06d7be");
+    }, getRandomInterval(1000, 2000));
+  });
+  useEffect(() => {
+    setInterval(() => {
+      setSecondStepColor("#06d7be");
+    }, getRandomInterval(2000, 3000));
+  });
+  useEffect(() => {
+    setInterval(() => {
+      setThirdStepColor("#06d7be");
+    }, getRandomInterval(3000, 4000));
+  });
+  useEffect(() => {
+    setInterval(() => {
+      setSuccessMessage(true);
+    }, getRandomInterval(4000, 4500));
+  });
+
   const events = [
     {
       status: "Retrieve integrity proof",
       description: "",
       icon: "pi pi-check px-2 py-2 click-icon",
-      color: isProofRetrieved ? "#06d7be" : "#d7d7d7",
+      color: isProofRetrieved ? firstStepColor : "#d7d7d7",
     },
     {
       status: "Validate integrity proof",
       description: "",
       icon: "pi pi-check px-2 py-2 click-icon",
-      color: isProofValidated ? "#06d7be" : "#d7d7d7",
+      color: isProofValidated ? secondStepColor : "#d7d7d7",
     },
     {
       status: "Validate blockchain registrations",
       description: "",
       icon: "pi pi-check px-2 py-2 click-icon",
-      color: isProofValidated ? "#06d7be" : "#d7d7d7",
+      color: isProofValidated ? thirdStepColor : "#d7d7d7",
     },
   ];
 
@@ -87,7 +116,7 @@ const VerificationSection = ({
       </div>
       <div className="little-top-margin"></div>
       <div className="horizontal-center">
-        {isProofRetrieved !== null ? (
+        {successMessage ? (
           <>
             <div className="pt-4">
               <div className="d-flex flex-row justify-content-center align-items-center">
@@ -96,13 +125,9 @@ const VerificationSection = ({
               <div className="bold-text">
                 <h4 className="mx-2">Your document has been verified</h4>
               </div>
-
               <div className="pt-2">
                 <Card className="mt-4 px-4 py-2" style={{ textAlign: "left" }}>
                   <div>
-                    {/*  <span>
-                      <i className="pi pi-file"></i>
-                    </span> */}
                     <span className="mx-2 bold-text">
                       {selectedFile && selectedFile.name}
                     </span>

@@ -58,6 +58,8 @@ const FileSection = () => {
     accept: "image/*",
   });
 
+  console.log(acceptedFiles);
+
   const style = useMemo(
     () => ({
       ...baseStyle,
@@ -90,36 +92,42 @@ const FileSection = () => {
     validateJSON(formData) && setIsJSONValidated(true);
     isJSONValidated ? setIsError(false) : setIsError(true);
     formData.length < 1 && setIsError(false);
-    isJSONValidated
-      ? setCurrentRecord([Record.fromString(formData)])
-      : console.log("Please introduce a valid JSON format");
+    isJSONValidated && setCurrentRecord([Record.fromString(formData)]);
   }, [formData, isJSONValidated]);
 
-  console.log(isError);
-  console.log(isJSONValidated);
+  const convertBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
 
-  async function handleFileSubmit(e) {
-    const convertBase64 = (file) => {
-      return new Promise((resolve, reject) => {
-        const fileReader = new FileReader();
-        fileReader.readAsDataURL(file);
-        fileReader.onload = () => {
-          resolve(fileReader.result);
-        };
-        fileReader.onerror = (error) => {
-          reject(error);
-        };
-      });
-    };
+  async function handleDropSubmit(e) {
+    console.log(e.target.files[0].file);
+    console.log(convertBase64(e.target.files[0]))
 
-    const base64File = { prova: "Hola" };
-    setSelectedFile(base64File);
-    setCurrentRecord([Record.fromObject(base64File)]);
-
-    /* const base64File = await convertBase64(e.target.files[0]); 
-    setSelectedFile(base64File);
-    setCurrentRecord([Record.fromString(base64File)]);  */
   }
+  
+  async function handleFileSubmit(e) {
+    console.log(e.target.files[0]);
+
+    /*   const base64File = { prova: "Hola" };
+    setSelectedFile(base64File);
+    setCurrentRecord([Record.fromObject(base64File)]); */
+
+    const base64File = await convertBase64(e.target.files[0]);
+    console.log(base64File);
+    setCurrentRecord([Record.fromString(base64File)]);
+  }
+
+  console.log(currentRecord)
+
 
   async function validateData() {
     setIsLoading(true);
@@ -168,7 +176,7 @@ const FileSection = () => {
   const date = moment(unix_timestamp * 1000).format("DD-MM-YYYY HH:mm:ss");
   const documentHash = currentRecord && currentRecord[0].getHash();
 
-  console.log(date);
+  console.log(acceptedFiles);
 
   useEffect(() => {
     errorCatched &&
@@ -186,7 +194,7 @@ const FileSection = () => {
                 <Card className="mt-4 px-5 py-5" style={{ textAlign: "left" }}>
                   <div>
                     <span className="mx-2 bold-text">
-                      {selectedFile && selectedFile.name}
+                      {(selectedFile && selectedFile.name) || acceptedFiles}
                     </span>
                   </div>
                   <div>
@@ -228,7 +236,14 @@ const FileSection = () => {
           </div>
         </section>
       );
-  }, [errorCatched, currentRecord, formData, selectedFile, documentHash]);
+  }, [
+    errorCatched,
+    currentRecord,
+    formData,
+    selectedFile,
+    documentHash,
+    acceptedFiles,
+  ]);
 
   return (
     <div className="container-md">
@@ -279,9 +294,9 @@ const FileSection = () => {
                           <span>
                             {" "}
                             {selectedFile !== undefined
-                              ? selectedFile.name
+                              ? selectedFile && selectedFile
                               : null}{" "}
-                              {!selectedFile.name && "File"}
+                            {!selectedFile && "File"}
                           </span>
                           <span onClick={handleDeleteSelected}>
                             <svg
