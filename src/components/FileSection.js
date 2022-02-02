@@ -114,8 +114,7 @@ const FileSection = () => {
 
   async function validateData() {
     setIsLoading(true);
-    const apiKey =
-      "test_7XVZZd0O3Nc164DQRxc3MkCkbXRcEq7od4R-WDOdWppXA4rgGEmvT24-BurHkrri";
+    const apiKey = "";
     const client = new BloockClient(apiKey);
 
     //set up networks
