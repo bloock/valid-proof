@@ -58,8 +58,6 @@ const FileSection = () => {
     accept: "image/*",
   });
 
-  console.log(acceptedFiles);
-
   const style = useMemo(
     () => ({
       ...baseStyle,
@@ -108,31 +106,14 @@ const FileSection = () => {
     });
   };
 
-  async function handleDropSubmit(e) {
-    console.log(e.target.files[0].file);
-    console.log(convertBase64(e.target.files[0]))
-
-  }
-  
   async function handleFileSubmit(e) {
-    console.log(e.target.files[0]);
-
-    /*   const base64File = { prova: "Hola" };
-    setSelectedFile(base64File);
-    setCurrentRecord([Record.fromObject(base64File)]); */
-
     const base64File = await convertBase64(e.target.files[0]);
-    console.log(base64File);
     setCurrentRecord([Record.fromString(base64File)]);
   }
 
-  console.log(currentRecord)
-
-
   async function validateData() {
     setIsLoading(true);
-    const apiKey =
-      "test_7XVZZd0O3Nc164DQRxc3MkCkbXRcEq7od4R-WDOdWppXA4rgGEmvT24-BurHkrri";
+    const apiKey = "";
     const client = new BloockClient(apiKey);
 
     //set up networks
@@ -166,17 +147,23 @@ const FileSection = () => {
   }
 
   useEffect(() => {
+    async function parseDropdown() {
+      if (acceptedFiles !== []) {
+        const base64File = await convertBase64(acceptedFiles[0]);
+        setCurrentRecord([Record.fromString(base64File)]);
+      }
+    }
+    parseDropdown();
+  }, [acceptedFiles]);
+
+  useEffect(() => {
     (recordTimestamp || errorCatched) && setIsLoading(false);
   }, [recordTimestamp, errorCatched]);
 
   let unix_timestamp =
     recordProof !== null && recordProof.anchor.networks[0].created_at;
-
-  console.log(recordProof);
   const date = moment(unix_timestamp * 1000).format("DD-MM-YYYY HH:mm:ss");
   const documentHash = currentRecord && currentRecord[0].getHash();
-
-  console.log(acceptedFiles);
 
   useEffect(() => {
     errorCatched &&
@@ -194,7 +181,7 @@ const FileSection = () => {
                 <Card className="mt-4 px-5 py-5" style={{ textAlign: "left" }}>
                   <div>
                     <span className="mx-2 bold-text">
-                      {(selectedFile && selectedFile.name) || acceptedFiles}
+                      {selectedFile && selectedFile.name}
                     </span>
                   </div>
                   <div>
