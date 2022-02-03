@@ -46,14 +46,14 @@ const FileSection = () => {
   const [currentRecord, setCurrentRecord] = useState(null);
   const [recordProof, setRecordProof] = useState(null);
   const [recordTimestamp, setRecordTimestamp] = useState(null);
-
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedFile, setSelectedFile] = useState();
+  const [selectedFile, setSelectedFile] = useState(null);
   const [formData, setFormData] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [errorCatched, setErrorCatched] = useState("");
   const [isJSONValidated, setIsJSONValidated] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [isFileParsed, setIsFileParsed] = useState(false);
 
   const { isDragActive, isDragAccept, isDragReject } = useDropzone({
     accept: "image/*",
@@ -110,9 +110,27 @@ const FileSection = () => {
   };
 
   async function handleFileSubmit(e) {
-    const base64File = await convertBase64(e.target.files[0]);
-    setCurrentRecord([Record.fromObject(base64File)]);
+    setSelectedFile(e.target.files[0]);
   }
+
+  useEffect(() => {
+    async function parseFile() {
+      if (selectedFile && selectedFile !== undefined) {
+        const base64File = await convertBase64(selectedFile);
+        setCurrentRecord([Record.fromString(base64File)]);
+        setIsFileParsed(true);
+      }
+    }
+    parseFile();
+  }, [selectedFile]);
+
+  useEffect(() => {
+    if (selectedFile && isFileParsed === false) {
+      setIsLoading(true);
+    } else {
+      setIsLoading(false);
+    }
+  }, [selectedFile, isFileParsed]);
 
   async function validateData() {
     setIsLoading(true);
@@ -295,7 +313,7 @@ const FileSection = () => {
                               <span>
                                 {" "}
                                 {selectedFile !== undefined
-                                  ? selectedFile && selectedFile
+                                  ? selectedFile && selectedFile.name
                                   : null}{" "}
                                 {(!selectedFile || !acceptedFiles) && "File"}
                               </span>
