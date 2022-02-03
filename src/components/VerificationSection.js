@@ -29,22 +29,22 @@ const VerificationSection = ({
   useEffect(() => {
     setInterval(() => {
       setFirstStepColor("#06d7be");
-    }, getRandomInterval(1000, 2000));
+    }, getRandomInterval(1000, 1700));
   });
   useEffect(() => {
     setInterval(() => {
       setSecondStepColor("#06d7be");
-    }, getRandomInterval(2000, 3000));
+    }, getRandomInterval(1700, 2400));
   });
   useEffect(() => {
     setInterval(() => {
       setThirdStepColor("#06d7be");
-    }, getRandomInterval(3000, 4000));
+    }, getRandomInterval(2400, 3300));
   });
   useEffect(() => {
     setInterval(() => {
       setSuccessMessage(true);
-    }, getRandomInterval(4000, 4500));
+    }, getRandomInterval(3300, 4000));
   });
 
   const events = [

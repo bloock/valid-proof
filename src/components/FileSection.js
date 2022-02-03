@@ -50,7 +50,7 @@ const FileSection = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [formData, setFormData] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [errorCatched, setErrorCatched] = useState("");
+  const [errorCatched, setErrorCatched] = useState(null);
   const [isJSONValidated, setIsJSONValidated] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isFileParsed, setIsFileParsed] = useState(false);
@@ -73,7 +73,13 @@ const FileSection = () => {
     setCurrentRecord(null);
     setRecordProof(null);
     setRecordTimestamp(null);
+    setErrorCatched(null);
+    setSelectedFile(null);
+    setErrorMessage("");
   };
+  useEffect(() => {
+    handleDeleteSelected();
+  }, []);
 
   function validateJSON(item) {
     try {
@@ -301,7 +307,7 @@ const FileSection = () => {
         </Col>
         <Col className="mb-10" style={{ marginBottom: "30px" }}>
           <Tabs justify defaultActiveKey="text" className="mb-3 ">
-            <Tab eventKey="text" title="Text format">
+            <Tab eventKey="text" title="File format">
               <section>
                 <div className="container" {...getRootProps({ style })}>
                   <div className="vertical-center horizontal-center">
@@ -342,7 +348,7 @@ const FileSection = () => {
                               </button>
                             ) : (
                               <div>
-                                {recordTimestamp || errorMessage ? (
+                                {recordTimestamp || errorCatched ? (
                                   <button
                                     className="button"
                                     onClick={handleDeleteSelected}
