@@ -97,7 +97,9 @@ const FileSection = () => {
   const convertBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
+      if (file) {
+        fileReader.readAsDataURL(file);
+      }
       fileReader.onload = () => {
         resolve(fileReader.result);
       };
@@ -109,12 +111,13 @@ const FileSection = () => {
 
   async function handleFileSubmit(e) {
     const base64File = await convertBase64(e.target.files[0]);
-    setCurrentRecord([Record.fromString(base64File)]);
+    setCurrentRecord([Record.fromObject(base64File)]);
   }
 
   async function validateData() {
     setIsLoading(true);
-    const apiKey = "";
+    const apiKey =
+      "test_7XVZZd0O3Nc164DQRxc3MkCkbXRcEq7od4R-WDOdWppXA4rgGEmvT24-BurHkrri";
     const client = new BloockClient(apiKey);
 
     //set up networks
