@@ -42,12 +42,14 @@ const rejectStyle = {
 };
 
 const FileSection = () => {
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+  const { acceptedFiles, getRootProps, getInputProps } =
+    useDropzone();
   const [currentRecord, setCurrentRecord] = useState(null);
   const [recordProof, setRecordProof] = useState(null);
   const [recordTimestamp, setRecordTimestamp] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [droppedFile, setDroppedFile] = useState([]);
   const [formData, setFormData] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [errorCatched, setErrorCatched] = useState(null);
@@ -69,17 +71,19 @@ const FileSection = () => {
     [isDragActive, isDragReject, isDragAccept]
   );
 
-  const handleDeleteSelected = (e) => {
+  const handleDeleteSelected = () => {
     setCurrentRecord(null);
     setRecordProof(null);
     setRecordTimestamp(null);
     setErrorCatched(null);
     setSelectedFile(null);
     setErrorMessage("");
+    setFormData("");
+    setIsJSONValidated(false);
+    setDroppedFile([]);
+    acceptedFiles.length = 0;
+    acceptedFiles.splice(0, acceptedFiles.length);
   };
-  useEffect(() => {
-    handleDeleteSelected();
-  }, []);
 
   function validateJSON(item) {
     try {
@@ -94,11 +98,19 @@ const FileSection = () => {
     setFormData(e.target.value);
   }
   useEffect(() => {
-    validateJSON(formData) && setIsJSONValidated(true);
-    isJSONValidated ? setIsError(false) : setIsError(true);
-    formData.length < 1 && setIsError(false);
-    isJSONValidated && setCurrentRecord([Record.fromString(formData)]);
+    if (isJSONValidated || formData.length < 1) {
+      setIsError(false);
+    } else {
+      setIsError(true);
+    }
+    if (validateJSON(formData)) {
+      setCurrentRecord([Record.fromObject(JSON.parse(formData))]);
+    }
   }, [formData, isJSONValidated]);
+
+  useEffect(() => {
+    setIsJSONValidated(validateJSON(formData));
+  }, [formData]);
 
   const convertBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -141,18 +153,8 @@ const FileSection = () => {
   async function validateData() {
     setIsLoading(true);
     const apiKey =
-      "test_7XVZZd0O3Nc164DQRxc3MkCkbXRcEq7od4R-WDOdWppXA4rgGEmvT24-BurHkrri";
+      "7cz2yPqLtWx7EkQwCim8bd15uSkiU9SvaGXvBJDYebjVO27w5xvWTdv-82Uo75rQ";
     const client = new BloockClient(apiKey);
-
-    //set up networks
-    client.setApiHost("https://api.bloock.dev");
-
-    client.setNetworkConfiguration(Network.BLOOCK_CHAIN, {
-      CONTRACT_ADDRESS: "d2d1BBcbee7741f8C846826F55b7c17fc5cf969a",
-      CONTRACT_ABI:
-        '[{"inputs":[{"internalType":"address","name":"role_manager","type":"address"},{"internalType":"address","name":"state_manager","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"bytes32","name":"previousAdminRole","type":"bytes32"},{"indexed":true,"internalType":"bytes32","name":"newAdminRole","type":"bytes32"}],"name":"RoleAdminChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"address","name":"account","type":"address"},{"indexed":true,"internalType":"address","name":"sender","type":"address"}],"name":"RoleGranted","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"bytes32","name":"role","type":"bytes32"},{"indexed":true,"internalType":"address","name":"account","type":"address"},{"indexed":true,"internalType":"address","name":"sender","type":"address"}],"name":"RoleRevoked","type":"event"},{"inputs":[],"name":"DEFAULT_ADMIN_ROLE","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"STATE_MANAGER","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"}],"name":"getRoleAdmin","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"state_root","type":"bytes32"}],"name":"getState","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"grantRole","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"hasRole","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"state_root","type":"bytes32"}],"name":"isStatePresent","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"renounceRole","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"role","type":"bytes32"},{"internalType":"address","name":"account","type":"address"}],"name":"revokeRole","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes4","name":"interfaceId","type":"bytes4"}],"name":"supportsInterface","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"state_root","type":"bytes32"}],"name":"updateState","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32[]","name":"content","type":"bytes32[]"},{"internalType":"bytes32[]","name":"hashes","type":"bytes32[]"},{"internalType":"bytes","name":"bitmap","type":"bytes"},{"internalType":"uint32[]","name":"depths","type":"uint32[]"}],"name":"verifyInclusionProof","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}]',
-      HTTP_PROVIDER: "https://bloockchain.bloock.dev",
-    });
 
     //Get proof
     try {
@@ -160,7 +162,10 @@ const FileSection = () => {
       setRecordProof(proof);
 
       //Verify proof
-      const timestamp = await client.verifyProof(proof, Network.BLOOCK_CHAIN);
+      const timestamp = await client.verifyProof(
+        proof,
+        Network.ETHEREUM_RINKEBY
+      );
       setRecordTimestamp(timestamp);
 
       if (timestamp) {
@@ -216,8 +221,7 @@ const FileSection = () => {
                   <div className="mb-5">
                     <span className="mx-2 bold-text">
                       {(selectedFile && selectedFile.name) ||
-                        (acceptedFiles[0] !== undefined &&
-                          acceptedFiles[0].name)}
+                        (acceptedFiles.length > 0 && acceptedFiles[0].name)}
                     </span>
                   </div>
                   <div>
@@ -318,10 +322,12 @@ const FileSection = () => {
                             <div>
                               <span>
                                 {" "}
-                                {selectedFile !== undefined
-                                  ? selectedFile && selectedFile.name
+                                {selectedFile && selectedFile !== undefined
+                                  ? selectedFile.name
                                   : null}{" "}
-                                {(!selectedFile || !acceptedFiles) && "File"}
+                                {acceptedFiles && acceptedFiles.length > 0
+                                  ? acceptedFiles[0].name
+                                  : null}{" "}
                               </span>
                               <span onClick={handleDeleteSelected}>
                                 <svg
@@ -382,11 +388,10 @@ const FileSection = () => {
                               name="file"
                               id="file"
                               onChange={handleFileSubmit}
+                             
                             />
                             <label for="file">Select file</label>
                           </div>
-                          {/*   <br/> */}
-                          {/* <p>Png, jpg and pdf</p> */}
                         </div>
                       )}
                     </div>
@@ -401,6 +406,7 @@ const FileSection = () => {
                     as="textarea"
                     placeholder="Paste your JSON here"
                     rows={10}
+                    value={formData}
                     onChange={(e) => handleJSONSubmit(e)}
                   />
 
@@ -419,15 +425,27 @@ const FileSection = () => {
                       Loading...
                     </button>
                   ) : (
-                    <button
-                      className="button mt-3 validateButton"
-                      style={{ width: "30%", border: "none" }}
-                      onClick={validateData}
-                      type="submit"
-                      disabled={isJSONValidated === false}
-                    >
-                      Validate JSON
-                    </button>
+                    <div>
+                      {recordTimestamp || errorCatched ? (
+                        <button
+                          className="button mt-3"
+                          onClick={handleDeleteSelected}
+                          style={{ border: "none" }}
+                        >
+                          Validate another JSON
+                        </button>
+                      ) : (
+                        <button
+                          className="button mt-3 validateButton"
+                          style={{ border: "none" }}
+                          onClick={validateData}
+                          type="submit"
+                          disabled={isJSONValidated === false}
+                        >
+                          Validate JSON
+                        </button>
+                      )}
+                    </div>
                   )}
                 </div>
               </div>
