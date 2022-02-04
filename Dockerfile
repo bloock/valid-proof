@@ -15,5 +15,10 @@ RUN apk add --no-cache bash
 COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder ./app/build /usr/share/nginx/html
 
+COPY ./env.sh .
+COPY .env.example ./.env
+
+RUN chmod +x env.sh
+
 EXPOSE 80
-CMD ["/bin/bash", "-c", "nginx -g \"daemon off;\""]
+CMD ["/bin/bash", "-c", "/usr/share/nginx/html/env.sh && nginx -g \"daemon off;\""]
