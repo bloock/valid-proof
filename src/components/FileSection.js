@@ -42,8 +42,7 @@ const rejectStyle = {
 };
 
 const FileSection = () => {
-  const { acceptedFiles, getRootProps, getInputProps } =
-    useDropzone();
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
   const [currentRecord, setCurrentRecord] = useState(null);
   const [recordProof, setRecordProof] = useState(null);
   const [recordTimestamp, setRecordTimestamp] = useState(null);
@@ -152,8 +151,7 @@ const FileSection = () => {
 
   async function validateData() {
     setIsLoading(true);
-    const apiKey =
-      "7cz2yPqLtWx7EkQwCim8bd15uSkiU9SvaGXvBJDYebjVO27w5xvWTdv-82Uo75rQ";
+    const apiKey = window.env.BLOOCK_API_KEY;
     const client = new BloockClient(apiKey);
 
     //Get proof
@@ -388,7 +386,6 @@ const FileSection = () => {
                               name="file"
                               id="file"
                               onChange={handleFileSubmit}
-                             
                             />
                             <label for="file">Select file</label>
                           </div>

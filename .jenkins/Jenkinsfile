@@ -1,0 +1,85 @@
+pipeline {
+    agent {
+        kubernetes {
+            cloud 'kubernetes-agents'
+            label 'kube-node'
+        }
+    }
+    environment {
+        snapshot = "${env.build_id}-snapshot"
+        release = "${env.GIT_BRANCH}-release"
+        feature = "${env.GIT_BRANCH}"
+    }
+    stages {
+        stage('Build docker image development') {
+            when {
+               branch 'master' 
+            }
+            steps {
+                container('dind') {
+                    withCredentials([
+                        usernamePassword(credentialsId: 'dockerRegistry', passwordVariable: 'DOCKPASS', usernameVariable: 'DOCKUSER'),
+                    ]) {
+                        sh 'echo "$DOCKPASS" | docker login enchainteregistry.azurecr.io --username $DOCKUSER --password-stdin'
+                        sh 'docker build -t enchainteregistry.azurecr.io/enchainte/valid-proof:latest-snapshot -t enchainteregistry.azurecr.io/enchainte/valid-proof:$snapshot .'
+                        sh 'docker image push enchainteregistry.azurecr.io/enchainte/valid-proof:latest-snapshot'
+                        sh 'docker image push enchainteregistry.azurecr.io/enchainte/valid-proof:$snapshot'
+                    }
+                }
+            }
+        }
+
+        stage('Build docker image production') {
+            when {
+               tag '*' 
+            }
+            steps {
+                container('dind') {
+                    withCredentials([
+                        usernamePassword(credentialsId: 'dockerRegistry', passwordVariable: 'DOCKPASS', usernameVariable: 'DOCKUSER'),
+                    ]) {
+                        sh 'echo "$DOCKPASS" | docker login enchainteregistry.azurecr.io --username $DOCKUSER --password-stdin'
+                        sh 'docker build -t enchainteregistry.azurecr.io/enchainte/valid-proof:latest -t enchainteregistry.azurecr.io/enchainte/valid-proof:$release .'
+                        sh 'docker image push enchainteregistry.azurecr.io/enchainte/valid-proof:latest'
+                        sh 'docker image push enchainteregistry.azurecr.io/enchainte/valid-proof:$release'
+                    }
+                }
+            }
+        }
+
+        stage('Build docker image feature') {
+            when {
+               branch 'feature/*' 
+            }
+            steps {
+                container('dind') {
+                    withCredentials([
+                        usernamePassword(credentialsId: 'dockerRegistry', passwordVariable: 'DOCKPASS', usernameVariable: 'DOCKUSER'),
+                    ]) {
+                        sh 'echo "$DOCKPASS" | docker login enchainteregistry.azurecr.io --username $DOCKUSER --password-stdin'
+                        sh 'docker build -t enchainteregistry.azurecr.io/enchainte/valid-proof:$(echo $feature | tr "/" "-") .'
+                        sh 'docker image push enchainteregistry.azurecr.io/enchainte/valid-proof:$(echo $feature | tr "/" "-")'
+                    }
+                }
+            }
+        }
+
+        stage('Deploy development') {
+            when {
+               branch 'master' 
+            }
+            steps {
+                build(job: 'valid-proof.deploy.web.development', parameters: [string(name: 'DOCKER_VERSION', value: snapshot)])
+            }
+        }
+
+        stage('Deploy production') {
+            when {
+               tag '*' 
+            }
+            steps {
+                build(job: 'valid-proof.deploy.web.production', parameters: [string(name: 'DOCKER_VERSION', value: release)])
+            }
+        }
+    }
+}
