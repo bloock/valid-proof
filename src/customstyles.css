@@ -188,7 +188,6 @@ textarea {
   }
 }
 
-
 @media (min-width: 970px) {
   .verification-section {
     width: 70%;
@@ -205,8 +204,4 @@ textarea {
   opacity: 50%;
 
   cursor: no-drop;
-}
-
-.p-card {
-  box-shadow: 3px solid black !important ;
 }
