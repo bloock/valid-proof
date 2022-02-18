@@ -206,3 +206,7 @@ textarea {
 
   cursor: no-drop;
 }
+
+.p-card {
+  box-shadow: 3px solid black !important ;
+}

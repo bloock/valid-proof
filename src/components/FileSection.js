@@ -157,14 +157,22 @@ const FileSection = () => {
     //Get proof
     try {
       const proof = await client.getProof(currentRecord);
-      setRecordProof(proof);
+      if (proof !== null) {
+        setRecordProof(proof);
+      } else {
+        setRecordProof(false);
+      }
 
       //Verify proof
       const timestamp = await client.verifyProof(
         proof,
         Network.ETHEREUM_RINKEBY
       );
-      setRecordTimestamp(timestamp);
+      if (timestamp !== null) {
+        setRecordTimestamp(timestamp);
+      } else {
+        setRecordTimestamp(false);
+      }
 
       if (timestamp) {
         console.log(`Record is valid - Timestamp: ${timestamp}`);
@@ -195,80 +203,6 @@ const FileSection = () => {
     recordProof !== null && recordProof.anchor.networks[0].created_at;
   const date = moment(unix_timestamp * 1000).format("DD-MM-YYYY HH:mm:ss");
   const documentHash = currentRecord && currentRecord[0].getHash();
-
-  useEffect(() => {
-    errorCatched &&
-      setErrorMessage(
-        <section className="container-md pt-6 verification-section">
-          <div className="pt-1 horizontal-center">
-            <div>
-              {currentRecord ? (
-                <div>
-                  <div className="d-flex flex-row justify-content-center align-items-center">
-                    <p className="px-2 fs-2">Oops!</p>
-                  </div>
-                  <div className="bold-text">
-                    <h4 className="mx-2">Your document couldn't be verified</h4>
-                  </div>
-                </div>
-              ) : null}
-            </div>
-            {currentRecord ? (
-              <div className="pt-2">
-                <Card className="mt-4 px-5 py-5" style={{ textAlign: "left" }}>
-                  <div className="mb-5">
-                    <span className="mx-2 bold-text">
-                      {(selectedFile && selectedFile.name) ||
-                        (acceptedFiles.length > 0 && acceptedFiles[0].name)}
-                    </span>
-                  </div>
-                  <div>
-                    <span>
-                      This document is not known to us. It is possible that it
-                      was modified unintentionally.
-                    </span>
-                    <p>
-                      Potential error sources:
-                      <ul>
-                        <li>
-                          - The issuer distributed the wrong version of the
-                          document.
-                        </li>
-                        <li>
-                          - The document owner sent you the wrong version of the
-                          document.
-                        </li>
-                        <li>
-                          - The file was unintentionally altered: by printing it
-                          as a PDF by saving it with a PDF writer that ignored
-                          the protection by printing and scanning it.
-                        </li>
-                      </ul>
-                    </p>
-                    <span>
-                      If you have any questions, please contact the issuer of
-                      the document directly or get in touch with our support.
-                    </span>
-                  </div>
-                  <Divider className="my-4" />
-                  <div className="bold-text">Document hash</div>
-                  <div className="" style={{ overflowWrap: "break-word" }}>
-                    {documentHash && documentHash}
-                  </div>
-                </Card>
-              </div>
-            ) : null}
-          </div>
-        </section>
-      );
-  }, [
-    errorCatched,
-    currentRecord,
-    formData,
-    selectedFile,
-    documentHash,
-    acceptedFiles,
-  ]);
 
   return (
     <div className="container-md">
@@ -451,7 +385,7 @@ const FileSection = () => {
         </Col>
       </Row>
 
-      {recordProof !== null ? (
+      {recordProof !== null || errorCatched ? (
         <div>
           <VerificationSection
             selectedFile={selectedFile}
