@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
@@ -7,6 +7,10 @@ import { Timeline } from "primereact/timeline";
 import "../customstyles.css";
 import { Card } from "primereact/card";
 import { Divider } from "primereact/divider";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import moment from "moment";
+import { Button } from 'primereact/button';
 
 const VerificationSection = ({
   isProofRetrieved,
@@ -15,12 +19,13 @@ const VerificationSection = ({
   selectedFile,
   documentHash,
   date,
-  acceptedFiles
+  acceptedFiles,
 }) => {
   const [firstStepColor, setFirstStepColor] = useState("#d7d7d7");
   const [secondStepColor, setSecondStepColor] = useState("#d7d7d7");
   const [thirdStepColor, setThirdStepColor] = useState("#d7d7d7");
   const [successMessage, setSuccessMessage] = useState(false);
+  const [expandedRows, setExpandedRows] = useState(null);
 
   function getRandomInterval(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -101,6 +106,45 @@ const VerificationSection = ({
     }
   };
 
+  const handleEtherscanRedirect = () => {
+    return (
+      window.open("https://etherscan.io/"))
+  }
+  const searchBodyTemplate = () => {
+    return <Button icon="p-button-icon p-c pi pi-external-link" onClick={handleEtherscanRedirect}/>
+}
+
+  console.log(isProofRetrieved)
+  const tableNetworksData = isProofRetrieved.anchor.networks.map((network) => {
+    const dates = moment(network.created_at * 1000).format(
+      "DD-MM-YYYY HH:mm:ss"
+    );
+    return {
+      created_at: dates,
+      name: (
+        <div>
+          {network.name === "ethereum_rinkeby"
+            ? (network.name = "Ethereum Rinkeby")
+            : network.name}
+        </div>
+      ),
+      state: network.state,
+      tx_hash: network.tx_hash,
+    };
+  });
+
+  const rowExpansionTemplate = (data) => {
+    return (
+      <div className="orders-subtable">
+        <h6 className="py-2 pt-3">Network details</h6>
+        <DataTable value={tableNetworksData} responsiveLayout="scroll">
+          <Column field="tx_hash" header="Tx hash" style={{width:'90%'}}></Column>
+          <Column  style={{width:'10%'}} body={searchBodyTemplate}></Column>
+        </DataTable>
+      </div>
+    );
+  };
+
   return (
     <div className="container-md mt-5 verification-section">
       <div className=" horizontal-center timeline-margins mb-5 stepper">
@@ -127,8 +171,8 @@ const VerificationSection = ({
                 <h4 className="mx-2">Your document has been verified</h4>
               </div>
               <div className="pt-2">
-                <Card className="mt-4 px-4 py-2" style={{ textAlign: "left" }}>
-                <div className="mb-5">
+                <Card className="mt-5 px-4 py-2" style={{ textAlign: "left" }}>
+                  <div className="mb-5">
                     <span className="mx-2 bold-text">
                       {(selectedFile && selectedFile.name) ||
                         (acceptedFiles[0] !== undefined &&
@@ -139,19 +183,30 @@ const VerificationSection = ({
                   <div className="" style={{ overflowWrap: "break-word" }}>
                     {documentHash && documentHash}
                   </div>
-                  <Divider className="my-4 pb-2" />
-                  <div className="bold-text mt-4">Blockchain:</div>
 
-                  <div>{isProofRetrieved.anchor.networks[0].name}</div>
                   <Divider className="my-4 pb-2" />
-                  <div className="bold-text">Tx hash</div>
-                  <div className="" style={{ overflowWrap: "break-word" }}>
-                    {isProofRetrieved.anchor.networks[0].tx_hash}
+
+                  <div className="bold-text">Anchor</div>
+                  <div>{isProofRetrieved.anchor.anchor_id}</div>
+
+                  <Divider className="my-4 pb-2" />
+
+                  <div className="bold-text">Networks</div>
+                  <div className="card my-3">
+                    <DataTable
+                      value={tableNetworksData}
+                      responsiveLayout="scroll"
+                      expandedRows={expandedRows}
+                      onRowToggle={(e) => setExpandedRows(e.data)}
+                      rowExpansionTemplate={rowExpansionTemplate}
+                      dataKey="id"
+                    >
+                      <Column expander style={{ width: "3em" }} />
+                      <Column field="name" header="Name"></Column>
+                      <Column field="state" header="State" ></Column>
+                      <Column field="created_at" header="Timestamp" ></Column>
+                    </DataTable>
                   </div>
-                  <Divider className="my-4 pb-2" />
-
-                  <div className="bold-text mt-4">Issue time</div>
-                  <div>{date && date}</div>
                   <Divider className="my-4 pb-2" />
                   <div className="bold-text">Issuer</div>
                   <div>BLOOCK</div>

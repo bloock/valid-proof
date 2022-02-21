@@ -151,13 +151,18 @@ const FileSection = () => {
 
   async function validateData() {
     setIsLoading(true);
-    const apiKey = window.env.BLOOCK_API_KEY;
+    /*     const apiKey = window.env.BLOOCK_API_KEY;
+     */
+
+    const apiKey =
+      "7cz2yPqLtWx7EkQwCim8bd15uSkiU9SvaGXvBJDYebjVO27w5xvWTdv-82Uo75rQ";
     const client = new BloockClient(apiKey);
 
     //Get proof
     try {
       const proof = await client.getProof(currentRecord);
       setRecordProof(proof);
+      console.log(proof)
 
       //Verify proof
       const timestamp = await client.verifyProof(
