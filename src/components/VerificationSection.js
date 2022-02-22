@@ -15,56 +15,98 @@ const VerificationSection = ({
   selectedFile,
   documentHash,
   date,
-  acceptedFiles
+  acceptedFiles,
 }) => {
   const [firstStepColor, setFirstStepColor] = useState("#d7d7d7");
   const [secondStepColor, setSecondStepColor] = useState("#d7d7d7");
   const [thirdStepColor, setThirdStepColor] = useState("#d7d7d7");
-  const [successMessage, setSuccessMessage] = useState(false);
+  const [isErrorMessage, setIsErrorMessage] = useState(false);
+  const [isSuccessMessage, setIsSuccessMessage] = useState(false);
 
   function getRandomInterval(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
   useEffect(() => {
-    setInterval(() => {
-      setFirstStepColor("#06d7be");
-    }, getRandomInterval(1000, 1700));
-  });
+    if (isProofRetrieved) {
+      setInterval(() => {
+        setFirstStepColor("#06d7be");
+      }, getRandomInterval(1000, 1700));
+    } else {
+      setInterval(() => {
+        setFirstStepColor("#F55845");
+      }, getRandomInterval(1000, 1700));
+    }
+  }, [isProofRetrieved]);
+
+  useEffect(() => {
+    if (isProofRetrieved !== null) {
+      setInterval(() => {
+        setSecondStepColor("#06d7be");
+      }, getRandomInterval(1700, 2400));
+    } else if (isProofRetrieved === false && firstStepColor === "#F55845") {
+      setSecondStepColor("#d7d7d7");
+    }
+  }, [isProofRetrieved, firstStepColor]);
+
+  useEffect(() => {
+    if (isProofValidated !== false && isProofRetrieved) {
+      setInterval(() => {
+        setThirdStepColor("#06d7be");
+      }, getRandomInterval(2400, 3000));
+    } else if (isProofRetrieved && isProofValidated === null) {
+      setInterval(() => {
+        setThirdStepColor("#F55845");
+      }, getRandomInterval(2400, 3000));
+    } else if (
+      !isProofRetrieved &&
+      isProofValidated === null &&
+      secondStepColor === "#d7d7d7"
+    ) {
+      setThirdStepColor("#d7d7d7");
+    }
+  }, [isProofValidated, isProofRetrieved, secondStepColor]);
+
   useEffect(() => {
     setInterval(() => {
-      setSecondStepColor("#06d7be");
-    }, getRandomInterval(1700, 2400));
-  });
-  useEffect(() => {
-    setInterval(() => {
-      setThirdStepColor("#06d7be");
-    }, getRandomInterval(2400, 3300));
-  });
-  useEffect(() => {
-    setInterval(() => {
-      setSuccessMessage(true);
+      if (isProofValidated && isProofRetrieved) {
+        setIsSuccessMessage(true);
+      } else if (
+        !isProofRetrieved ||
+        (isProofRetrieved && isProofValidated === null)
+      ) {
+        setIsErrorMessage(true);
+      }
     }, getRandomInterval(3300, 4000));
-  });
+  }, [isProofValidated, isProofRetrieved]);
 
   const events = [
     {
       status: "Retrieve integrity proof",
       description: "",
-      icon: "pi pi-check px-2 py-2 click-icon",
-      color: isProofRetrieved ? firstStepColor : "#d7d7d7",
+      icon:
+        firstStepColor === "#d7d7d7" || firstStepColor === "#06d7be"
+          ? "pi pi-check px-2 py-2 click-icon"
+          : "pi pi-times px-2 py-2 click-icon",
+      color: firstStepColor,
     },
     {
       status: "Validate integrity proof",
       description: "",
-      icon: "pi pi-check px-2 py-2 click-icon",
-      color: isProofValidated ? secondStepColor : "#d7d7d7",
+      icon:
+        secondStepColor === "#d7d7d7" || secondStepColor === "#06d7be"
+          ? "pi pi-check px-2 py-2 click-icon"
+          : "pi pi-times px-2 py-2 click-icon",
+      color: secondStepColor,
     },
     {
       status: "Validate blockchain registrations",
       description: "",
-      icon: "pi pi-check px-2 py-2 click-icon",
-      color: isProofValidated ? thirdStepColor : "#d7d7d7",
+      icon:
+        thirdStepColor === "#d7d7d7" || thirdStepColor === "#06d7be"
+          ? "pi pi-check px-2 py-2 click-icon"
+          : "pi pi-times px-2 py-2 click-icon",
+      color: thirdStepColor,
     },
   ];
 
@@ -117,9 +159,9 @@ const VerificationSection = ({
       </div>
       <div className="little-top-margin"></div>
       <div className="horizontal-center">
-        {successMessage ? (
+        {isSuccessMessage ? (
           <>
-            <div className="pt-4">
+            <div className="pt-5">
               <div className="d-flex flex-row justify-content-center align-items-center">
                 <p className="px-2 fs-2">Done!</p>
               </div>
@@ -128,7 +170,7 @@ const VerificationSection = ({
               </div>
               <div className="pt-2">
                 <Card className="mt-4 px-4 py-2" style={{ textAlign: "left" }}>
-                <div className="mb-5">
+                  <div className="mb-5">
                     <span className="mx-2 bold-text">
                       {(selectedFile && selectedFile.name) ||
                         (acceptedFiles[0] !== undefined &&
@@ -159,6 +201,66 @@ const VerificationSection = ({
               </div>
             </div>
           </>
+        ) : null}
+        {isErrorMessage ? (
+          <section className="container-md pt-5 verification-section">
+            <div className="pt-1 horizontal-center">
+              <div>
+                <div>
+                  <div className="d-flex flex-row justify-content-center align-items-center">
+                    <p className="px-2 fs-2">Oops!</p>
+                  </div>
+                  <div className="bold-text">
+                    <h4 className="mx-2">Your document couldn't be verified</h4>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <Card className="mt-4 px-5 py-5" style={{ textAlign: "left" }}>
+                  <div className="mb-5">
+                    <span className="mx-2 bold-text">
+                      {(selectedFile && selectedFile.name) ||
+                        (acceptedFiles.length > 0 && acceptedFiles[0].name)}
+                    </span>
+                  </div>
+                  <div>
+                    <span>
+                      This document is not known to us. It is possible that it
+                      was modified unintentionally.
+                    </span>
+                    <p>
+                      Potential error sources:
+                      <ul>
+                        <li>
+                          - The issuer distributed the wrong version of the
+                          document.
+                        </li>
+                        <li>
+                          - The document owner sent you the wrong version of the
+                          document.
+                        </li>
+                        <li>
+                          - The file was unintentionally altered: by printing it
+                          as a PDF by saving it with a PDF writer that ignored
+                          the protection by printing and scanning it.
+                        </li>
+                      </ul>
+                    </p>
+                    <span>
+                      If you have any questions, please contact the issuer of
+                      the document directly or get in touch with our support.
+                    </span>
+                  </div>
+                  <Divider className="my-4" />
+                  <div className="bold-text">Document hash</div>
+                  <div className="" style={{ overflowWrap: "break-word" }}>
+                    {documentHash && documentHash}
+                  </div>
+                </Card>
+              </div>
+            </div>
+          </section>
         ) : null}
       </div>
     </div>
