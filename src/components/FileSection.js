@@ -162,7 +162,7 @@ const FileSection = () => {
     try {
       const proof = await client.getProof(currentRecord);
       setRecordProof(proof);
-      console.log(proof)
+      console.log(proof);
 
       //Verify proof
       const timestamp = await client.verifyProof(
@@ -222,6 +222,14 @@ const FileSection = () => {
               <div className="pt-2">
                 <Card className="mt-4 px-5 py-5" style={{ textAlign: "left" }}>
                   <div className="mb-5">
+                    <i
+                      className=" pi pi-copy px-1 py-1 click-icon "
+                      style={{
+                        color: "#495057",
+                        fontSize: "1.3rem",
+                        fontWeight: "100",
+                      }}
+                    ></i>
                     <span className="mx-2 bold-text">
                       {(selectedFile && selectedFile.name) ||
                         (acceptedFiles.length > 0 && acceptedFiles[0].name)}

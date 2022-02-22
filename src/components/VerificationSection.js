@@ -10,7 +10,7 @@ import { Divider } from "primereact/divider";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import moment from "moment";
-import { Button } from 'primereact/button';
+import { Button } from "primereact/button";
 
 const VerificationSection = ({
   isProofRetrieved,
@@ -107,14 +107,18 @@ const VerificationSection = ({
   };
 
   const handleEtherscanRedirect = () => {
-    return (
-      window.open("https://etherscan.io/"))
-  }
+    return window.open("https://etherscan.io/");
+  };
   const searchBodyTemplate = () => {
-    return <Button icon="p-button-icon p-c pi pi-external-link" onClick={handleEtherscanRedirect}/>
-}
+    return (
+      <Button
+        icon="p-button-icon p-c pi pi-external-link"
+        onClick={handleEtherscanRedirect}
+      />
+    );
+  };
 
-  console.log(isProofRetrieved)
+  console.log(isProofRetrieved);
   const tableNetworksData = isProofRetrieved.anchor.networks.map((network) => {
     const dates = moment(network.created_at * 1000).format(
       "DD-MM-YYYY HH:mm:ss"
@@ -138,8 +142,12 @@ const VerificationSection = ({
       <div className="orders-subtable">
         <h6 className="py-2 pt-3">Network details</h6>
         <DataTable value={tableNetworksData} responsiveLayout="scroll">
-          <Column field="tx_hash" header="Tx hash" style={{width:'90%'}}></Column>
-          <Column  style={{width:'10%'}} body={searchBodyTemplate}></Column>
+          <Column
+            field="tx_hash"
+            header="Tx hash"
+            style={{ width: "90%" }}
+          ></Column>
+          <Column style={{ width: "10%" }} body={searchBodyTemplate}></Column>
         </DataTable>
       </div>
     );
@@ -171,8 +179,19 @@ const VerificationSection = ({
                 <h4 className="mx-2">Your document has been verified</h4>
               </div>
               <div className="pt-2">
-                <Card className="mt-5 px-4 py-2" style={{ textAlign: "left" }}>
+                <Card
+                  className="mt-5 px-5 py-4 border-0"
+                  style={{ textAlign: "left" }}
+                >
                   <div className="mb-5">
+                    <i
+                      className=" pi pi-copy px-1 py-1 click-icon "
+                      style={{
+                        color: "#495057",
+                        fontSize: "1.3rem",
+                        fontWeight: "100",
+                      }}
+                    ></i>
                     <span className="mx-2 bold-text">
                       {(selectedFile && selectedFile.name) ||
                         (acceptedFiles[0] !== undefined &&
@@ -203,8 +222,8 @@ const VerificationSection = ({
                     >
                       <Column expander style={{ width: "3em" }} />
                       <Column field="name" header="Name"></Column>
-                      <Column field="state" header="State" ></Column>
-                      <Column field="created_at" header="Timestamp" ></Column>
+                      <Column field="state" header="State"></Column>
+                      <Column field="created_at" header="Timestamp"></Column>
                     </DataTable>
                   </div>
                   <Divider className="my-4 pb-2" />

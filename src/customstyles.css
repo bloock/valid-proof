@@ -238,3 +238,7 @@ textarea {
 .p-button:hover {
   color:#06d7be!important;
 }
+
+.p-card {
+  box-shadow:2px 3px 10px 2px #eeeeee;;
+}
