@@ -162,7 +162,6 @@ const FileSection = () => {
     try {
       const proof = await client.getProof(currentRecord);
       setRecordProof(proof);
-      console.log(proof);
 
       //Verify proof
       const timestamp = await client.verifyProof(

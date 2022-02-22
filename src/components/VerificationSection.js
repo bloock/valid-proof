@@ -118,7 +118,6 @@ const VerificationSection = ({
     );
   };
 
-  console.log(isProofRetrieved);
   const tableNetworksData = isProofRetrieved.anchor.networks.map((network) => {
     const dates = moment(network.created_at * 1000).format(
       "DD-MM-YYYY HH:mm:ss"
