@@ -209,11 +209,12 @@ const FileSection = () => {
       <Row className="flex-column flex-lg-row align-items-center pt-8">
         <Col style={{ paddingRight: "50px", marginBottom: "30px" }}>
           <h1 className="bold-text title">
-            Easy validation of blockchain data records
+            Validate your records on blockchain
           </h1>
           <h3 className="mt-4">
-            Open source protocol to validate in seconds if your data has been
-            recorded in blockchain.{" "}
+            Open source website to obtain a mathematical evidence proving
+            irrefutably the time a record was emitted and its provenance and
+            integrity.{" "}
           </h3>
           <ul className="mt-4">
             <li className="mt-2">
@@ -221,7 +222,7 @@ const FileSection = () => {
                 className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
                 style={{ marginRight: "10px", backgroundColor: "#06D7BE" }}
               ></i>
-              <p>Simple and easy to use</p>
+              <p>Get a simple summary of the evidence details</p>
             </li>
             <li className="mt-3">
               <i
@@ -229,7 +230,7 @@ const FileSection = () => {
                 style={{ marginRight: "10px", backgroundColor: "#06D7BE" }}
               ></i>
 
-              <p>Inmediate results in just seconds</p>
+              <p>Verify independently your records on blockchain</p>
             </li>
             <li className="mt-3">
               <i
@@ -237,7 +238,7 @@ const FileSection = () => {
                 style={{ marginRight: "10px", backgroundColor: "#06D7BE" }}
               ></i>
 
-              <p>Completely transparent and open source</p>
+              <p>Completely transparent and opensource</p>
             </li>
           </ul>
         </Col>

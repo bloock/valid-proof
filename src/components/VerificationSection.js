@@ -100,7 +100,7 @@ const VerificationSection = ({
       color: secondStepColor,
     },
     {
-      status: "Validate blockchain registrations",
+      status: "Validate existence in blockchain",
       description: "",
       icon:
         thirdStepColor === "#d7d7d7" || thirdStepColor === "#06d7be"
@@ -166,7 +166,7 @@ const VerificationSection = ({
                 <p className="px-2 fs-2">Done!</p>
               </div>
               <div className="bold-text">
-                <h4 className="mx-2">Your document has been verified</h4>
+                <h4 className="mx-2">Your record has been verified</h4>
               </div>
               <div className="pt-2">
                 <Card className="mt-4 px-4 py-2" style={{ textAlign: "left" }}>
@@ -211,7 +211,7 @@ const VerificationSection = ({
                     <p className="px-2 fs-2">Oops!</p>
                   </div>
                   <div className="bold-text">
-                    <h4 className="mx-2">Your document couldn't be verified</h4>
+                    <h4 className="mx-2">Your record couldn't be verified</h4>
                   </div>
                 </div>
               </div>
@@ -226,30 +226,26 @@ const VerificationSection = ({
                   </div>
                   <div>
                     <span>
-                      This document is not known to us. It is possible that it
-                      was modified unintentionally.
+                      There’s no proof of existence for this record. It might
+                      have been modified unintentionally.
                     </span>
                     <p>
                       Potential error sources:
                       <ul>
                         <li>
-                          - The issuer distributed the wrong version of the
-                          document.
+                          - The issuer provided an altered version of the
+                          record.
                         </li>
                         <li>
-                          - The document owner sent you the wrong version of the
-                          document.
+                          - The record was altered by a malicious third party
+                          during transmission.
                         </li>
-                        <li>
-                          - The file was unintentionally altered: by printing it
-                          as a PDF by saving it with a PDF writer that ignored
-                          the protection by printing and scanning it.
-                        </li>
+                        <li>- The record was unintentionally altered.</li>
                       </ul>
                     </p>
                     <span>
                       If you have any questions, please contact the issuer of
-                      the document directly or get in touch with our support.
+                      the records directly or get in touch with our support.
                     </span>
                   </div>
                   <Divider className="my-4" />
