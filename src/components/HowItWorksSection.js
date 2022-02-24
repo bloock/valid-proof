@@ -12,7 +12,7 @@ import "../customstyles.css";
 const HowItWorksSection = () => {
   return (
     <div className="bg-light">
-      <div className="container-md pt-10 ">
+      <div className="container-md px-4 pt-10 ">
         <h2 className="bold-text title mb-5 text-center pt-6">How it works</h2>
         <Row className="pt-2">
           <Col

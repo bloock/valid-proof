@@ -151,7 +151,7 @@ const FileSection = () => {
 
   async function validateData() {
     setIsLoading(true);
-    const apiKey = window.env.BLOOCK_API_KEY;
+    const apiKey = window.env.API_KEY;
     const client = new BloockClient(apiKey);
 
     //Get proof
@@ -205,9 +205,9 @@ const FileSection = () => {
   const documentHash = currentRecord && currentRecord[0].getHash();
 
   return (
-    <div className="container-md">
+    <div className="container-md px-4">
       <Row className="flex-column flex-lg-row align-items-center pt-8">
-        <Col style={{ paddingRight: "50px", marginBottom: "30px" }}>
+        <Col style={{ paddingRight: "50px", paddingTop: "10px"}}>
           <h1 className="bold-text title">
             Validate your records on blockchain
           </h1>
@@ -242,7 +242,10 @@ const FileSection = () => {
             </li>
           </ul>
         </Col>
-        <Col className="mb-10" style={{ marginBottom: "30px" }}>
+        <Col
+          className="mb-10"
+          style={{  height: "400px" ,  paddingTop: "10px"}}
+        >
           <Tabs justify defaultActiveKey="text" className="mb-3 ">
             <Tab eventKey="text" title="File format">
               <section>
@@ -342,16 +345,6 @@ const FileSection = () => {
                     onChange={(e) => handleJSONSubmit(e)}
                   />
 
-                  {isError ? (
-                    <div>
-                      <br />
-                      <p>
-                        {" "}
-                        Please introduce a valid JSON for the validation{" "}
-                      </p>{" "}
-                    </div>
-                  ) : null}
-
                   {isLoading ? (
                     <button className="button" style={{ border: "none" }}>
                       Loading...
@@ -367,15 +360,25 @@ const FileSection = () => {
                           Validate another JSON
                         </button>
                       ) : (
-                        <button
-                          className="button mt-3 validateButton"
-                          style={{ border: "none" }}
-                          onClick={validateData}
-                          type="submit"
-                          disabled={isJSONValidated === false}
-                        >
-                          Validate JSON
-                        </button>
+                        <div className="mt-2 text-center" style={{ height: "100px" }}>
+                          <div className={`${isError ? "visible" : "invisible"}`}>
+                          
+                            <p>
+                              {" "}
+                              Please introduce a valid JSON for the validation{" "}
+                            </p>{" "}
+                          </div>
+
+                          <button
+                            className="button mt-2 validateButton"
+                            style={{ border: "none" }}
+                            onClick={validateData}
+                            type="submit"
+                            disabled={isJSONValidated === false}
+                          >
+                            Validate JSON
+                          </button>
+                        </div>
                       )}
                     </div>
                   )}

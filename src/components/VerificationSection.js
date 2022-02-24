@@ -7,6 +7,7 @@ import { Timeline } from "primereact/timeline";
 import "../customstyles.css";
 import { Card } from "primereact/card";
 import { Divider } from "primereact/divider";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 const VerificationSection = ({
   isProofRetrieved,
@@ -144,8 +145,8 @@ const VerificationSection = ({
   };
 
   return (
-    <div className="container-md mt-5 verification-section">
-      <div className=" horizontal-center timeline-margins mb-5 stepper">
+    <div className="container-md px-4 mt-5 verification-section" >
+      <div className=" horizontal-center timeline-margins mb-5 stepper" style={{paddingTop: "30px", paddingBottom:"70px"}}>
         <div className="bold-text header-title mb-4 mt-4">
           Your verification:
         </div>
@@ -161,7 +162,7 @@ const VerificationSection = ({
       <div className="horizontal-center">
         {isSuccessMessage ? (
           <>
-            <div className="pt-5">
+            <div>
               <div className="d-flex flex-row justify-content-center align-items-center">
                 <p className="px-2 fs-2">Done!</p>
               </div>
@@ -178,7 +179,7 @@ const VerificationSection = ({
                     </span>
                   </div>
                   <div className="bold-text">Document hash</div>
-                  <div className="" style={{ overflowWrap: "break-word" }}>
+                  <div style={{ overflowWrap: "break-word" }}>
                     {documentHash && documentHash}
                   </div>
                   <Divider className="my-4 pb-2" />
@@ -187,7 +188,7 @@ const VerificationSection = ({
                   <div>{isProofRetrieved.anchor.networks[0].name}</div>
                   <Divider className="my-4 pb-2" />
                   <div className="bold-text">Tx hash</div>
-                  <div className="" style={{ overflowWrap: "break-word" }}>
+                  <div  style={{ overflowWrap: "break-word" }}>
                     {isProofRetrieved.anchor.networks[0].tx_hash}
                   </div>
                   <Divider className="my-4 pb-2" />
@@ -201,9 +202,15 @@ const VerificationSection = ({
               </div>
             </div>
           </>
-        ) : null}
+        ) : (
+          <div className="progressSpinner" style={{paddingBottom:"40px"}}>
+            <ProgressSpinner style={{color: "#06d7be"}} />
+            <p className="text-secondary">Your record is being verified...</p>
+            <div className="mt-5">{""}</div>
+          </div>
+        )}
         {isErrorMessage ? (
-          <section className="container-md pt-5 verification-section">
+          <section className="container-md verification-section">
             <div className="pt-1 horizontal-center">
               <div>
                 <div>
@@ -217,7 +224,10 @@ const VerificationSection = ({
               </div>
 
               <div className="pt-2">
-                <Card className="mt-4 px-5 py-5" style={{ textAlign: "left" }}>
+                <Card
+                  className="mt-3 mb-5 px-5 py-5"
+                  style={{ textAlign: "left" }}
+                >
                   <div className="mb-5">
                     <span className="mx-2 bold-text">
                       {(selectedFile && selectedFile.name) ||

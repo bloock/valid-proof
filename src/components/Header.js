@@ -11,7 +11,7 @@ const Header = () => {
   return (
     <Fragment >
     <div className="fixed-top bg-white">
-      <div className="container-md  py-2 pt-4 d-flex align-items-center justify-content-between">
+      <div className="container-md px-4 py-2 pt-4 d-flex align-items-center justify-content-between">
         <img alt="Card" src={logo} />
 
         {/* <span className="float-right">
