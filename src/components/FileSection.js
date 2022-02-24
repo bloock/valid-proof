@@ -129,9 +129,6 @@ const FileSection = () => {
     setSelectedFile(e.target.files[0]);
   }
 
-  console.log(formData);
-  console.log(selectedFile);
-  console.log(currentRecord);
   useEffect(() => {
     async function parseFile() {
       if (selectedFile && selectedFile !== undefined) {
