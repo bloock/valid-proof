@@ -128,7 +128,7 @@ const VerificationSection = ({
         <i className={item.icon}></i>
       </span>
     );
-  }
+  };
 
   const customizedContent = (item) => {
     if (item.status === events[events.length - 1].status) {
@@ -150,12 +150,11 @@ const VerificationSection = ({
         </div>
       );
     }
-  }
+  };
 
   const handleEtherscanRedirect = () => {
     return window.open("https://etherscan.io/");
-  }
-
+  };
 
   const tableNetworksData = isProofRetrieved?.anchor.networks.map((network) => {
     const dates = moment(network.created_at * 1000).format(
@@ -173,7 +172,7 @@ const VerificationSection = ({
       state: network.state,
       tx_hash: network.tx_hash,
     };
-  })
+  });
 
   const rowExpansionTemplate = (data) => {
     return (
@@ -188,7 +187,7 @@ const VerificationSection = ({
         </div>
       </div>
     );
-  }
+  };
 
   return (
     <div className="container-md mt-5 verification-section">
@@ -220,14 +219,29 @@ const VerificationSection = ({
                   className="mt-5 px-5 py-4 border-0"
                   style={{ textAlign: "left" }}
                 >
-                  <div className="mb-5">
+                  <div className={(selectedFile && selectedFile.name) ||
+                        acceptedFiles[0] !== undefined
+                          ? "mb-5" : "mb-0"}>
                     <i
                       className=" pi pi-file px-1 py-1 click-icon "
-                      style={{
-                        color: "#495057",
-                        fontSize: "1.3rem",
-                        fontWeight: "100",
-                      }}
+                      style={
+                        (selectedFile && selectedFile.name) ||
+                        acceptedFiles[0] !== undefined
+                          ? {
+                              display: "inline",
+                              color: "#495057",
+                              fontSize: "1.3rem",
+                              fontWeight: "100",
+                              position: "block",
+                            }
+                          : {
+                              display: "none",
+                              color: "#495057",
+                              fontSize: "1.3rem",
+                              fontWeight: "100",
+                              position: "block",
+                            }
+                      }
                     ></i>
                     <span className="mx-2 bold-text">
                       {(selectedFile && selectedFile.name) ||
@@ -287,18 +301,34 @@ const VerificationSection = ({
 
               <div className="pt-2">
                 <Card className="mt-4 px-5 py-5" style={{ textAlign: "left" }}>
-                  <div className="mb-5">
+                <div className={(selectedFile && selectedFile.name) ||
+                        acceptedFiles[0] !== undefined
+                          ? "mb-5" : "mb-0"}>
                     <i
                       className=" pi pi-file px-1 py-1 click-icon "
-                      style={{
-                        color: "#495057",
-                        fontSize: "1.3rem",
-                        fontWeight: "100",
-                      }}
+                      style={
+                        (selectedFile && selectedFile.name) ||
+                        acceptedFiles[0] !== undefined
+                          ? {
+                              display: "inline",
+                              color: "#495057",
+                              fontSize: "1.3rem",
+                              fontWeight: "100",
+                              position: "block",
+                            }
+                          : {
+                              display: "none",
+                              color: "#495057",
+                              fontSize: "1.3rem",
+                              fontWeight: "100",
+                              position: "block",
+                            }
+                      }
                     ></i>
                     <span className="mx-2 bold-text">
                       {(selectedFile && selectedFile.name) ||
-                        (acceptedFiles.length > 0 && acceptedFiles[0].name)}
+                        (acceptedFiles[0] !== undefined &&
+                          acceptedFiles[0].name)}
                     </span>
                   </div>
                   <div>

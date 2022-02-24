@@ -3,7 +3,7 @@ import { BloockClient, Network, Record } from "@bloock/sdk";
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
-import { Row, Col} from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
@@ -125,11 +125,13 @@ const FileSection = () => {
     });
   };
 
-  
   async function handleFileSubmit(e) {
     setSelectedFile(e.target.files[0]);
   }
-  
+
+  console.log(formData);
+  console.log(selectedFile);
+  console.log(currentRecord);
   useEffect(() => {
     async function parseFile() {
       if (selectedFile && selectedFile !== undefined) {
@@ -398,9 +400,7 @@ const FileSection = () => {
             errorCatched={errorCatched}
           />
         </div>
-      ) : (
-        null
-      )}
+      ) : null}
     </div>
   );
 };
