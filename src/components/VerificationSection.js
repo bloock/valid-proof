@@ -152,10 +152,6 @@ const VerificationSection = ({
     }
   };
 
-  const handleEtherscanRedirect = () => {
-    return window.open("https://etherscan.io/");
-  };
-
   const tableNetworksData = isProofRetrieved?.anchor.networks.map((network) => {
     const dates = moment(network.created_at * 1000).format(
       "DD-MM-YYYY HH:mm:ss"
@@ -174,15 +170,39 @@ const VerificationSection = ({
     };
   });
 
-  const rowExpansionTemplate = (data) => {
+  const rowExpansionTemplate = (network) => {
     return (
       <div className="orders-subtable">
         <p className="bold-text pt-3">Tx Hash</p>
-        <div className="d-flex justify-content-between align-items-center ">
-          <p>{data.tx_hash}</p>
+        <div className="d-flex justify-content-between align-items-center text-break">
+          <div style={{width:"90%"}}>
+            {network.tx_hash && network.tx_hash}
+          </div>
+
           <Button
             icon="p-button-icon p-c pi pi-external-link"
-            onClick={handleEtherscanRedirect}
+            onClick={() => {
+              if (network.name.props.children === "Ethereum Rinkeby") {
+                return (
+                  window.open(
+                    `https://rinkeby.etherscan.io/tx/${network.tx_hash}`
+                  ),
+                  "_blank"
+                );
+              } else if (network.name.props.children === "Ethereum Ropsten") {
+                return (
+                  window.open(
+                    `https://ropsten.etherscan.io/tx/${network.tx_hash}`
+                  ),
+                  "_blank"
+                );
+              } else if (network.name.props.children === "Ethereum Mainnet") {
+                return (
+                  window.open(`https://etherscan.io/tx/${network.tx_hash}`),
+                  "_blank"
+                );
+              }
+            }}
           />
         </div>
       </div>
@@ -219,9 +239,14 @@ const VerificationSection = ({
                   className="mt-5 px-5 py-4 border-0"
                   style={{ textAlign: "left" }}
                 >
-                  <div className={(selectedFile && selectedFile.name) ||
-                        acceptedFiles[0] !== undefined
-                          ? "mb-5" : "mb-0"}>
+                  <div
+                    className={
+                      (selectedFile && selectedFile.name) ||
+                      acceptedFiles[0] !== undefined
+                        ? "mb-5"
+                        : "mb-0"
+                    }
+                  >
                     <i
                       className=" pi pi-file px-1 py-1 click-icon "
                       style={
@@ -250,7 +275,7 @@ const VerificationSection = ({
                     </span>
                   </div>
                   <div className="bold-text">Document hash</div>
-                  <div className="" style={{ overflowWrap: "break-word" }}>
+                  <div style={{ overflowWrap: "break-word" }}>
                     {documentHash && documentHash}
                   </div>
 
@@ -301,9 +326,14 @@ const VerificationSection = ({
 
               <div className="pt-2">
                 <Card className="mt-4 px-5 py-5" style={{ textAlign: "left" }}>
-                <div className={(selectedFile && selectedFile.name) ||
-                        acceptedFiles[0] !== undefined
-                          ? "mb-5" : "mb-0"}>
+                  <div
+                    className={
+                      (selectedFile && selectedFile.name) ||
+                      acceptedFiles[0] !== undefined
+                        ? "mb-5"
+                        : "mb-0"
+                    }
+                  >
                     <i
                       className=" pi pi-file px-1 py-1 click-icon "
                       style={
