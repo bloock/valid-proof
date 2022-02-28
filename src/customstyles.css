@@ -218,3 +218,40 @@ textarea {
   stroke: #06d7be !important;
   animation: p-progress-spinner-dash 1.5s ease-in-out infinite;
 }
+.p-datatable .p-datatable-tbody > tr > td .p-row-toggler:focus,
+.p-datatable .p-datatable-tbody > tr > td .p-row-editor-init:focus,
+.p-datatable .p-datatable-tbody > tr > td .p-row-editor-save:focus,
+.p-datatable .p-datatable-tbody > tr > td .p-row-editor-cancel:focus {
+  box-shadow: none;
+}
+
+.p-datatable .p-datatable-tbody > tr > td .p-row-toggler:enabled:hover,
+.p-datatable .p-datatable-tbody > tr > td .p-row-editor-init:enabled:hover,
+.p-datatable .p-datatable-tbody > tr > td .p-row-editor-save:enabled:hover,
+.p-datatable .p-datatable-tbody > tr > td .p-row-editor-cancel:enabled:hover {
+  color: #06d7be;
+  background-color: transparent!important;
+}
+
+.p-datatable .p-datatable-tbody > tr > td .p-row-toggler,
+.p-datatable .p-datatable-tbody > tr > td .p-row-editor-init,
+.p-datatable .p-datatable-tbody > tr > td .p-row-editor-save,
+.p-datatable .p-datatable-tbody > tr > td .p-row-editor-cancel {
+  color: #2b2b2b;
+}
+
+.p-button,
+.p-button:hover {
+  background: transparent !important;
+  color: #2b2b2b !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.p-button:hover {
+  color:#06d7be!important;
+}
+
+.p-card {
+  box-shadow:2px 3px 10px 2px #eeeeee;;
+}

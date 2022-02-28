@@ -3,7 +3,7 @@ import { BloockClient, Network, Record } from "@bloock/sdk";
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
-import { Row, Col, Card } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
@@ -11,7 +11,6 @@ import Form from "react-bootstrap/Form";
 import "../customstyles.css";
 import { useDropzone } from "react-dropzone";
 import VerificationSection from "./VerificationSection";
-import { Divider } from "primereact/divider";
 import moment from "moment";
 
 const baseStyle = {
@@ -44,6 +43,7 @@ const rejectStyle = {
 const FileSection = () => {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
   const [currentRecord, setCurrentRecord] = useState(null);
+  const [currentJSONRecord, setCurrentJSONRecord] = useState(null);
   const [recordProof, setRecordProof] = useState(null);
   const [recordTimestamp, setRecordTimestamp] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -72,6 +72,7 @@ const FileSection = () => {
 
   const handleDeleteSelected = () => {
     setCurrentRecord(null);
+    setCurrentJSONRecord(null);
     setRecordProof(null);
     setRecordTimestamp(null);
     setErrorCatched(null);
@@ -93,9 +94,29 @@ const FileSection = () => {
     return true;
   }
 
+  const handleJSONChange = (e) => {
+    if (
+      e.target.value !== "" ||
+      currentJSONRecord ||
+      (currentJSONRecord && recordTimestamp)
+    ) {
+      setSelectedFile(null);
+      setCurrentRecord(null);
+      setRecordProof(null);
+      setRecordTimestamp(null);
+      setErrorCatched(null);
+      setSelectedFile(null);
+      setErrorMessage("");
+      setDroppedFile([]);
+      acceptedFiles.length = 0;
+      acceptedFiles.splice(0, acceptedFiles.length);
+    }
+  };
+
   async function handleJSONSubmit(e) {
     setFormData(e.target.value);
   }
+
   useEffect(() => {
     if (isJSONValidated || formData.length < 1) {
       setIsError(false);
@@ -103,7 +124,7 @@ const FileSection = () => {
       setIsError(true);
     }
     if (validateJSON(formData)) {
-      setCurrentRecord([Record.fromObject(JSON.parse(formData))]);
+      setCurrentJSONRecord([Record.fromObject(JSON.parse(formData))]);
     }
   }, [formData, isJSONValidated]);
 
@@ -124,6 +145,17 @@ const FileSection = () => {
         reject(error);
       };
     });
+  };
+
+  const handleFileChange = (e) => {
+    if (
+      e.target.files !== null ||
+      currentRecord ||
+      (currentRecord && recordTimestamp)
+    ) {
+      setFormData("");
+      setCurrentJSONRecord(null);
+    }
   };
 
   async function handleFileSubmit(e) {
@@ -156,7 +188,9 @@ const FileSection = () => {
 
     //Get proof
     try {
-      const proof = await client.getProof(currentRecord);
+      const proof = currentRecord
+        ? await client.getProof(currentRecord)
+        : await client.getProof(currentJSONRecord);
       if (proof !== null) {
         setRecordProof(proof);
       } else {
@@ -202,7 +236,9 @@ const FileSection = () => {
   let unix_timestamp =
     recordProof !== null && recordProof.anchor.networks[0].created_at;
   const date = moment(unix_timestamp * 1000).format("DD-MM-YYYY HH:mm:ss");
-  const documentHash = currentRecord && currentRecord[0].getHash();
+  const documentHash =
+    (currentRecord && currentRecord[0].getHash()) ||
+    (currentJSONRecord && currentJSONRecord[0].getHash());
 
   return (
     <div className="container-md px-4">
@@ -242,12 +278,13 @@ const FileSection = () => {
             </li>
           </ul>
         </Col>
-        <Col
-          className="mb-10"
-          style={{  height: "400px" ,  paddingTop: "10px"}}
-        >
-          <Tabs justify defaultActiveKey="text" className="mb-3 ">
-            <Tab eventKey="text" title="File format">
+        <Col className="mb-10" style={{ marginBottom: "30px" }}>
+          <Tabs justify defaultActiveKey="text" className="mb-3">
+            <Tab
+              eventKey="text"
+              title="File format"
+              onChange={(e) => handleFileChange(e)}
+            >
               <section>
                 <div className="container" {...getRootProps({ style })}>
                   <div className="vertical-center horizontal-center">
@@ -290,7 +327,8 @@ const FileSection = () => {
                               </button>
                             ) : (
                               <div>
-                                {recordTimestamp || errorCatched ? (
+                                {(currentRecord && recordTimestamp) ||
+                                (currentRecord && errorCatched) ? (
                                   <button
                                     className="button"
                                     onClick={handleDeleteSelected}
@@ -324,6 +362,7 @@ const FileSection = () => {
                               name="file"
                               id="file"
                               onChange={handleFileSubmit}
+                              onClick={handleDeleteSelected}
                             />
                             <label for="file">Select file</label>
                           </div>
@@ -334,12 +373,16 @@ const FileSection = () => {
                 </div>
               </section>
             </Tab>
-            <Tab eventKey="json" title="JSON format">
+            <Tab
+              eventKey="json"
+              title="JSON format"
+              onChange={(e) => handleJSONChange(e)}
+            >
               <div>
                 <div className="mb-3 d-flex flex-column align-items-center">
                   <Form.Control
                     as="textarea"
-                    placeholder="Paste your JSON here"
+                    placeholder={"Paste your JSON here"}
                     rows={10}
                     value={formData}
                     onChange={(e) => handleJSONSubmit(e)}
@@ -351,7 +394,8 @@ const FileSection = () => {
                     </button>
                   ) : (
                     <div>
-                      {recordTimestamp || errorCatched ? (
+                      {(currentJSONRecord && recordTimestamp) ||
+                      (currentJSONRecord && errorCatched) ? (
                         <button
                           className="button mt-3"
                           onClick={handleDeleteSelected}
@@ -399,11 +443,10 @@ const FileSection = () => {
             isProofRetrieved={recordProof}
             isProofValidated={recordTimestamp}
             acceptedFiles={acceptedFiles}
+            errorCatched={errorCatched}
           />
         </div>
-      ) : (
-        <div> {errorMessage} </div>
-      )}
+      ) : null}
     </div>
   );
 };
