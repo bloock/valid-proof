@@ -8,7 +8,7 @@ pipeline {
     environment {
         snapshot = "${env.build_id}-snapshot"
         release = "${env.GIT_BRANCH}-release"
-        feature = "${env.GIT_BRANCH}"
+        feature = "${env.GIT_BRANCH}-${env.build_id}"
     }
     stages {
         stage('Build docker image development') {
