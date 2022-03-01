@@ -238,7 +238,7 @@ const VerificationSection = ({
               <div className="bold-text">
                 <h4 className="mx-2">Your record has been verified</h4>
               </div>
-              <div className="pt-2">
+              <div className="pt-2 mb-5">
                 <Card
                   className="mt-5 px-5 py-4 border-0"
                   style={{ textAlign: "left" }}
@@ -313,13 +313,7 @@ const VerificationSection = ({
               </div>
             </div>
           </>
-        ) : (
-          <div className="progressSpinner" style={{ paddingBottom: "40px" }}>
-            <ProgressSpinner style={{ color: "#06d7be" }} />
-            <p className="text-secondary">Your record is being verified...</p>
-            <div className="mt-5">{""}</div>
-          </div>
-        )}
+        ) : null}
         {isErrorMessage ? (
           <section className="container-md verification-section">
             <div className="pt-1 horizontal-center">
@@ -343,7 +337,7 @@ const VerificationSection = ({
                 </div>
               </div>
 
-              <div className="pt-2">
+              <div className="pt-2 mb-5">
                 <Card className="mt-4 px-5 py-4" style={{ textAlign: "left" }}>
                   <div
                     className={
@@ -435,6 +429,13 @@ const VerificationSection = ({
               </div>
             </div>
           </section>
+        ) : null}
+        { !isSuccessMessage && !isErrorMessage ? (
+          <div className="progressSpinner" style={{ paddingBottom: "40px" }}>
+            <ProgressSpinner style={{ color: "#06d7be" }} />
+            <p className="text-secondary">Your record is being verified...</p>
+            <div className="mt-5">{""}</div>
+          </div>
         ) : null}
       </div>
     </div>
