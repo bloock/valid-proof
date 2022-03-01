@@ -7,6 +7,7 @@ import { Timeline } from "primereact/timeline";
 import "../customstyles.css";
 import { Card } from "primereact/card";
 import { Divider } from "primereact/divider";
+import { ProgressSpinner } from "primereact/progressspinner";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import moment from "moment";
@@ -109,7 +110,7 @@ const VerificationSection = ({
       color: secondStepColor,
     },
     {
-      status: "Validate blockchain registrations",
+      status: "Validate existence in blockchain",
       description: "",
       icon:
         thirdStepColor === "#d7d7d7" || thirdStepColor === "#06d7be"
@@ -175,7 +176,7 @@ const VerificationSection = ({
       <div className="orders-subtable">
         <p className="bold-text pt-3">Tx Hash</p>
         <div className="d-flex justify-content-between align-items-center text-break">
-          <div style={{width:"90%"}}>
+          <div style={{ width: "90%" }}>
             {network.tx_hash && network.tx_hash}
           </div>
 
@@ -210,8 +211,11 @@ const VerificationSection = ({
   };
 
   return (
-    <div className="container-md mt-5 verification-section">
-      <div className=" horizontal-center timeline-margins mb-5 stepper">
+    <div className="container-md px-4 mt-5 verification-section">
+      <div
+        className=" horizontal-center timeline-margins mb-5 stepper"
+        style={{ paddingTop: "30px", paddingBottom: "70px" }}
+      >
         <div className="bold-text header-title mb-4 mt-4">
           Your verification:
         </div>
@@ -227,12 +231,12 @@ const VerificationSection = ({
       <div className="horizontal-center">
         {isSuccessMessage ? (
           <>
-            <div className="pt-5">
+            <div>
               <div className="d-flex flex-row justify-content-center align-items-center">
                 <p className="px-2 fs-2">Done!</p>
               </div>
               <div className="bold-text">
-                <h4 className="mx-2">Your document has been verified</h4>
+                <h4 className="mx-2">Your record has been verified</h4>
               </div>
               <div className="pt-2">
                 <Card
@@ -309,28 +313,43 @@ const VerificationSection = ({
               </div>
             </div>
           </>
-        ) : null}
+        ) : (
+          <div className="progressSpinner" style={{ paddingBottom: "40px" }}>
+            <ProgressSpinner style={{ color: "#06d7be" }} />
+            <p className="text-secondary">Your record is being verified...</p>
+            <div className="mt-5">{""}</div>
+          </div>
+        )}
         {isErrorMessage ? (
-          <section className="container-md pt-5 verification-section">
+          <section className="container-md verification-section">
             <div className="pt-1 horizontal-center">
               <div>
                 <div>
                   <div className="d-flex flex-row justify-content-center align-items-center">
                     <p className="px-2 fs-2">Oops!</p>
                   </div>
-                  <div className="bold-text">
-                    <h4 className="mx-2">Your document couldn't be verified</h4>
-                  </div>
+                  {!isProofRetrieved ? (
+                    <div className="bold-text">
+                      <h4 className="mx-2">Your record couldn't be verified</h4>
+                    </div>
+                  ) : (
+                    <div className="bold-text">
+                      <h4 className="mx-2">
+                        The digest of the retrieved proof couldn't be found in
+                        any blockchain protocol.
+                      </h4>
+                    </div>
+                  )}
                 </div>
               </div>
 
               <div className="pt-2">
-                <Card className="mt-4 px-5 py-5" style={{ textAlign: "left" }}>
+                <Card className="mt-4 px-5 py-4" style={{ textAlign: "left" }}>
                   <div
                     className={
                       (selectedFile && selectedFile.name) ||
                       acceptedFiles[0] !== undefined
-                        ? "mb-5"
+                        ? "mb-4"
                         : "mb-0"
                     }
                   >
@@ -361,34 +380,52 @@ const VerificationSection = ({
                           acceptedFiles[0].name)}
                     </span>
                   </div>
-                  <div>
-                    <span>
-                      This document is not known to us. It is possible that it
-                      was modified unintentionally.
-                    </span>
-                    <p>
-                      Potential error sources:
-                      <ul>
-                        <li>
-                          - The issuer distributed the wrong version of the
-                          document.
-                        </li>
-                        <li>
-                          - The document owner sent you the wrong version of the
-                          document.
-                        </li>
-                        <li>
-                          - The file was unintentionally altered: by printing it
-                          as a PDF by saving it with a PDF writer that ignored
-                          the protection by printing and scanning it.
-                        </li>
-                      </ul>
-                    </p>
-                    <span>
-                      If you have any questions, please contact the issuer of
-                      the document directly or get in touch with our support.
-                    </span>
-                  </div>
+
+                  {!isProofRetrieved ? (
+                    <div>
+                      <p className="pb-3">
+                        There’s no proof of existence for this record. It might
+                        have been modified unintentionally.
+                      </p>
+                      <p>
+                        Potential error sources:
+                        <ul>
+                          <li>
+                            - The issuer provided an altered version of the
+                            record.
+                          </li>
+                          <li>
+                            - The record was altered by a malicious third party
+                            during transmission.
+                          </li>
+                          <li>- The record was unintentionally altered.</li>
+                        </ul>
+                      </p>
+                      <p>
+                        If you have any questions, please contact the issuer of
+                        the records directly or get in touch with our support.
+                      </p>
+                    </div>
+                  ) : (
+                    <div>
+                      <p>
+                        Potential error sources:
+                        <ul>
+                          <li>
+                            - You were provided a fraudulent proof by the
+                            issuer.
+                          </li>
+                          <li>
+                            - Your record is still pending to be transacted into
+                            a blockchain protocol by the issuer.
+                          </li>
+                        </ul>
+                      </p>
+                      <p>
+                        Please try loading your record again in a few minutes.
+                      </p>
+                    </div>
+                  )}
                   <Divider className="my-4" />
                   <div className="bold-text">Document hash</div>
                   <div className="" style={{ overflowWrap: "break-word" }}>

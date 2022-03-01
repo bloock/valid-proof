@@ -181,12 +181,12 @@ const FileSection = () => {
     }
   }, [selectedFile, isFileParsed]);
 
+
   async function validateData() {
     setIsLoading(true);
     const apiKey = window.env.API_KEY;
     const client = new BloockClient(apiKey);
 
-    //Get proof
     try {
       const proof = currentRecord
         ? await client.getProof(currentRecord)
@@ -197,7 +197,6 @@ const FileSection = () => {
         setRecordProof(false);
       }
 
-      //Verify proof
       const timestamp = await client.verifyProof(
         proof,
         Network.ETHEREUM_RINKEBY
@@ -241,15 +240,16 @@ const FileSection = () => {
     (currentJSONRecord && currentJSONRecord[0].getHash());
 
   return (
-    <div className="container-md">
+    <div className="container-md px-4">
       <Row className="flex-column flex-lg-row align-items-center pt-8">
-        <Col style={{ paddingRight: "50px", marginBottom: "30px" }}>
+        <Col style={{ paddingRight: "50px", paddingTop: "10px" }}>
           <h1 className="bold-text title">
-            Easy validation of blockchain data records
+            Validate your records on blockchain
           </h1>
           <h3 className="mt-4">
-            Open source protocol to validate in seconds if your data has been
-            recorded in blockchain.{" "}
+            Open source website to obtain a mathematical evidence proving
+            irrefutably the time a record was emitted and its provenance and
+            integrity.{" "}
           </h3>
           <ul className="mt-4">
             <li className="mt-2">
@@ -257,7 +257,7 @@ const FileSection = () => {
                 className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
                 style={{ marginRight: "10px", backgroundColor: "#06D7BE" }}
               ></i>
-              <p>Simple and easy to use</p>
+              <p>Get a simple summary of the evidence details</p>
             </li>
             <li className="mt-3">
               <i
@@ -265,7 +265,7 @@ const FileSection = () => {
                 style={{ marginRight: "10px", backgroundColor: "#06D7BE" }}
               ></i>
 
-              <p>Inmediate results in just seconds</p>
+              <p>Verify independently your records on blockchain</p>
             </li>
             <li className="mt-3">
               <i
@@ -273,7 +273,7 @@ const FileSection = () => {
                 style={{ marginRight: "10px", backgroundColor: "#06D7BE" }}
               ></i>
 
-              <p>Completely transparent and open source</p>
+              <p>Completely transparent and opensource</p>
             </li>
           </ul>
         </Col>
@@ -387,16 +387,6 @@ const FileSection = () => {
                     onChange={(e) => handleJSONSubmit(e)}
                   />
 
-                  {isError ? (
-                    <div>
-                      <br />
-                      <p>
-                        {" "}
-                        Please introduce a valid JSON for the validation{" "}
-                      </p>{" "}
-                    </div>
-                  ) : null}
-
                   {isLoading ? (
                     <button className="button" style={{ border: "none" }}>
                       Loading...
@@ -413,15 +403,29 @@ const FileSection = () => {
                           Validate another JSON
                         </button>
                       ) : (
-                        <button
-                          className="button mt-3 validateButton"
-                          style={{ border: "none" }}
-                          onClick={validateData}
-                          type="submit"
-                          disabled={isJSONValidated === false}
+                        <div
+                          className="mt-2 text-center"
+                          style={{ height: "100px" }}
                         >
-                          Validate JSON
-                        </button>
+                          <div
+                            className={`${isError ? "visible" : "invisible"}`}
+                          >
+                            <p>
+                              {" "}
+                              Please introduce a valid JSON for the validation{" "}
+                            </p>{" "}
+                          </div>
+
+                          <button
+                            className="button mt-2 validateButton"
+                            style={{ border: "none" }}
+                            onClick={validateData}
+                            type="submit"
+                            disabled={isJSONValidated === false}
+                          >
+                            Validate JSON
+                          </button>
+                        </div>
                       )}
                     </div>
                   )}

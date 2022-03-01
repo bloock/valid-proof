@@ -12,16 +12,16 @@ import "../customstyles.css";
 const HowItWorksSection = () => {
   return (
     <div className="bg-light">
-      <div className="container-md pt-10 ">
+      <div className="container-md px-4 pt-10 ">
         <h2 className="bold-text title mb-5 text-center pt-6">How it works</h2>
         <Row className="pt-2">
           <Col
             className="text-center text-lg-start text-break"
             style={{ width: "45%" }}
           >
-            <h4 className="bold-text">Select your proof type</h4>
+            <h4 className="bold-text">Select the type of record to provide</h4>
             <div className="mb-4">
-              Select if you want text format or if you have the data in JSON.
+              Select if your data is in document format or in JSON format.
             </div>
             <img
               alt="Card"
@@ -31,10 +31,10 @@ const HowItWorksSection = () => {
             />
           </Col>
           <Col className="text-center text-lg-start text-break">
-            <h4 className="bold-text">Load your proof</h4>
+            <h4 className="bold-text">Load your record</h4>
             <div className="mb-4">
-              Select from your system the proof to load and the system will
-              automatically check its validation.
+              Select from your system or write down the record you want to
+              validate.
             </div>
             <img
               alt="Card"
@@ -46,7 +46,8 @@ const HowItWorksSection = () => {
           <Col className="text-center text-lg-start text-break">
             <h4 className="bold-text">Get your results</h4>
             <div className="mb-4">
-              Obtain the validation status of your proof identification.
+              Obtain a summarised mathematical evidence proving the authenticity
+              and integrity of your record.
             </div>
             <img
               alt="Card"

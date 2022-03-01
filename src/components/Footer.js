@@ -9,11 +9,8 @@ const Footer = () => {
   return (
     <footer className="bg-light">
       <Divider className="my-0 py-2" />
-      <div className="container-md py-5 header-text d-flex justify-content-between">
+      <div className="container-md px-4 py-5 header-text d-flex justify-content-between">
         <span>Powered by BLOOCK</span>
-       {/*  <span>
-          Privacy policy
-        </span> */}
       </div>
     </footer>
   );
