@@ -181,12 +181,12 @@ const FileSection = () => {
     }
   }, [selectedFile, isFileParsed]);
 
+
   async function validateData() {
     setIsLoading(true);
     const apiKey = window.env.API_KEY;
     const client = new BloockClient(apiKey);
 
-    //Get proof
     try {
       const proof = currentRecord
         ? await client.getProof(currentRecord)
@@ -197,7 +197,6 @@ const FileSection = () => {
         setRecordProof(false);
       }
 
-      //Verify proof
       const timestamp = await client.verifyProof(
         proof,
         Network.ETHEREUM_RINKEBY
@@ -243,7 +242,7 @@ const FileSection = () => {
   return (
     <div className="container-md px-4">
       <Row className="flex-column flex-lg-row align-items-center pt-8">
-        <Col style={{ paddingRight: "50px", paddingTop: "10px"}}>
+        <Col style={{ paddingRight: "50px", paddingTop: "10px" }}>
           <h1 className="bold-text title">
             Validate your records on blockchain
           </h1>
@@ -404,9 +403,13 @@ const FileSection = () => {
                           Validate another JSON
                         </button>
                       ) : (
-                        <div className="mt-2 text-center" style={{ height: "100px" }}>
-                          <div className={`${isError ? "visible" : "invisible"}`}>
-                          
+                        <div
+                          className="mt-2 text-center"
+                          style={{ height: "100px" }}
+                        >
+                          <div
+                            className={`${isError ? "visible" : "invisible"}`}
+                          >
                             <p>
                               {" "}
                               Please introduce a valid JSON for the validation{" "}

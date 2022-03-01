@@ -11,9 +11,6 @@ const Footer = () => {
       <Divider className="my-0 py-2" />
       <div className="container-md px-4 py-5 header-text d-flex justify-content-between">
         <span>Powered by BLOOCK</span>
-       {/*  <span>
-          Privacy policy
-        </span> */}
       </div>
     </footer>
   );

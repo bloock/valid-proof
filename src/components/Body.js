@@ -7,9 +7,7 @@ import FileSection from "./FileSection";
 import HowItWorksSection from "./HowItWorksSection";
 import "../customstyles.css";
 
-
 const Body = () => {
-
   return (
     <Fragment>
       <div className="top-margin"></div>
