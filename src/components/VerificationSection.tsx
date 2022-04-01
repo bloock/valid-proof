@@ -1,126 +1,175 @@
-import React, { useEffect, useState } from "react";
-import "primereact/resources/themes/saga-blue/theme.css";
-import "primereact/resources/primereact.min.css";
-import "primeicons/primeicons.css";
+import { BloockClient, Network, Proof, Record } from "@bloock/sdk";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Timeline } from "primereact/timeline";
-import "../customstyles.css";
+import moment from "moment";
+import "primeicons/primeicons.css";
+import { Button } from "primereact/button";
 import { Card } from "primereact/card";
+import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
 import { Divider } from "primereact/divider";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
-import moment from "moment";
-import { Button } from "primereact/button";
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/saga-blue/theme.css";
+import { Timeline } from "primereact/timeline";
+import React, { useEffect, useState } from "react";
+import "../styles.css";
 
-const VerificationSection = ({
-  isProofRetrieved,
-  isProofValidated,
-  selectedFile,
-  documentHash,
-  acceptedFiles,
-  errorCatched,
+type VerificationSectionProps = {
+  record: Record;
+  fileName: string | null;
+};
+
+const apiKey = (window as any).env.API_KEY;
+const client = new BloockClient(apiKey);
+
+const VerificationSection: React.FC<VerificationSectionProps> = ({
+  record,
+  fileName,
 }) => {
-  const [firstStepColor, setFirstStepColor] = useState("#d7d7d7");
-  const [secondStepColor, setSecondStepColor] = useState("#d7d7d7");
-  const [thirdStepColor, setThirdStepColor] = useState("#d7d7d7");
-  const [expandedRows, setExpandedRows] = useState(null);
-  const [isErrorMessage, setIsErrorMessage] = useState(false);
-  const [isSuccessMessage, setIsSuccessMessage] = useState(false);
+  const [expandedRows, setExpandedRows] = useState<any>(null);
 
-  function getRandomInterval(min, max) {
+  const [recordProof, setRecordProof] = useState<Proof | null>(null);
+  const [recordProofVerified, setRecordProofVerified] = useState<
+    boolean | null
+  >(null);
+  const [recordTimestamp, setRecordTimestamp] = useState<number | null>(null);
+  const [errorStep, setErrorStep] = useState<number | null>(null);
+
+  function getRandomInterval(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
   useEffect(() => {
-    setInterval(() => {
-      if (isProofRetrieved) {
-        setFirstStepColor("#06d7be");
-      } else {
-        setFirstStepColor("#F55845");
-      }
-    }, getRandomInterval(1000, 1700));
-  }, [isProofRetrieved]);
+    setErrorStep(null);
+    setRecordProof(null);
+    setRecordProofVerified(null);
+    setRecordTimestamp(null);
+  }, [record]);
 
   useEffect(() => {
-    setInterval(() => {
-      if (isProofRetrieved) {
-        setSecondStepColor("#06d7be");
-      } else if (isProofRetrieved === false && firstStepColor === "#F55845") {
-        setSecondStepColor("#d7d7d7");
+    const getProof = async () => {
+      if (record) {
+        try {
+          const proof = await client.getProof([record]);
+          if (proof != null) {
+            setRecordProof(proof);
+          } else {
+            setErrorStep(0);
+          }
+        } catch (e) {
+          setErrorStep(0);
+        }
       }
-    }, getRandomInterval(1700, 2400));
-  }, [isProofRetrieved, firstStepColor]);
+    };
+
+    setTimeout(() => getProof(), getRandomInterval(2000, 3000));
+  }, [record]);
 
   useEffect(() => {
-    setInterval(() => {
-      if (
-        isProofValidated !== null &&
-        isProofRetrieved !== null &&
-        errorCatched === null
-      ) {
-        setThirdStepColor("#06d7be");
-      } else if (isProofRetrieved && errorCatched !== null) {
-        setThirdStepColor("#F55845");
-      } else if (
-        isProofRetrieved === null &&
-        isProofValidated === false &&
-        secondStepColor === "#d7d7d7"
-      ) {
-        setThirdStepColor("#d7d7d7");
+    const validateRecordProof = async () => {
+      if (recordProof != null) {
+        setRecordProofVerified(true);
       }
-    }, getRandomInterval(2400, 3000));
-  }, [isProofValidated, isProofRetrieved, secondStepColor, errorCatched]);
+    };
+
+    setTimeout(() => {
+      validateRecordProof();
+    }, getRandomInterval(1000, 2000));
+  }, [recordProof]);
 
   useEffect(() => {
-    setInterval(() => {
-      if (
-        isProofRetrieved &&
-        isProofValidated !== null &&
-        errorCatched === null
-      ) {
-        setIsSuccessMessage(true);
-      } else if (
-        errorCatched !== null ||
-        isProofRetrieved === null ||
-        (isProofRetrieved && isProofValidated === false)
-      ) {
-        setIsErrorMessage(true);
+    const getRecordTimestamp = async () => {
+      if (recordProof != null) {
+        try {
+          let recordNetwork = (recordProof as any).anchor.networks[0];
+          let network = Network.ETHEREUM_MAINNET;
+          switch (recordNetwork.name) {
+            case "ethereum_mainnet":
+              network = Network.ETHEREUM_MAINNET;
+              break;
+            case "ethereum_rinkeby":
+              network = Network.ETHEREUM_RINKEBY;
+              break;
+            case "bloock_chain":
+              network = Network.BLOOCK_CHAIN;
+              break;
+          }
+
+          const timestamp = await client.verifyProof(recordProof, network);
+          if (timestamp > 0) {
+            setRecordTimestamp(timestamp);
+          } else {
+            setErrorStep(2);
+          }
+        } catch (e) {
+          setErrorStep(2);
+        }
       }
-    }, getRandomInterval(3300, 4000));
-  }, [isProofValidated, isProofRetrieved, errorCatched]);
+    };
+
+    setTimeout(() => {
+      getRecordTimestamp();
+    }, getRandomInterval(1000, 2000));
+  }, [recordProofVerified]);
+
+  const colors = {
+    success: "#06d7be",
+    error: "#F55845",
+    idle: "#d7d7d7",
+  };
 
   const events = [
     {
       status: "Retrieve integrity proof",
       description: "",
       icon:
-        firstStepColor === "#d7d7d7" || firstStepColor === "#06d7be"
+        errorStep === 0
+          ? "pi pi-times px-2 py-2 click-icon"
+          : recordTimestamp == null
           ? "pi pi-check px-2 py-2 click-icon"
-          : "pi pi-times px-2 py-2 click-icon",
-      color: firstStepColor,
+          : "pi pi-check px-2 py-2 click-icon",
+      color:
+        errorStep === 0
+          ? colors.error
+          : recordProof == null
+          ? colors.idle
+          : colors.success,
     },
     {
       status: "Validate integrity proof",
       description: "",
       icon:
-        secondStepColor === "#d7d7d7" || secondStepColor === "#06d7be"
+        errorStep === 1
+          ? "pi pi-times px-2 py-2 click-icon"
+          : recordProofVerified === null
           ? "pi pi-check px-2 py-2 click-icon"
-          : "pi pi-times px-2 py-2 click-icon",
-      color: secondStepColor,
+          : "pi pi-check px-2 py-2 click-icon",
+      color:
+        errorStep === 1
+          ? colors.error
+          : recordProofVerified === null
+          ? colors.idle
+          : colors.success,
     },
     {
       status: "Validate existence in blockchain",
       description: "",
       icon:
-        thirdStepColor === "#d7d7d7" || thirdStepColor === "#06d7be"
+        errorStep === 2
+          ? "pi pi-times px-2 py-2 click-icon"
+          : recordTimestamp === null
           ? "pi pi-check px-2 py-2 click-icon"
-          : "pi pi-times px-2 py-2 click-icon",
-      color: thirdStepColor,
+          : "pi pi-check px-2 py-2 click-icon",
+      color:
+        errorStep === 2
+          ? colors.error
+          : recordTimestamp === null
+          ? colors.idle
+          : colors.success,
     },
   ];
 
-  const customizedMarker = (item) => {
+  const customizedMarker = (item: any) => {
     return (
       <span
         className="custom-marker p-shadow-2 circle"
@@ -131,7 +180,7 @@ const VerificationSection = ({
     );
   };
 
-  const customizedContent = (item) => {
+  const customizedContent = (item: any) => {
     if (item.status === events[events.length - 1].status) {
       return (
         <div className="horizontal-center half-right double-width">
@@ -153,25 +202,38 @@ const VerificationSection = ({
     }
   };
 
-  const tableNetworksData = isProofRetrieved?.anchor.networks.map((network) => {
-    const dates = moment(network.created_at * 1000).format(
-      "DD-MM-YYYY HH:mm:ss"
-    );
-    return {
-      created_at: dates,
-      name: (
-        <div>
-          {network.name === "ethereum_rinkeby"
-            ? (network.name = "Ethereum Rinkeby")
-            : network.name}
-        </div>
-      ),
-      state: network.state,
-      tx_hash: network.tx_hash,
-    };
-  });
+  const tableNetworksData = (recordProof as any)?.anchor.networks.map(
+    (network: any) => {
+      const dates = moment(network.created_at * 1000).format(
+        "DD-MM-YYYY HH:mm:ss"
+      );
+      return {
+        created_at: dates,
+        name: network.name,
+        label:
+          network.name === "ethereum_rinkeby"
+            ? "Ethereum Rinkeby"
+            : network.name,
+        state: network.state,
+        tx_hash: network.tx_hash,
+      };
+    }
+  );
 
-  const rowExpansionTemplate = (network) => {
+  const rowExpansionTemplate = (network: any) => {
+    let etherscanUrl = `https://etherscan.io/tx/${network.tx_hash}`;
+    switch (network.name) {
+      case "ethereum_mainnet":
+        etherscanUrl = `https://etherscan.io/tx/${network.tx_hash}`;
+        break;
+      case "ethereum_rinkeby":
+        etherscanUrl = `https://rinkeby.etherscan.io/tx/${network.tx_hash}`;
+        break;
+      case "bloock_chain":
+        etherscanUrl = "";
+        break;
+    }
+
     return (
       <div className="orders-subtable">
         <p className="bold-text pt-3">Tx Hash</p>
@@ -182,36 +244,20 @@ const VerificationSection = ({
 
           <Button
             icon="p-button-icon p-c pi pi-external-link"
-            onClick={() => {
-              if (network.name.props.children === "Ethereum Rinkeby") {
-                return (
-                  window.open(
-                    `https://rinkeby.etherscan.io/tx/${network.tx_hash}`
-                  ),
-                  "_blank"
-                );
-              } else if (network.name.props.children === "Ethereum Ropsten") {
-                return (
-                  window.open(
-                    `https://ropsten.etherscan.io/tx/${network.tx_hash}`
-                  ),
-                  "_blank"
-                );
-              } else if (network.name.props.children === "Ethereum Mainnet") {
-                return (
-                  window.open(`https://etherscan.io/tx/${network.tx_hash}`),
-                  "_blank"
-                );
-              }
-            }}
+            onClick={() => window.open(etherscanUrl, "_blank")}
           />
         </div>
       </div>
     );
   };
 
+  console.log(
+    recordTimestamp,
+    errorStep,
+    recordTimestamp == null && errorStep == null
+  );
   return (
-    <div className="container-md px-4 mt-5 verification-section">
+    <div className="container-md mt-5 verification-section">
       <div
         className=" horizontal-center timeline-margins mb-5 stepper"
         style={{ paddingTop: "30px", paddingBottom: "70px" }}
@@ -229,7 +275,7 @@ const VerificationSection = ({
       </div>
       <div className="little-top-margin"></div>
       <div className="horizontal-center">
-        {isSuccessMessage ? (
+        {recordTimestamp && errorStep == null ? (
           <>
             <div>
               <div className="d-flex flex-row justify-content-center align-items-center">
@@ -243,65 +289,55 @@ const VerificationSection = ({
                   className="mt-5 px-5 py-4 border-0"
                   style={{ textAlign: "left" }}
                 >
-                  <div
-                    className={
-                      (selectedFile && selectedFile.name) ||
-                      acceptedFiles[0] !== undefined
-                        ? "mb-5"
-                        : "mb-0"
-                    }
-                  >
+                  <div className={fileName ? "mb-5" : "mb-0"}>
                     <i
                       className=" pi pi-file px-1 py-1 click-icon "
                       style={
-                        (selectedFile && selectedFile.name) ||
-                        acceptedFiles[0] !== undefined
+                        fileName
                           ? {
                               display: "inline",
                               color: "#495057",
                               fontSize: "1.3rem",
                               fontWeight: "100",
-                              position: "block",
                             }
                           : {
                               display: "none",
                               color: "#495057",
                               fontSize: "1.3rem",
                               fontWeight: "100",
-                              position: "block",
                             }
                       }
                     ></i>
-                    <span className="mx-2 bold-text">
-                      {(selectedFile && selectedFile.name) ||
-                        (acceptedFiles[0] !== undefined &&
-                          acceptedFiles[0].name)}
-                    </span>
+                    <span className="mx-2 bold-text">{fileName}</span>
                   </div>
                   <div className="bold-text">Document hash</div>
                   <div style={{ overflowWrap: "break-word" }}>
-                    {documentHash && documentHash}
+                    {record && record.getHash()}
                   </div>
 
                   <Divider className="my-4 pb-2" />
 
-                  <div className="bold-text">Anchor</div>
-                  <div>{isProofRetrieved.anchor.anchor_id}</div>
+                  {recordProof ? (
+                    <>
+                      <div className="bold-text">Anchor</div>
+                      <div>{(recordProof as any).anchor.anchor_id}</div>
 
-                  <Divider className="my-4 pb-2" />
+                      <Divider className="my-4 pb-2" />
+                    </>
+                  ) : null}
 
                   <div className="bold-text">Networks</div>
                   <div className="card my-3">
                     <DataTable
                       value={tableNetworksData}
-                      responsiveLayout="scroll"
                       expandedRows={expandedRows}
                       onRowToggle={(e) => setExpandedRows(e.data)}
                       rowExpansionTemplate={rowExpansionTemplate}
+                      responsiveLayout="scroll"
                       dataKey="id"
                     >
                       <Column expander style={{ width: "3em" }} />
-                      <Column field="name" header="Name"></Column>
+                      <Column field="label" header="Name"></Column>
                       <Column field="state" header="State"></Column>
                       <Column field="created_at" header="Timestamp"></Column>
                     </DataTable>
@@ -314,7 +350,7 @@ const VerificationSection = ({
             </div>
           </>
         ) : null}
-        {isErrorMessage ? (
+        {errorStep != null ? (
           <section className="container-md verification-section">
             <div className="pt-1 horizontal-center">
               <div>
@@ -322,7 +358,7 @@ const VerificationSection = ({
                   <div className="d-flex flex-row justify-content-center align-items-center">
                     <p className="px-2 fs-2">Oops!</p>
                   </div>
-                  {!isProofRetrieved ? (
+                  {errorStep === 0 ? (
                     <div className="bold-text">
                       <h4 className="mx-2">Your record couldn't be verified</h4>
                     </div>
@@ -339,43 +375,29 @@ const VerificationSection = ({
 
               <div className="pt-2 mb-5">
                 <Card className="mt-4 px-5 py-4" style={{ textAlign: "left" }}>
-                  <div
-                    className={
-                      (selectedFile && selectedFile.name) ||
-                      acceptedFiles[0] !== undefined
-                        ? "mb-4"
-                        : "mb-0"
-                    }
-                  >
+                  <div className={fileName ? "mb-4" : "mb-0"}>
                     <i
                       className=" pi pi-file px-1 py-1 click-icon "
                       style={
-                        (selectedFile && selectedFile.name) ||
-                        acceptedFiles[0] !== undefined
+                        fileName
                           ? {
                               display: "inline",
                               color: "#495057",
                               fontSize: "1.3rem",
                               fontWeight: "100",
-                              position: "block",
                             }
                           : {
                               display: "none",
                               color: "#495057",
                               fontSize: "1.3rem",
                               fontWeight: "100",
-                              position: "block",
                             }
                       }
                     ></i>
-                    <span className="mx-2 bold-text">
-                      {(selectedFile && selectedFile.name) ||
-                        (acceptedFiles[0] !== undefined &&
-                          acceptedFiles[0].name)}
-                    </span>
+                    <span className="mx-2 bold-text">{fileName}</span>
                   </div>
 
-                  {!isProofRetrieved ? (
+                  {errorStep === 0 ? (
                     <div>
                       <p className="pb-3">
                         There’s no proof of existence for this record. It might
@@ -423,14 +445,14 @@ const VerificationSection = ({
                   <Divider className="my-4" />
                   <div className="bold-text">Document hash</div>
                   <div className="" style={{ overflowWrap: "break-word" }}>
-                    {documentHash && documentHash}
+                    {record && record.getHash()}
                   </div>
                 </Card>
               </div>
             </div>
           </section>
         ) : null}
-        { !isSuccessMessage && !isErrorMessage ? (
+        {recordTimestamp == null && errorStep == null ? (
           <div className="progressSpinner" style={{ paddingBottom: "40px" }}>
             <ProgressSpinner style={{ color: "#06d7be" }} />
             <p className="text-secondary">Your record is being verified...</p>

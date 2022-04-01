@@ -1,9 +1,9 @@
-import React from "react";
-import { Divider } from "primereact/divider";
-import "primereact/resources/themes/saga-blue/theme.css";
-import "primereact/resources/primereact.min.css";
-import "primeicons/primeicons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "primeicons/primeicons.css";
+import { Divider } from "primereact/divider";
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/saga-blue/theme.css";
+import React from "react";
 
 const Footer = () => {
   return (

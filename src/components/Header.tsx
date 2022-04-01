@@ -1,11 +1,11 @@
-import React, { Fragment } from "react";
-import { Divider } from "primereact/divider";
-import "primereact/resources/themes/saga-blue/theme.css";
-import "primereact/resources/primereact.min.css";
-import "primeicons/primeicons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../customstyles.css";
+import "primeicons/primeicons.css";
+import { Divider } from "primereact/divider";
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/saga-blue/theme.css";
+import React, { Fragment } from "react";
 import logo from "../images/validProof_logo.jpg";
+import "../styles.css";
 
 const Header = () => {
   return (
