@@ -26,7 +26,6 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   record,
   fileName,
 }) => {
-  console.log(record);
   const [expandedRows, setExpandedRows] = useState<any>(null);
 
   const [recordProof, setRecordProof] = useState<Proof | null>(null);
@@ -252,11 +251,6 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     );
   };
 
-  console.log(
-    recordTimestamp,
-    errorStep,
-    recordTimestamp == null && errorStep == null
-  );
   return (
     <div className="container-md mt-5 verification-section">
       <div
