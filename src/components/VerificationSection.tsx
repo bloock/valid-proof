@@ -26,6 +26,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   record,
   fileName,
 }) => {
+  console.log(record);
   const [expandedRows, setExpandedRows] = useState<any>(null);
 
   const [recordProof, setRecordProof] = useState<Proof | null>(null);

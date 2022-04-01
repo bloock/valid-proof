@@ -1,4 +1,5 @@
 import { Record } from "@bloock/sdk";
+import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
@@ -20,10 +21,29 @@ const Home = () => {
   const verificationRef = useRef<HTMLInputElement>(null);
   const [searchParams] = useSearchParams();
 
+  async function fileLoader(urlParam: any) {
+    if (urlParam instanceof URL) {
+      urlParam = urlParam.toString();
+    } else {
+      urlParam = "";
+    }
+    let bytes = await axios
+      .get(urlParam, {
+        responseType: "arraybuffer",
+      })
+      .then((res) => {
+        return Buffer.from(res.data);
+      });
+
+    let array = new Uint8Array(bytes);
+    setRecord(Record.fromUint8Array(array));
+    return;
+  }
+
   useEffect(() => {
     const recordQuery = searchParams.get("record");
     if (recordQuery) {
-      setRecord(Record.fromHash(recordQuery));
+      fileLoader(recordQuery);
     }
   }, [searchParams]);
 
