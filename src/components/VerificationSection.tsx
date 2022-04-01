@@ -251,11 +251,6 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     );
   };
 
-  console.log(
-    recordTimestamp,
-    errorStep,
-    recordTimestamp == null && errorStep == null
-  );
   return (
     <div className="container-md mt-5 verification-section">
       <div

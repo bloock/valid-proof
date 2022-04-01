@@ -110,7 +110,6 @@ const FileSection: React.FC<FileSectionProps> = ({
         fileReader.readAsDataURL(file);
       }
       fileReader.onload = () => {
-        console.log(fileReader.result);
         setSelectedFile({
           name: file.name,
           value: fileReader.result,
