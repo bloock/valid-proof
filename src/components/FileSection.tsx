@@ -9,9 +9,10 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import { useDropzone } from "react-dropzone";
 import "../styles.css";
+import { useIsJson } from "../utils/use-is-json";
 
 type FileSectionProps = {
-  onFileChange: (name: string) => any;
+  onFileChange: (name: string | null) => any;
   onRecordChange: (record: Record | null) => any;
   onElementChange: (element: any) => any;
 };
@@ -46,6 +47,7 @@ const rejectStyle = {
 const FileSection: React.FC<FileSectionProps> = ({
   onRecordChange = () => {},
   onElementChange = () => {},
+  onFileChange = () => {},
 }) => {
   const [currentRecord, setCurrentRecord] = useState<Record | null>(null);
   const [selectedJSON, setSelectedJSON] = useState<string>("");
@@ -53,6 +55,8 @@ const FileSection: React.FC<FileSectionProps> = ({
     name: string;
     value: string | ArrayBuffer | null;
   } | null>(null);
+
+  const isJSONValid = useIsJson;
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length >= 0) {
@@ -71,16 +75,8 @@ const FileSection: React.FC<FileSectionProps> = ({
   useEffect(() => {
     onRecordChange(currentRecord);
     onElementChange(selectedJSON || selectedFile);
-  }, [currentRecord]);
-
-  function isJSONValid(item: string): boolean {
-    try {
-      item = JSON.parse(item);
-    } catch (e) {
-      return false;
-    }
-    return true;
-  }
+    onFileChange(selectedFile?.name ? selectedFile.name : null);
+  }, [currentRecord, selectedFile, selectedJSON]);
 
   const handleJSONChange = (json: string | null) => {
     setCurrentRecord(null);
