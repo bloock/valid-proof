@@ -10,10 +10,18 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
   const fileDetect = useFileType;
   let detectedFile = fileDetect(element);
 
+  console.log(detectedFile);
+
   const previewBasedOnMimeType = () => {
     switch (detectedFile) {
       case "image/png":
-        return <img src={element.value}></img>;
+        return <img className="img-contain" src={element.value}></img>;
+      case "image/jpg":
+        debugger;
+        return <img className="img-contain" src={element.value}></img>;
+      case "image/svg+xml":
+        debugger;
+        return <img className="img-contain" src={element.value}></img>;
       case "application/json":
         if (process.env.JSON_FILE_PREVIEW === undefined) {
           return <ReactJson src={JSON.parse(element)} />;
@@ -28,7 +36,13 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
   };
 
   return (
-    <div className="p-card height-100 p-4">{previewBasedOnMimeType()}</div>
+    <div className="p-card height-100 p-4 d-flex justify-content-center">
+      {previewBasedOnMimeType() !== null ? (
+        previewBasedOnMimeType()
+      ) : (
+        <>Not found</>
+      )}
+    </div>
   );
 };
 
