@@ -227,3 +227,7 @@ textarea {
 .p-card {
   box-shadow: 2px 3px 10px 2px #eeeeee;
 }
+
+.height-100 {
+  height: 100%;
+}

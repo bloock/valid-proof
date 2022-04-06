@@ -7,7 +7,6 @@ import "primereact/resources/themes/saga-blue/theme.css";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
-import FilePreview from "../components/FilePreview";
 import FileSection from "../components/FileSection";
 import VerificationSection from "../components/VerificationSection";
 import demoimage1 from "../images/howitworks-1.jpg";
@@ -103,17 +102,14 @@ const Home = () => {
             ></FileSection>
           </Col>
         </Row>
-        {element && (
-          <Row>
-            <Col>
-              <FilePreview element={element} />
-            </Col>
-          </Row>
-        )}
 
         {record ? (
           <div ref={verificationRef}>
-            <VerificationSection record={record} fileName={fileName} />
+            <VerificationSection
+              record={record}
+              fileName={fileName}
+              element={element}
+            />
           </div>
         ) : null}
       </div>
