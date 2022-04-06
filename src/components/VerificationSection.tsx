@@ -287,21 +287,21 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
                   <div className={fileName ? "mb-5" : "mb-0"}>
                     <i
                       className=" pi pi-file px-1 py-1 click-icon "
-                      style={
-                        fileName
-                          ? {
-                              display: "inline",
-                              color: "#495057",
-                              fontSize: "1.3rem",
-                              fontWeight: "100",
-                            }
-                          : {
-                              display: "none",
-                              color: "#495057",
-                              fontSize: "1.3rem",
-                              fontWeight: "100",
-                            }
-                      }
+                      // style={
+                      //   fileName
+                      //     ? {
+                      //         display: "inline",
+                      //         color: "#495057",
+                      //         fontSize: "1.3rem",
+                      //         fontWeight: "100",
+                      //       }
+                      //     : {
+                      //         display: "none",
+                      //         color: "#495057",
+                      //         fontSize: "1.3rem",
+                      //         fontWeight: "100",
+                      //       }
+                      // }
                     ></i>
                     <span className="mx-2 bold-text">{fileName}</span>
                   </div>
@@ -373,21 +373,21 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
                   <div className={fileName ? "mb-4" : "mb-0"}>
                     <i
                       className=" pi pi-file px-1 py-1 click-icon "
-                      style={
-                        fileName
-                          ? {
-                              display: "inline",
-                              color: "#495057",
-                              fontSize: "1.3rem",
-                              fontWeight: "100",
-                            }
-                          : {
-                              display: "none",
-                              color: "#495057",
-                              fontSize: "1.3rem",
-                              fontWeight: "100",
-                            }
-                      }
+                      // style={
+                      //   fileName
+                      //     ? {
+                      //         display: "inline",
+                      //         color: "#495057",
+                      //         fontSize: "1.3rem",
+                      //         fontWeight: "100",
+                      //       }
+                      //     : {
+                      //         display: "none",
+                      //         color: "#495057",
+                      //         fontSize: "1.3rem",
+                      //         fontWeight: "100",
+                      //       }
+                      // }
                     ></i>
                     <span className="mx-2 bold-text">{fileName}</span>
                   </div>

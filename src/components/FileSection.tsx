@@ -13,6 +13,7 @@ import "../styles.css";
 type FileSectionProps = {
   onFileChange: (name: string) => any;
   onRecordChange: (record: Record | null) => any;
+  onElementChange: (element: any) => any;
 };
 
 const baseStyle = {
@@ -44,6 +45,7 @@ const rejectStyle = {
 
 const FileSection: React.FC<FileSectionProps> = ({
   onRecordChange = () => {},
+  onElementChange = () => {},
 }) => {
   const [currentRecord, setCurrentRecord] = useState<Record | null>(null);
   const [selectedJSON, setSelectedJSON] = useState<string>("");
@@ -68,6 +70,7 @@ const FileSection: React.FC<FileSectionProps> = ({
 
   useEffect(() => {
     onRecordChange(currentRecord);
+    onElementChange(selectedJSON || selectedFile);
   }, [currentRecord]);
 
   function isJSONValid(item: string): boolean {

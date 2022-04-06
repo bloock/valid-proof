@@ -7,6 +7,7 @@ import "primereact/resources/themes/saga-blue/theme.css";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
+import FilePreview from "../components/FilePreview";
 import FileSection from "../components/FileSection";
 import VerificationSection from "../components/VerificationSection";
 import demoimage1 from "../images/howitworks-1.jpg";
@@ -17,6 +18,7 @@ import "../styles.css";
 const Home = () => {
   const [record, setRecord] = useState<Record | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [element, setElement] = useState<string | null>(null);
 
   const verificationRef = useRef<HTMLInputElement>(null);
   const [searchParams] = useSearchParams();
@@ -97,9 +99,17 @@ const Home = () => {
             <FileSection
               onFileChange={(fileName) => setFileName(fileName)}
               onRecordChange={(record) => setRecord(record)}
+              onElementChange={(element) => setElement(element)}
             ></FileSection>
           </Col>
         </Row>
+        {element && (
+          <Row>
+            <Col>
+              <FilePreview element={element} />
+            </Col>
+          </Row>
+        )}
 
         {record ? (
           <div ref={verificationRef}>
