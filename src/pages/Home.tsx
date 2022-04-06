@@ -58,7 +58,7 @@ const Home = () => {
     <Fragment>
       <div className="top-margin"></div>
       <div className="container-md px-4">
-        <Row className="flex-column flex-lg-row align-items-center pt-8">
+        <Row className="flex-column flex-lg-row pt-8">
           <Col style={{ paddingRight: "50px", paddingTop: "10px" }}>
             <h1 className="bold-text title">
               Validate your records on blockchain

@@ -285,68 +285,75 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
               </div>
               <div className="pt-2 mb-5">
                 <Card
-                  className="mt-5 px-5 py-4 border-0"
+                  className="mt-5 px-3 py-4 border-0"
                   style={{ textAlign: "left" }}
                 >
-                  <div>
-                    <FilePreview element={element} />
-                  </div>
-                  <div className={fileName ? "mb-5" : "mb-0"}>
-                    <i
-                      className=" pi pi-file px-1 py-1 click-icon "
-                      style={
-                        fileName
-                          ? {
-                              display: "inline",
-                              color: "#495057",
-                              fontSize: "1.3rem",
-                              fontWeight: 100,
-                            }
-                          : {
-                              display: "none",
-                              color: "#495057",
-                              fontSize: "1.3rem",
-                              fontWeight: 100,
-                            }
-                      }
-                    ></i>
-                    <span className="mx-2 bold-text">{fileName}</span>
-                  </div>
-                  <div className="bold-text">Document hash</div>
-                  <div style={{ overflowWrap: "break-word" }}>
-                    {record && record.getHash()}
-                  </div>
-
-                  <Divider className="my-4 pb-2" />
-
-                  {recordProof ? (
-                    <>
-                      <div className="bold-text">Anchor</div>
-                      <div>{(recordProof as any).anchor.anchor_id}</div>
+                  <Row className="justify-content-between">
+                    <Col md={5}>
+                      <FilePreview element={element} />
+                    </Col>
+                    <Col md={6}>
+                      <div className={fileName ? "mb-5" : "mb-0"}>
+                        <i
+                          className=" pi pi-file px-1 py-1 click-icon "
+                          style={
+                            fileName
+                              ? {
+                                  display: "inline",
+                                  color: "#495057",
+                                  fontSize: "1.3rem",
+                                  fontWeight: 100,
+                                }
+                              : {
+                                  display: "none",
+                                  color: "#495057",
+                                  fontSize: "1.3rem",
+                                  fontWeight: 100,
+                                }
+                          }
+                        ></i>
+                        <span className="mx-2 bold-text">{fileName}</span>
+                      </div>
+                      <div className="bold-text">Document hash</div>
+                      <div style={{ overflowWrap: "break-word" }}>
+                        {record && record.getHash()}
+                      </div>
 
                       <Divider className="my-4 pb-2" />
-                    </>
-                  ) : null}
 
-                  <div className="bold-text">Networks</div>
-                  <div className="card my-3">
-                    <DataTable
-                      value={tableNetworksData}
-                      expandedRows={expandedRows}
-                      onRowToggle={(e) => setExpandedRows(e.data)}
-                      rowExpansionTemplate={rowExpansionTemplate}
-                      responsiveLayout="scroll"
-                      dataKey="id"
-                    >
-                      <Column expander style={{ width: "3em" }} />
-                      <Column field="label" header="Name"></Column>
-                      <Column field="state" header="State"></Column>
-                      <Column field="created_at" header="Timestamp"></Column>
-                    </DataTable>
-                  </div>
-                  <Divider className="my-4 pb-2" />
-                  <div className="bold-text">Issuer</div>
-                  <div>BLOOCK</div>
+                      {recordProof ? (
+                        <>
+                          <div className="bold-text">Anchor</div>
+                          <div>{(recordProof as any).anchor.anchor_id}</div>
+
+                          <Divider className="my-4 pb-2" />
+                        </>
+                      ) : null}
+
+                      <div className="bold-text">Networks</div>
+                      <div className="card my-3">
+                        <DataTable
+                          value={tableNetworksData}
+                          expandedRows={expandedRows}
+                          onRowToggle={(e) => setExpandedRows(e.data)}
+                          rowExpansionTemplate={rowExpansionTemplate}
+                          responsiveLayout="scroll"
+                          dataKey="id"
+                        >
+                          <Column expander style={{ width: "3em" }} />
+                          <Column field="label" header="Name"></Column>
+                          <Column field="state" header="State"></Column>
+                          <Column
+                            field="created_at"
+                            header="Timestamp"
+                          ></Column>
+                        </DataTable>
+                      </div>
+                      <Divider className="my-4 pb-2" />
+                      <div className="bold-text">Issuer</div>
+                      <div>BLOOCK</div>
+                    </Col>
+                  </Row>
                 </Card>
               </div>
             </div>
@@ -376,7 +383,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
               </div>
 
               <div className="pt-2 mb-5">
-                <Card className="mt-4 px-5 py-4" style={{ textAlign: "left" }}>
+                <Card className="mt-4 px-3 py-4" style={{ textAlign: "left" }}>
                   <Row className="justify-content-between">
                     <Col md={5}>
                       <FilePreview element={element} />
@@ -385,21 +392,21 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
                       <div className={fileName ? "mb-4" : "mb-0"}>
                         <i
                           className=" pi pi-file px-1 py-1 click-icon "
-                          // style={
-                          //   fileName
-                          //     ? {
-                          //         display: "inline",
-                          //         color: "#495057",
-                          //         fontSize: "1.3rem",
-                          //         fontWeight: "100",
-                          //       }
-                          //     : {
-                          //         display: "none",
-                          //         color: "#495057",
-                          //         fontSize: "1.3rem",
-                          //         fontWeight: "100",
-                          //       }
-                          // }
+                          style={
+                            fileName
+                              ? {
+                                  display: "inline",
+                                  color: "#495057",
+                                  fontSize: "1.3rem",
+                                  fontWeight: 100,
+                                }
+                              : {
+                                  display: "none",
+                                  color: "#495057",
+                                  fontSize: "1.3rem",
+                                  fontWeight: 100,
+                                }
+                          }
                         ></i>
                         <span className="mx-2 bold-text">{fileName}</span>
                       </div>

@@ -1,6 +1,7 @@
 import React from "react";
 import ReactJson from "react-json-view";
 import { useFileType } from "../utils/use-file-type";
+import { useIsJson } from "../utils/use-is-json";
 
 type FilePreviewProps = {
   element: any;
@@ -8,23 +9,34 @@ type FilePreviewProps = {
 
 const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
   const fileDetect = useFileType;
+  const isJSONValid = useIsJson;
   let detectedFile = fileDetect(element);
-
-  console.log(detectedFile);
 
   const previewBasedOnMimeType = () => {
     switch (detectedFile) {
       case "image/png":
         return <img className="img-contain" src={element.value}></img>;
       case "image/jpg":
-        debugger;
+        return <img className="img-contain" src={element.value}></img>;
+      case "image/jpeg":
         return <img className="img-contain" src={element.value}></img>;
       case "image/svg+xml":
-        debugger;
         return <img className="img-contain" src={element.value}></img>;
       case "application/json":
-        if (process.env.JSON_FILE_PREVIEW === undefined) {
-          return <ReactJson src={JSON.parse(element)} />;
+        if (isJSONValid(element)) {
+          return (
+            <ReactJson
+              style={{
+                maxWidth: "100%",
+                maxHeight: "700px",
+                overflow: "scroll",
+              }}
+              displayDataTypes={false}
+              displayObjectSize={false}
+              name={false}
+              src={JSON.parse(element)}
+            />
+          );
         } else {
           return null;
         }
@@ -36,7 +48,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
   };
 
   return (
-    <div className="p-card height-100 p-4 d-flex justify-content-center">
+    <div className="p-card height-100 p-3 d-flex justify-content-center">
       {previewBasedOnMimeType() !== null ? (
         previewBasedOnMimeType()
       ) : (
