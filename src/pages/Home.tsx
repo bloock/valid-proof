@@ -17,22 +17,20 @@ import "../styles.css";
 const Home = () => {
   const [record, setRecord] = useState<Record | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
-  const [element, setElement] = useState<string | null>(null);
+  const [element, setElement] = useState<string | null | any>(null);
 
   const verificationRef = useRef<HTMLInputElement>(null);
   const [searchParams] = useSearchParams();
 
   async function fileLoader(urlParam: any) {
-    if (urlParam instanceof URL) {
-      urlParam = urlParam.toString();
-    } else {
-      urlParam = "";
-    }
+    urlParam = new URL(urlParam);
     let bytes = await axios
       .get(urlParam, {
         responseType: "arraybuffer",
       })
       .then((res) => {
+        let arrayContentType = res.headers["content-type"].split(";");
+        setElement({ name: urlParam, value: arrayContentType[0] });
         return Buffer.from(res.data);
       });
 

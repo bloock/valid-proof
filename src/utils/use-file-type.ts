@@ -11,11 +11,15 @@ enum FileType {
 }
 
 export const useFileType = (file: any) => {
-  const isJSONValid = useIsJson;
+  const isJSONValid = useIsJson(file);
   if (file) {
     if (file?.value) {
-      let fileEncode = lookup(file.name);
-
+      let fileEncode;
+      if (file.name instanceof URL) {
+        fileEncode = file.value;
+      } else {
+        fileEncode = lookup(file.name);
+      }
       if (fileEncode) {
         if (Object.values(FileType).includes(fileEncode)) {
           return fileEncode;
@@ -23,7 +27,7 @@ export const useFileType = (file: any) => {
           return null;
         }
       }
-    } else if (isJSONValid(file) === true) {
+    } else if (isJSONValid === true) {
       return "application/json";
     } else {
       return null;
