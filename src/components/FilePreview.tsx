@@ -17,7 +17,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
 
   const previewBasedOnMimeType = () => {
     switch (detectedFile) {
-      case "image/png":
+      case "image/png" || "image/jpg":
         return <img className="img-contain" src={element.value}></img>;
       case "image/jpg":
         return <img className="img-contain" src={element.value}></img>;
@@ -46,7 +46,12 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
       case "application/pdf":
         return (
           <div className="pdf-viewer">
-            <Document file={element.value} className="pdf-viewer">
+            <Document
+              file={
+                element.value["content-type"] ? element.name : element.value
+              }
+              className="pdf-viewer"
+            >
               <Page pageNumber={1} />
             </Document>
           </div>

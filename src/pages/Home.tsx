@@ -17,12 +17,13 @@ import "../styles.css";
 const Home = () => {
   const [record, setRecord] = useState<Record | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
-  const [element, setElement] = useState<string | null | Uint8Array>(null);
+  const [element, setElement] = useState<string | null | any>(null);
 
   const verificationRef = useRef<HTMLInputElement>(null);
   const [searchParams] = useSearchParams();
 
   async function fileLoader(urlParam: any) {
+    urlParam = new URL(urlParam);
     if (urlParam instanceof URL) {
       urlParam = urlParam.toString();
     } else {
@@ -33,18 +34,17 @@ const Home = () => {
         responseType: "arraybuffer",
       })
       .then((res) => {
+        setElement({ name: urlParam, value: res.headers });
         return Buffer.from(res.data);
       });
 
     let array = new Uint8Array(bytes);
-    setElement(array);
     setRecord(Record.fromUint8Array(array));
     return;
   }
 
   useEffect(() => {
     const recordQuery = searchParams.get("record");
-
     if (recordQuery) {
       fileLoader(recordQuery);
     }
