@@ -15,16 +15,20 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
   const isJSONValid = useIsJson;
   let detectedFile = fileDetect(element);
 
+  const srcElement = element.value["content-type"]
+    ? element.name
+    : element.value;
+
   const previewBasedOnMimeType = () => {
     switch (detectedFile) {
       case "image/png" || "image/jpg":
-        return <img className="img-contain" src={element.value}></img>;
+        return <img className="img-contain" src={srcElement}></img>;
       case "image/jpg":
-        return <img className="img-contain" src={element.value}></img>;
+        return <img className="img-contain" src={srcElement}></img>;
       case "image/jpeg":
-        return <img className="img-contain" src={element.value}></img>;
+        return <img className="img-contain" src={srcElement}></img>;
       case "image/svg+xml":
-        return <img className="img-contain" src={element.value}></img>;
+        return <img className="img-contain" src={srcElement}></img>;
       case "application/json":
         if (isJSONValid(element)) {
           return (
@@ -46,12 +50,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
       case "application/pdf":
         return (
           <div className="pdf-viewer">
-            <Document
-              file={
-                element.value["content-type"] ? element.name : element.value
-              }
-              className="pdf-viewer"
-            >
+            <Document file={srcElement} className="pdf-viewer">
               <Page pageNumber={1} />
             </Document>
           </div>
