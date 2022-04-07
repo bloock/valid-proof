@@ -12,11 +12,14 @@ import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import { Timeline } from "primereact/timeline";
 import React, { useEffect, useState } from "react";
+import { Col, Row } from "react-bootstrap";
 import "../styles.css";
+import FilePreview from "./FilePreview";
 
 type VerificationSectionProps = {
   record: Record;
   fileName: string | null;
+  element: any;
 };
 
 const apiKey = (window as any).env.API_KEY;
@@ -25,6 +28,7 @@ const client = new BloockClient(apiKey);
 const VerificationSection: React.FC<VerificationSectionProps> = ({
   record,
   fileName,
+  element,
 }) => {
   const [expandedRows, setExpandedRows] = useState<any>(null);
 
@@ -281,65 +285,75 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
               </div>
               <div className="pt-2 mb-5">
                 <Card
-                  className="mt-5 px-5 py-4 border-0"
+                  className="mt-5 px-3 py-4 border-0"
                   style={{ textAlign: "left" }}
                 >
-                  <div className={fileName ? "mb-5" : "mb-0"}>
-                    <i
-                      className=" pi pi-file px-1 py-1 click-icon "
-                      style={
-                        fileName
-                          ? {
-                              display: "inline",
-                              color: "#495057",
-                              fontSize: "1.3rem",
-                              fontWeight: "100",
-                            }
-                          : {
-                              display: "none",
-                              color: "#495057",
-                              fontSize: "1.3rem",
-                              fontWeight: "100",
-                            }
-                      }
-                    ></i>
-                    <span className="mx-2 bold-text">{fileName}</span>
-                  </div>
-                  <div className="bold-text">Document hash</div>
-                  <div style={{ overflowWrap: "break-word" }}>
-                    {record && record.getHash()}
-                  </div>
-
-                  <Divider className="my-4 pb-2" />
-
-                  {recordProof ? (
-                    <>
-                      <div className="bold-text">Anchor</div>
-                      <div>{(recordProof as any).anchor.anchor_id}</div>
+                  <Row className="justify-content-between">
+                    <Col md={5}>
+                      <FilePreview element={element} />
+                    </Col>
+                    <Col md={6}>
+                      <div className={fileName ? "mb-5" : "mb-0"}>
+                        <i
+                          className=" pi pi-file px-1 py-1 click-icon "
+                          style={
+                            fileName
+                              ? {
+                                  display: "inline",
+                                  color: "#495057",
+                                  fontSize: "1.3rem",
+                                  fontWeight: 100,
+                                }
+                              : {
+                                  display: "none",
+                                  color: "#495057",
+                                  fontSize: "1.3rem",
+                                  fontWeight: 100,
+                                }
+                          }
+                        ></i>
+                        <span className="mx-2 bold-text">{fileName}</span>
+                      </div>
+                      <div className="bold-text">Document hash</div>
+                      <div style={{ overflowWrap: "break-word" }}>
+                        {record && record.getHash()}
+                      </div>
 
                       <Divider className="my-4 pb-2" />
-                    </>
-                  ) : null}
 
-                  <div className="bold-text">Networks</div>
-                  <div className="card my-3">
-                    <DataTable
-                      value={tableNetworksData}
-                      expandedRows={expandedRows}
-                      onRowToggle={(e) => setExpandedRows(e.data)}
-                      rowExpansionTemplate={rowExpansionTemplate}
-                      responsiveLayout="scroll"
-                      dataKey="id"
-                    >
-                      <Column expander style={{ width: "3em" }} />
-                      <Column field="label" header="Name"></Column>
-                      <Column field="state" header="State"></Column>
-                      <Column field="created_at" header="Timestamp"></Column>
-                    </DataTable>
-                  </div>
-                  <Divider className="my-4 pb-2" />
-                  <div className="bold-text">Issuer</div>
-                  <div>BLOOCK</div>
+                      {recordProof ? (
+                        <>
+                          <div className="bold-text">Anchor</div>
+                          <div>{(recordProof as any).anchor.anchor_id}</div>
+
+                          <Divider className="my-4 pb-2" />
+                        </>
+                      ) : null}
+
+                      <div className="bold-text">Networks</div>
+                      <div className="card my-3">
+                        <DataTable
+                          value={tableNetworksData}
+                          expandedRows={expandedRows}
+                          onRowToggle={(e) => setExpandedRows(e.data)}
+                          rowExpansionTemplate={rowExpansionTemplate}
+                          responsiveLayout="scroll"
+                          dataKey="id"
+                        >
+                          <Column expander style={{ width: "3em" }} />
+                          <Column field="label" header="Name"></Column>
+                          <Column field="state" header="State"></Column>
+                          <Column
+                            field="created_at"
+                            header="Timestamp"
+                          ></Column>
+                        </DataTable>
+                      </div>
+                      <Divider className="my-4 pb-2" />
+                      <div className="bold-text">Issuer</div>
+                      <div>BLOOCK</div>
+                    </Col>
+                  </Row>
                 </Card>
               </div>
             </div>
@@ -369,79 +383,88 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
               </div>
 
               <div className="pt-2 mb-5">
-                <Card className="mt-4 px-5 py-4" style={{ textAlign: "left" }}>
-                  <div className={fileName ? "mb-4" : "mb-0"}>
-                    <i
-                      className=" pi pi-file px-1 py-1 click-icon "
-                      style={
-                        fileName
-                          ? {
-                              display: "inline",
-                              color: "#495057",
-                              fontSize: "1.3rem",
-                              fontWeight: "100",
-                            }
-                          : {
-                              display: "none",
-                              color: "#495057",
-                              fontSize: "1.3rem",
-                              fontWeight: "100",
-                            }
-                      }
-                    ></i>
-                    <span className="mx-2 bold-text">{fileName}</span>
-                  </div>
+                <Card className="mt-4 px-3 py-4" style={{ textAlign: "left" }}>
+                  <Row className="justify-content-between">
+                    <Col md={5}>
+                      <FilePreview element={element} />
+                    </Col>
+                    <Col md={6}>
+                      <div className={fileName ? "mb-4" : "mb-0"}>
+                        <i
+                          className=" pi pi-file px-1 py-1 click-icon "
+                          style={
+                            fileName
+                              ? {
+                                  display: "inline",
+                                  color: "#495057",
+                                  fontSize: "1.3rem",
+                                  fontWeight: 100,
+                                }
+                              : {
+                                  display: "none",
+                                  color: "#495057",
+                                  fontSize: "1.3rem",
+                                  fontWeight: 100,
+                                }
+                          }
+                        ></i>
+                        <span className="mx-2 bold-text">{fileName}</span>
+                      </div>
 
-                  {errorStep === 0 ? (
-                    <div>
-                      <p className="pb-3">
-                        There’s no proof of existence for this record. It might
-                        have been modified unintentionally.
-                      </p>
-                      <p>
-                        Potential error sources:
-                        <ul>
-                          <li>
-                            - The issuer provided an altered version of the
-                            record.
-                          </li>
-                          <li>
-                            - The record was altered by a malicious third party
-                            during transmission.
-                          </li>
-                          <li>- The record was unintentionally altered.</li>
-                        </ul>
-                      </p>
-                      <p>
-                        If you have any questions, please contact the issuer of
-                        the records directly or get in touch with our support.
-                      </p>
-                    </div>
-                  ) : (
-                    <div>
-                      <p>
-                        Potential error sources:
-                        <ul>
-                          <li>
-                            - You were provided a fraudulent proof by the
-                            issuer.
-                          </li>
-                          <li>
-                            - Your record is still pending to be transacted into
-                            a blockchain protocol by the issuer.
-                          </li>
-                        </ul>
-                      </p>
-                      <p>
-                        Please try loading your record again in a few minutes.
-                      </p>
-                    </div>
-                  )}
-                  <Divider className="my-4" />
-                  <div className="bold-text">Document hash</div>
-                  <div className="" style={{ overflowWrap: "break-word" }}>
-                    {record && record.getHash()}
-                  </div>
+                      {errorStep === 0 ? (
+                        <div>
+                          <p className="pb-3">
+                            There’s no proof of existence for this record. It
+                            might have been modified unintentionally.
+                          </p>
+                          <p>
+                            Potential error sources:
+                            <ul>
+                              <li>
+                                - The issuer provided an altered version of the
+                                record.
+                              </li>
+                              <li>
+                                - The record was altered by a malicious third
+                                party during transmission.
+                              </li>
+                              <li>- The record was unintentionally altered.</li>
+                            </ul>
+                          </p>
+                          <p>
+                            If you have any questions, please contact the issuer
+                            of the records directly or get in touch with our
+                            support.
+                          </p>
+                        </div>
+                      ) : (
+                        <div>
+                          <p>
+                            Potential error sources:
+                            <ul>
+                              <li>
+                                - You were provided a fraudulent proof by the
+                                issuer.
+                              </li>
+                              <li>
+                                - Your record is still pending to be transacted
+                                into a blockchain protocol by the issuer.
+                              </li>
+                            </ul>
+                          </p>
+                          <p>
+                            Please try loading your record again in a few
+                            minutes.
+                          </p>
+                        </div>
+                      )}
+                      <Divider className="my-4" />
+                      <div className="bold-text">Document hash</div>
+                      <div className="" style={{ overflowWrap: "break-word" }}>
+                        {record && record.getHash()}
+                      </div>
+                    </Col>
+                  </Row>
                 </Card>
               </div>
             </div>

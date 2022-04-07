@@ -17,6 +17,7 @@ import "../styles.css";
 const Home = () => {
   const [record, setRecord] = useState<Record | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [element, setElement] = useState<string | null>(null);
 
   const verificationRef = useRef<HTMLInputElement>(null);
   const [searchParams] = useSearchParams();
@@ -57,7 +58,7 @@ const Home = () => {
     <Fragment>
       <div className="top-margin"></div>
       <div className="container-md px-4">
-        <Row className="flex-column flex-lg-row align-items-center pt-8">
+        <Row className="flex-column flex-lg-row pt-8">
           <Col style={{ paddingRight: "50px", paddingTop: "10px" }}>
             <h1 className="bold-text title">
               Validate your records on blockchain
@@ -97,13 +98,18 @@ const Home = () => {
             <FileSection
               onFileChange={(fileName) => setFileName(fileName)}
               onRecordChange={(record) => setRecord(record)}
+              onElementChange={(element) => setElement(element)}
             ></FileSection>
           </Col>
         </Row>
 
         {record ? (
           <div ref={verificationRef}>
-            <VerificationSection record={record} fileName={fileName} />
+            <VerificationSection
+              record={record}
+              fileName={fileName}
+              element={element}
+            />
           </div>
         ) : null}
       </div>
