@@ -8,7 +8,7 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
 import FileSection from "../components/FileSection";
-import VerificationSection from "../components/VerificationSection";
+import VerificationSection from "../components/verification/VerificationMain";
 import demoimage1 from "../images/howitworks-1.jpg";
 import demoimage2 from "../images/howitworks-2.jpg";
 import demoimage3 from "../images/howitworks-3.jpg";
