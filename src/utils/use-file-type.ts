@@ -15,9 +15,8 @@ export const useFileType = (file: any) => {
   if (file) {
     if (file?.value) {
       let fileEncode;
-      if (file.value["content-type"]) {
-        let arrayContentType = file.value["content-type"].split(";");
-        fileEncode = arrayContentType[0];
+      if (file.name instanceof URL) {
+        fileEncode = file.value;
       } else {
         fileEncode = lookup(file.name);
       }

@@ -15,9 +15,8 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
   const isJSONValid = useIsJson;
   let detectedFile = fileDetect(element);
 
-  const srcElement = element.value["content-type"]
-    ? element.name
-    : element.value;
+  const srcElement =
+    element.name instanceof URL ? element.name.href : element.value;
 
   const previewBasedOnMimeType = () => {
     switch (detectedFile) {

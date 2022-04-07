@@ -24,17 +24,13 @@ const Home = () => {
 
   async function fileLoader(urlParam: any) {
     urlParam = new URL(urlParam);
-    if (urlParam instanceof URL) {
-      urlParam = urlParam.toString();
-    } else {
-      urlParam = "";
-    }
     let bytes = await axios
       .get(urlParam, {
         responseType: "arraybuffer",
       })
       .then((res) => {
-        setElement({ name: urlParam, value: res.headers });
+        let arrayContentType = res.headers["content-type"].split(";");
+        setElement({ name: urlParam, value: arrayContentType[0] });
         return Buffer.from(res.data);
       });
 
