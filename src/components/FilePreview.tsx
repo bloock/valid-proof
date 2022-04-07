@@ -21,7 +21,9 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
 
   const previewBasedOnMimeType = () => {
     switch (detectedFile) {
-      case "image/png" || "image/jpg":
+      case "image/png":
+        return <img className="img-contain" src={srcElement}></img>;
+      case "image/jpg":
         return <img className="img-contain" src={srcElement}></img>;
       case "image/jpg":
         return <img className="img-contain" src={srcElement}></img>;
