@@ -81,6 +81,8 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     }, getRandomInterval(1000, 2000));
   }, [recordProof]);
 
+  console.log(element);
+
   useEffect(() => {
     const getRecordTimestamp = async () => {
       if (recordProof != null) {

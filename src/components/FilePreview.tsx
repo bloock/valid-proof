@@ -1,11 +1,14 @@
 import React from "react";
 import ReactJson from "react-json-view";
+import { Document, Page, pdfjs } from "react-pdf";
 import { useFileType } from "../utils/use-file-type";
 import { useIsJson } from "../utils/use-is-json";
 
 type FilePreviewProps = {
   element: any;
 };
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
   const fileDetect = useFileType;
@@ -41,7 +44,13 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
           return null;
         }
       case "application/pdf":
-        return element.name;
+        return (
+          <div className="pdf-viewer">
+            <Document file={element.value} className="pdf-viewer">
+              <Page pageNumber={1} />
+            </Document>
+          </div>
+        );
       default:
         return null;
     }

@@ -17,7 +17,7 @@ import "../styles.css";
 const Home = () => {
   const [record, setRecord] = useState<Record | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
-  const [element, setElement] = useState<string | null>(null);
+  const [element, setElement] = useState<string | null | Uint8Array>(null);
 
   const verificationRef = useRef<HTMLInputElement>(null);
   const [searchParams] = useSearchParams();
@@ -37,12 +37,14 @@ const Home = () => {
       });
 
     let array = new Uint8Array(bytes);
+    setElement(array);
     setRecord(Record.fromUint8Array(array));
     return;
   }
 
   useEffect(() => {
     const recordQuery = searchParams.get("record");
+
     if (recordQuery) {
       fileLoader(recordQuery);
     }
