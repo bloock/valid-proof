@@ -98,14 +98,14 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
           {record && record.getHash()}
         </div>
 
-        <Divider className="my-4 pb-2" />
+        <Divider className="my-2 pb-2" />
 
         {recordProof ? (
           <>
             <div className="bold-text">Anchor</div>
             <div>{(recordProof as any).anchor.anchor_id}</div>
 
-            <Divider className="my-4 pb-2" />
+            <Divider className="my-2 pb-2" />
           </>
         ) : null}
 
@@ -125,7 +125,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
             <Column field="created_at" header="Timestamp"></Column>
           </DataTable>
         </div>
-        <Divider className="my-4 pb-2" />
+        <Divider className="my-2 pb-2" />
         <div className="bold-text">Issuer</div>
         <div>BLOOCK</div>
       </Col>

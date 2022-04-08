@@ -3,13 +3,13 @@ import { Divider } from "primereact/divider";
 import React from "react";
 import { Col } from "react-bootstrap";
 
-type VerificationSuccessProps = {
+type VerificationErrorProps = {
   fileName: string | null;
   record: Record;
   errorStep: number | null;
 };
 
-const VerificationError: React.FC<VerificationSuccessProps> = ({
+const VerificationError: React.FC<VerificationErrorProps> = ({
   fileName,
   record,
   errorStep,
