@@ -260,3 +260,15 @@ textarea {
 .color-error {
   color: #f65531;
 }
+
+.p-accordion-content {
+  background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.p-accordion-header-link {
+  border: none !important;
+  padding: 0 !important;
+  padding-top: 1rem !important;
+}
