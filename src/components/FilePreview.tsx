@@ -1,8 +1,11 @@
+import loadable from "@loadable/component";
 import React from "react";
-import ReactJson from "react-json-view";
+// import ReactJson from "react-json-view";
 import { Document, Page, pdfjs } from "react-pdf";
 import { useFileType } from "../utils/use-file-type";
 import { useIsJson } from "../utils/use-is-json";
+
+const ReactJson = loadable(() => import("react-json-view"));
 
 type FilePreviewProps = {
   element: any;
