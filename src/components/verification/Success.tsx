@@ -100,7 +100,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
     <>
       <div className={fileName ? "mb-5" : "mb-0"}>
         <i
-          className=" pi pi-file px-1 py-1 click-icon "
+          className=" pi pi-file px-2 py-1 click-icon "
           style={
             fileName
               ? {
@@ -120,16 +120,16 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
         <span className="mx-2 bold-text">{fileName}</span>
         <div className="my-3">
           <p className="color-success">
-            <i className="pi pi-check-circle px-1 py-1 "></i>
+            <i className="pi pi-check-circle px-2 py-1 "></i>
             Your document has been verified
           </p>
         </div>
       </div>
       <div className="bold-text">
-        <TooltipComponent title="Document hash" description="Test description">
+        <TooltipComponent title="Document hash" description="">
           <p>
             Document hash{" "}
-            <i className="pi pi-question-circle px-1 py-1 text-secondary "></i>
+            <i className="pi pi-question-circle px-2 py-1 text-secondary "></i>
           </p>
         </TooltipComponent>
       </div>
@@ -141,7 +141,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
         <TooltipComponent title="Issuer" description="Issuer description">
           <p>
             Issuer
-            <i className="pi pi-question-circle px-1 py-1 text-secondary "></i>
+            <i className="pi pi-question-circle px-2 py-1 text-secondary "></i>
           </p>
         </TooltipComponent>
       </div>
@@ -152,12 +152,33 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
           {recordProof ? (
             <>
               <Divider className="my-2 pb-2" />
+              <TooltipComponent
+                title="Anchor"
+                description="An anchor is a snapshot of the state tree which is registered to blockchain protocol. It is formed by the resulting state of the state transition."
+              >
+                <div className="bold-text">
+                  <p>
+                    Anchor
+                    <i className="pi pi-question-circle px-2 py-1 text-secondary "></i>
+                  </p>
+                </div>
+              </TooltipComponent>
 
-              <div className="bold-text">Anchor</div>
               <div>{(recordProof as any).anchor.anchor_id}</div>
 
               <Divider className="my-2 pb-2" />
-              <div className="bold-text">Root</div>
+              <TooltipComponent
+                title="Root"
+                description="This value represents the root of the state tree. Users can easily verify the root of your blockchain in any of the public sources of Ethereum (i.e. https://etherscan.io/)."
+              >
+                <div className="bold-text">
+                  <p>
+                    Root
+                    <i className="pi pi-question-circle px-2 py-1 text-secondary "></i>
+                  </p>
+                </div>
+              </TooltipComponent>
+
               <div style={{ overflowWrap: "break-word" }}>
                 <div>{(recordProof as any).root}</div>
               </div>
