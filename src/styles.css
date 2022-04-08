@@ -183,13 +183,23 @@ textarea {
 
 @media (min-width: 970px) {
   .verification-section {
-    width: 90%;
+    width: 95%;
+  }
+  .verification-container {
+    padding-left: 4rem;
+    padding-right: 4rem;
   }
 }
 
-@media (min-width: 970px) {
+@media (max-width: 970px) {
   .verification-section {
-    width: 90%;
+    width: 100%;
+  }
+
+  .verification-container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-bottom: 2rem;
   }
 }
 
@@ -241,4 +251,12 @@ textarea {
 .pdf-viewer canvas {
   width: 100% !important;
   height: auto !important;
+}
+
+.color-success {
+  color: #36b37e;
+}
+
+.color-error {
+  color: #f65531;
 }

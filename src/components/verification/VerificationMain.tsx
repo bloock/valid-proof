@@ -166,26 +166,28 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
               </div>
             )}
             <div
-              className="mt-5 px-3 py-4 border-0 bg-light"
+              className="mt-5 py-4 border-0 bg-light verification-container"
               style={{ textAlign: "left" }}
             >
-              <Row className="justify-content-between">
-                <Col md={5}>
+              <Row className="justify-content-between pt-3 pb-3">
+                <Col lg={5} className="mb-4">
                   <FilePreview element={element} />
                 </Col>
-                {recordTimestamp && errorStep === null ? (
-                  <VerificationSuccess
-                    fileName={fileName}
-                    record={record}
-                    recordProof={recordProof}
-                  />
-                ) : (
-                  <VerificationError
-                    fileName={fileName}
-                    record={record}
-                    errorStep={errorStep}
-                  />
-                )}
+                <Col lg={6} className="mb-4 mt-2">
+                  {recordTimestamp && errorStep === null ? (
+                    <VerificationSuccess
+                      fileName={fileName}
+                      record={record}
+                      recordProof={recordProof}
+                    />
+                  ) : (
+                    <VerificationError
+                      fileName={fileName}
+                      record={record}
+                      errorStep={errorStep}
+                    />
+                  )}
+                </Col>
               </Row>
             </div>
           </div>

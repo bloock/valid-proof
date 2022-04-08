@@ -1,7 +1,6 @@
 import { Record } from "@bloock/sdk";
 import { Divider } from "primereact/divider";
 import React from "react";
-import { Col } from "react-bootstrap";
 
 type VerificationErrorProps = {
   fileName: string | null;
@@ -15,27 +14,20 @@ const VerificationError: React.FC<VerificationErrorProps> = ({
   errorStep,
 }) => {
   return (
-    <Col md={6}>
+    <>
       <div className={fileName ? "mb-4" : "mb-0"}>
         <i
-          className=" pi pi-file px-1 py-1 click-icon "
-          style={
-            fileName
-              ? {
-                  display: "inline",
-                  color: "#495057",
-                  fontSize: "1.3rem",
-                  fontWeight: 100,
-                }
-              : {
-                  display: "none",
-                  color: "#495057",
-                  fontSize: "1.3rem",
-                  fontWeight: 100,
-                }
-          }
+          className={`pi pi-file px-1 py-1 click-icon text-secondary ${
+            fileName ? "d-inline font-bold" : "d-none"
+          }`}
         ></i>
         <span className="mx-2 bold-text">{fileName}</span>
+        <div className="my-3">
+          <p className="color-error">
+            <i className="pi pi-check-circle px-1 py-1 "></i>
+            Your record couldn’t be verified
+          </p>
+        </div>
       </div>
 
       {errorStep === 0 ? (
@@ -80,7 +72,7 @@ const VerificationError: React.FC<VerificationErrorProps> = ({
       <div className="" style={{ overflowWrap: "break-word" }}>
         {record && record.getHash()}
       </div>
-    </Col>
+    </>
   );
 };
 

@@ -5,7 +5,6 @@ import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Divider } from "primereact/divider";
 import React, { useState } from "react";
-import { Col } from "react-bootstrap";
 
 type VerificationSuccessProps = {
   fileName: string | null;
@@ -71,64 +70,68 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
 
   return (
     <>
-      <Col md={6}>
-        <div className={fileName ? "mb-5" : "mb-0"}>
-          <i
-            className=" pi pi-file px-1 py-1 click-icon "
-            style={
-              fileName
-                ? {
-                    display: "inline",
-                    color: "#495057",
-                    fontSize: "1.3rem",
-                    fontWeight: 100,
-                  }
-                : {
-                    display: "none",
-                    color: "#495057",
-                    fontSize: "1.3rem",
-                    fontWeight: 100,
-                  }
-            }
-          ></i>
-          <span className="mx-2 bold-text">{fileName}</span>
+      <div className={fileName ? "mb-5" : "mb-0"}>
+        <i
+          className=" pi pi-file px-1 py-1 click-icon "
+          style={
+            fileName
+              ? {
+                  display: "inline",
+                  color: "#495057",
+                  fontSize: "1.3rem",
+                  fontWeight: 100,
+                }
+              : {
+                  display: "none",
+                  color: "#495057",
+                  fontSize: "1.3rem",
+                  fontWeight: 100,
+                }
+          }
+        ></i>
+        <span className="mx-2 bold-text">{fileName}</span>
+        <div className="my-3">
+          <p className="color-success">
+            <i className="pi pi-check-circle px-1 py-1 "></i>
+            Your document has been verified
+          </p>
         </div>
-        <div className="bold-text">Document hash</div>
-        <div style={{ overflowWrap: "break-word" }}>
-          {record && record.getHash()}
-        </div>
+      </div>
+      <div className="bold-text">Document hash</div>
+      <div style={{ overflowWrap: "break-word" }}>
+        {record && record.getHash()}
+      </div>
 
-        <Divider className="my-2 pb-2" />
+      <Divider className="my-2 pb-2" />
 
-        {recordProof ? (
-          <>
-            <div className="bold-text">Anchor</div>
-            <div>{(recordProof as any).anchor.anchor_id}</div>
+      {recordProof ? (
+        <>
+          <div className="bold-text">Anchor</div>
+          <div>{(recordProof as any).anchor.anchor_id}</div>
 
-            <Divider className="my-2 pb-2" />
-          </>
-        ) : null}
+          <Divider className="my-2 pb-2" />
+        </>
+      ) : null}
 
-        <div className="bold-text">Networks</div>
-        <div className="card my-3">
-          <DataTable
-            value={tableNetworksData}
-            expandedRows={expandedRows}
-            onRowToggle={(e) => setExpandedRows(e.data)}
-            rowExpansionTemplate={rowExpansionTemplate}
-            responsiveLayout="scroll"
-            dataKey="id"
-          >
-            <Column expander style={{ width: "3em" }} />
-            <Column field="label" header="Name"></Column>
-            <Column field="state" header="State"></Column>
-            <Column field="created_at" header="Timestamp"></Column>
-          </DataTable>
-        </div>
-        <Divider className="my-2 pb-2" />
-        <div className="bold-text">Issuer</div>
-        <div>BLOOCK</div>
-      </Col>
+      <div className="bold-text">Networks</div>
+      <div className="card my-3">
+        <DataTable
+          value={tableNetworksData}
+          expandedRows={expandedRows}
+          onRowToggle={(e) => setExpandedRows(e.data)}
+          rowExpansionTemplate={rowExpansionTemplate}
+          responsiveLayout="scroll"
+          dataKey="id"
+        >
+          <Column expander style={{ width: "3em" }} />
+          <Column field="label" header="Name"></Column>
+          <Column field="state" header="State"></Column>
+          <Column field="created_at" header="Timestamp"></Column>
+        </DataTable>
+      </div>
+      <Divider className="my-2 pb-2" />
+      <div className="bold-text">Issuer</div>
+      <div>BLOOCK</div>
     </>
   );
 };
