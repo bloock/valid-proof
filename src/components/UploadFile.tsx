@@ -4,12 +4,10 @@ import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import Form from "react-bootstrap/Form";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import { useDropzone } from "react-dropzone";
 import "../styles.css";
-import { useIsJson } from "../utils/use-is-json";
 
 type FileSectionProps = {
   onFileChange: (name: string | null) => any;
@@ -50,13 +48,10 @@ const FileSection: React.FC<FileSectionProps> = ({
   onFileChange = () => {},
 }) => {
   const [currentRecord, setCurrentRecord] = useState<Record | null>(null);
-  const [selectedJSON, setSelectedJSON] = useState<string>("");
   const [selectedFile, setSelectedFile] = useState<{
     name: string;
     value: string | ArrayBuffer | null;
   } | null>(null);
-
-  const isJSONValid = useIsJson;
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length >= 0) {
@@ -74,30 +69,13 @@ const FileSection: React.FC<FileSectionProps> = ({
 
   useEffect(() => {
     onRecordChange(currentRecord);
-    onElementChange(selectedJSON || selectedFile);
+    onElementChange(selectedFile);
     onFileChange(selectedFile?.name ? selectedFile.name : null);
-  }, [currentRecord, selectedFile, selectedJSON]);
+  }, [currentRecord, selectedFile]);
 
-  const handleJSONChange = (json: string | null) => {
-    setCurrentRecord(null);
-    setSelectedJSON("");
-
-    if (json != null) {
-      setSelectedJSON(json);
-    }
-  };
-
-  const handleJSONSubmit = () => {
-    try {
-      let object = JSON.parse(selectedJSON);
-      if (object) {
-        const record = Record.fromObject(object);
-        setCurrentRecord(record);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  useEffect(() => {
+    handleFileSubmit();
+  }, [selectedFile]);
 
   const handleFileChange = (file: File | null) => {
     setCurrentRecord(null);
@@ -113,11 +91,13 @@ const FileSection: React.FC<FileSectionProps> = ({
           name: file.name,
           value: fileReader.result,
         });
+        handleFileSubmit();
       };
     }
   };
 
   const handleFileSubmit = () => {
+    debugger;
     if (selectedFile != null && typeof selectedFile.value == "string") {
       const record = Record.fromString(selectedFile.value);
       setCurrentRecord(record);
@@ -163,7 +143,7 @@ const FileSection: React.FC<FileSectionProps> = ({
                       </span>
                     </div>
 
-                    <div className="mt-3">
+                    {/* <div className="mt-3">
                       <div>
                         {currentRecord ? (
                           <button
@@ -176,7 +156,6 @@ const FileSection: React.FC<FileSectionProps> = ({
                         ) : (
                           <button
                             className="button"
-                            onClick={() => handleFileSubmit()}
                             style={{ border: "none" }}
                             type="submit"
                           >
@@ -184,7 +163,7 @@ const FileSection: React.FC<FileSectionProps> = ({
                           </button>
                         )}
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 ) : (
                   <div>
@@ -201,52 +180,6 @@ const FileSection: React.FC<FileSectionProps> = ({
             </div>
           </div>
         </section>
-      </Tab>
-      <Tab eventKey="json" title="JSON format">
-        <div>
-          <div className="mb-3 d-flex flex-column align-items-center">
-            <Form.Control
-              as="textarea"
-              placeholder={"Paste your JSON here"}
-              rows={10}
-              value={selectedJSON}
-              onChange={(e) => handleJSONChange(e.target.value)}
-            />
-            <div>
-              {currentRecord ? (
-                <button
-                  className="button mt-3"
-                  onClick={() => handleJSONChange(null)}
-                  style={{ border: "none" }}
-                >
-                  Validate another JSON
-                </button>
-              ) : (
-                <div className="mt-2 text-center" style={{ height: "100px" }}>
-                  <div
-                    className={`${
-                      isJSONValid(selectedJSON) === false
-                        ? "visible"
-                        : "invisible"
-                    }`}
-                  >
-                    <p> Please introduce a valid JSON for the validation </p>{" "}
-                  </div>
-
-                  <button
-                    className="button mt-2 validateButton"
-                    style={{ border: "none" }}
-                    onClick={() => handleJSONSubmit()}
-                    type="submit"
-                    disabled={isJSONValid(selectedJSON) === false}
-                  >
-                    Validate JSON
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
       </Tab>
     </Tabs>
   );
