@@ -29,8 +29,8 @@ export const useFileType = (file: any) => {
       }
     } else if (isJSONValid === true) {
       return "application/json";
-    } else {
-      return null;
+    } else if (Object.values(FileType).includes(file)) {
+      return file;
     }
   } else {
     return null;

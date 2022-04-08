@@ -7,7 +7,8 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import { useDropzone } from "react-dropzone";
-import "../styles.css";
+import "../../styles.css";
+import { useFileType } from "../../utils/use-file-type";
 
 type FileSectionProps = {
   onFileChange: (name: string | null) => any;
@@ -53,6 +54,8 @@ const FileSection: React.FC<FileSectionProps> = ({
     value: string | ArrayBuffer | null;
   } | null>(null);
 
+  const fileTypeDetect = useFileType;
+
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length >= 0) {
       handleFileChange(acceptedFiles[0]);
@@ -71,36 +74,59 @@ const FileSection: React.FC<FileSectionProps> = ({
     onRecordChange(currentRecord);
     onElementChange(selectedFile);
     onFileChange(selectedFile?.name ? selectedFile.name : null);
+    console.log(currentRecord && currentRecord.getHash());
   }, [currentRecord, selectedFile]);
 
-  useEffect(() => {
-    handleFileSubmit();
-  }, [selectedFile]);
-
-  const handleFileChange = (file: File | null) => {
-    setCurrentRecord(null);
-    setSelectedFile(null);
-
-    if (file != null) {
-      const fileReader = new FileReader();
-      if (file) {
-        fileReader.readAsDataURL(file);
-      }
-      fileReader.onload = () => {
-        setSelectedFile({
-          name: file.name,
-          value: fileReader.result,
-        });
-        handleFileSubmit();
+  function fileToBytes(file: File): Promise<Uint8Array> {
+    return new Promise((resolve, reject) => {
+      let reader = new FileReader();
+      reader.onload = function () {
+        let arraybuffer = reader.result;
+        if (arraybuffer) {
+          let bytes = new Uint8Array(arraybuffer as ArrayBuffer);
+          resolve(bytes);
+        } else {
+          reject();
+        }
       };
-    }
-  };
+      reader.onerror = function () {
+        reject();
+      };
+      reader.readAsArrayBuffer(file);
+    });
+  }
 
-  const handleFileSubmit = () => {
-    debugger;
-    if (selectedFile != null && typeof selectedFile.value == "string") {
-      const record = Record.fromString(selectedFile.value);
-      setCurrentRecord(record);
+  function fileToJSON(file: File): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let reader = new FileReader();
+      reader.onload = function () {
+        try {
+          resolve(JSON.parse(reader.result as string));
+        } catch {
+          reject();
+        }
+      };
+      reader.onerror = function () {
+        reject();
+      };
+      reader.readAsText(file);
+    });
+  }
+
+  const handleFileChange = async (file: File | null) => {
+    if (file != null) {
+      let fileType = fileTypeDetect(file.type);
+      switch (fileType) {
+        case "application/pdf":
+          setCurrentRecord(await Record.fromPDF(await fileToBytes(file)));
+          break;
+        case "application/json":
+          setCurrentRecord(await Record.fromJSON(await fileToJSON(file)));
+          break;
+        default:
+          setCurrentRecord(Record.fromTypedArray(await fileToBytes(file)));
+          break;
+      }
     }
   };
 
@@ -142,28 +168,6 @@ const FileSection: React.FC<FileSectionProps> = ({
                         </svg>
                       </span>
                     </div>
-
-                    {/* <div className="mt-3">
-                      <div>
-                        {currentRecord ? (
-                          <button
-                            className="button"
-                            onClick={() => handleFileChange(null)}
-                            style={{ border: "none" }}
-                          >
-                            Validate another file
-                          </button>
-                        ) : (
-                          <button
-                            className="button"
-                            style={{ border: "none" }}
-                            type="submit"
-                          >
-                            Validate file
-                          </button>
-                        )}
-                      </div>
-                    </div> */}
                   </div>
                 ) : (
                   <div>

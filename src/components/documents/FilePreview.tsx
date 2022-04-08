@@ -1,9 +1,8 @@
 import loadable from "@loadable/component";
 import React from "react";
-// import ReactJson from "react-json-view";
 import { Document, Page, pdfjs } from "react-pdf";
-import { useFileType } from "../utils/use-file-type";
-import { useIsJson } from "../utils/use-is-json";
+import { useFileType } from "../../utils/use-file-type";
+import { useIsJson } from "../../utils/use-is-json";
 
 const ReactJson = loadable(() => import("react-json-view"));
 
@@ -24,13 +23,9 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
   const previewBasedOnMimeType = () => {
     switch (detectedFile) {
       case "image/png":
-        return <img className="img-contain" src={srcElement}></img>;
       case "image/jpg":
-        return <img className="img-contain" src={srcElement}></img>;
       case "image/jpg":
-        return <img className="img-contain" src={srcElement}></img>;
       case "image/jpeg":
-        return <img className="img-contain" src={srcElement}></img>;
       case "image/svg+xml":
         return <img className="img-contain" src={srcElement}></img>;
       case "application/json":

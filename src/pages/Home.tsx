@@ -7,7 +7,7 @@ import "primereact/resources/themes/saga-blue/theme.css";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
-import FileSection from "../components/UploadFile";
+import FileSection from "../components/documents/UploadFile";
 import VerificationSection from "../components/verification/VerificationMain";
 import demoimage1 from "../images/howitworks-1.jpg";
 import demoimage2 from "../images/howitworks-2.jpg";
@@ -30,7 +30,6 @@ const Home = () => {
         responseType: "arraybuffer",
       })
       .then((res) => {
-        console.log(res);
         let arrayContentType = res.headers["content-type"].split(";");
         setElement({ name: urlParam, value: arrayContentType[0] });
         setFileName(urlParam.path);
@@ -42,8 +41,6 @@ const Home = () => {
     setRecord(Record.fromUint8Array(array));
     return;
   }
-
-  console.log(fileName);
 
   useEffect(() => {
     const recordQuery = searchParams.get("record");
