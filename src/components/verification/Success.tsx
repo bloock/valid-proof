@@ -22,8 +22,6 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
 }) => {
   const [expandedRows, setExpandedRows] = useState<any>(null);
 
-  console.log(recordProof);
-
   const tableNetworksData = (recordProof as any)?.anchor.networks.map(
     (network: any) => {
       const dates = moment(network.created_at * 1000).format(
