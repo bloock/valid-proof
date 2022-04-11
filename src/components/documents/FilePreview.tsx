@@ -1,9 +1,8 @@
 import loadable from "@loadable/component";
-import React from "react";
+import React, { useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { useFileType } from "../../utils/use-file-type";
 import { useIsJson } from "../../utils/use-is-json";
-
 
 const ReactJson = loadable(() => import("react-json-view"));
 
@@ -17,6 +16,13 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
   const fileDetect = useFileType;
   const isJSONValid = useIsJson;
   let detectedFile = fileDetect(element);
+  const [numPages, setNumPage] = useState<number>(0);
+  const [pageNumber, setPageNumber] = useState(1);
+
+  function onDocumentLoadSuccess(pdfInfo: any) {
+    debugger;
+    setNumPage(pdfInfo.numPages);
+  }
 
   let srcElement: any;
 
@@ -68,8 +74,30 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
       case "application/pdf":
         return (
           <div className="pdf-viewer">
-            <Document file={srcElement} className="pdf-viewer">
-              <Page pageNumber={1} />
+            <Document
+              file={srcElement}
+              className="pdf-viewer"
+              onLoadSuccess={onDocumentLoadSuccess}
+            >
+              <Page pageNumber={pageNumber} />
+              <div>
+                {numPages > pageNumber ? (
+                  <div
+                    className="button mt-1 w-25 text-center"
+                    onClick={() => setPageNumber(pageNumber + 1)}
+                  >
+                    <small>Next</small>
+                  </div>
+                ) : null}
+                {pageNumber > 1 ? (
+                  <div
+                    className="button mt-1 w-25 text-center"
+                    onClick={() => setPageNumber(pageNumber - 1)}
+                  >
+                    <small>Previous</small>
+                  </div>
+                ) : null}
+              </div>
             </Document>
           </div>
         );
