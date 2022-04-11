@@ -58,6 +58,7 @@ p {
 
 .button:hover {
   background-color: rgb(59, 53, 53);
+  cursor: pointer;
 }
 
 .line {
@@ -271,4 +272,8 @@ textarea {
   border: none !important;
   padding: 0 !important;
   padding-top: 1rem !important;
+}
+
+.react-pdf__Page__annotations .annotationLayer {
+  display: none;
 }

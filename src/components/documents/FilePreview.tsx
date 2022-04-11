@@ -20,7 +20,6 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
   const [pageNumber, setPageNumber] = useState(1);
 
   function onDocumentLoadSuccess(pdfInfo: any) {
-    debugger;
     setNumPage(pdfInfo.numPages);
   }
 
@@ -80,23 +79,34 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
               onLoadSuccess={onDocumentLoadSuccess}
             >
               <Page pageNumber={pageNumber} />
-              <div>
-                {numPages > pageNumber ? (
-                  <div
-                    className="button mt-1 w-25 text-center"
-                    onClick={() => setPageNumber(pageNumber + 1)}
-                  >
-                    <small>Next</small>
-                  </div>
-                ) : null}
-                {pageNumber > 1 ? (
-                  <div
-                    className="button mt-1 w-25 text-center"
-                    onClick={() => setPageNumber(pageNumber - 1)}
-                  >
-                    <small>Previous</small>
-                  </div>
-                ) : null}
+              <div className="d-flex align-items-center justify-content-center">
+                <div className=" w-25">
+                  {pageNumber > 1 ? (
+                    <div
+                      style={{ padding: "2px" }}
+                      className="button mt-1 text-center"
+                      onClick={() => setPageNumber(pageNumber - 1)}
+                    >
+                      <small>&lt;</small>
+                    </div>
+                  ) : null}
+                </div>
+                <div>
+                  <small>
+                    {pageNumber} of {numPages}
+                  </small>
+                </div>
+                <div className="w-25">
+                  {numPages > pageNumber ? (
+                    <div
+                      style={{ padding: "2px" }}
+                      className="button mt-1 text-center"
+                      onClick={() => setPageNumber(pageNumber + 1)}
+                    >
+                      <small>&gt;</small>
+                    </div>
+                  ) : null}
+                </div>
               </div>
             </Document>
           </div>
