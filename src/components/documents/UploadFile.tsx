@@ -77,7 +77,6 @@ const FileSection: React.FC<FileSectionProps> = ({
   }, [currentRecord, selectedFile]);
 
   function fileToBytes(file: File): Promise<Uint8Array> {
-    debugger;
     return new Promise((resolve, reject) => {
       let reader = new FileReader();
       reader.onload = function () {
@@ -114,7 +113,6 @@ const FileSection: React.FC<FileSectionProps> = ({
   }
 
   const handleFileChange = async (file: File | null) => {
-    debugger;
     if (file != null) {
       let fileType = fileTypeDetect(file.type);
 

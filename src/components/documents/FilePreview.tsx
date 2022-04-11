@@ -16,7 +16,6 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
   const fileDetect = useFileType;
   const isJSONValid = useIsJson;
   let detectedFile = fileDetect(element);
-  debugger;
 
   let srcElement: any;
 
@@ -49,7 +48,6 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
       case "application/x-msdownload":
       case "application/json":
         if (isJSONValid(JSON.stringify(element.value))) {
-          debugger;
           return (
             <ReactJson
               style={{
@@ -79,14 +77,12 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
     }
   }
 
-  console.log(srcElement);
-
   return (
     <div className="p-card height-100 p-3 d-flex justify-content-center">
       {previewBasedOnMimeType() !== null ? (
         previewBasedOnMimeType()
       ) : (
-        <>Not found</>
+        <>File not found</>
       )}
     </div>
   );
