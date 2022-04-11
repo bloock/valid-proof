@@ -113,6 +113,7 @@ const FileSection: React.FC<FileSectionProps> = ({
   }
 
   const handleFileChange = async (file: File | null) => {
+    debugger;
     if (file != null) {
       let fileType = fileTypeDetect(file.type);
 
@@ -138,6 +139,9 @@ const FileSection: React.FC<FileSectionProps> = ({
 
           break;
       }
+    } else {
+      setSelectedFile(null);
+      setCurrentRecord(null);
     }
   };
 
