@@ -4,8 +4,6 @@ import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import Tab from "react-bootstrap/Tab";
-import Tabs from "react-bootstrap/Tabs";
 import { useDropzone } from "react-dropzone";
 import "../../styles.css";
 import { useFileType } from "../../utils/use-file-type";
@@ -22,13 +20,15 @@ const baseStyle = {
   flexDirection: "column",
   alignItems: "center",
   padding: "20px",
-  borderWidth: 2,
+  borderWidth: 3,
   borderRadius: 2,
+  borderColor: "blue",
   backgroundColor: "#fafafa",
   color: "#bdbdbd",
-  outline: "none",
   transition: "border .24s ease-in-out",
-  height: "250px",
+  height: "323px",
+  outline: "2px dashed #07D1B6",
+  outlineOffset: "-24px",
 };
 
 const activeStyle = {
@@ -77,6 +77,7 @@ const FileSection: React.FC<FileSectionProps> = ({
   }, [currentRecord, selectedFile]);
 
   function fileToBytes(file: File): Promise<Uint8Array> {
+    debugger;
     return new Promise((resolve, reject) => {
       let reader = new FileReader();
       reader.onload = function () {
@@ -156,51 +157,50 @@ const FileSection: React.FC<FileSectionProps> = ({
   );
 
   return (
-    <Tabs defaultActiveKey="text" className="mb-3 nav-fill">
-      <Tab eventKey="text" title="File format">
-        <section>
-          <div className="container" {...getRootProps({ style: style as any })}>
-            <div className="vertical-center horizontal-center">
+    <section>
+      <div
+        className="container mt-5"
+        {...getRootProps({ style: style as any })}
+      >
+        <div className="vertical-center horizontal-center">
+          <div>
+            {selectedFile ? (
               <div>
-                {selectedFile ? (
-                  <div>
-                    <div>
-                      <span>
-                        {selectedFile && selectedFile !== undefined
-                          ? selectedFile.name
-                          : null}
-                      </span>
-                      <span onClick={() => handleFileChange(null)}>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          fill="currentColor"
-                          className="bi bi-x"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-                        </svg>
-                      </span>
-                    </div>
-                  </div>
-                ) : (
-                  <div>
-                    <p>Drag and drop your file</p>
-                    <p>or</p>
-
-                    <div className="button mt-1">
-                      <input {...getInputProps()} />
-                      <label htmlFor="file">Select file</label>
-                    </div>
-                  </div>
-                )}
+                <div>
+                  <span>
+                    {selectedFile && selectedFile !== undefined
+                      ? selectedFile.name
+                      : null}
+                  </span>
+                  <span onClick={() => handleFileChange(null)}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      fill="currentColor"
+                      className="bi bi-x"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                    </svg>
+                  </span>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div>
+                <p>Drag and drop your file</p>
+                <p>or</p>
+
+                <div className="button mt-1">
+                  <input {...getInputProps()} />
+                  <label htmlFor="file">Select file</label>
+                </div>
+              </div>
+            )}
           </div>
-        </section>
-      </Tab>
-    </Tabs>
+        </div>
+      </div>
+    </section>
   );
 };
 

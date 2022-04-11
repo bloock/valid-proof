@@ -16,6 +16,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
   const fileDetect = useFileType;
   const isJSONValid = useIsJson;
   let detectedFile = fileDetect(element);
+  debugger;
 
   let srcElement: any;
 
@@ -27,15 +28,16 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
     } else if (element.value instanceof Uint8Array) {
       if (detectedFile === "application/json") {
         srcElement = element.value;
-      } else {
-        let btoaElement = btoa(String.fromCharCode.apply(null, element.value));
+      } else if (detectedFile) {
+        let btoaElement = Buffer.from(element.value).toString("base64");
         srcElement = `data:${detectedFile};base64,${btoaElement}`;
+      } else {
+        srcElement = null;
       }
     } else {
-      return null;
+      srcElement = null;
     }
   }
-
   function previewBasedOnMimeType() {
     switch (detectedFile) {
       case "image/png":
@@ -76,6 +78,8 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
         return null;
     }
   }
+
+  console.log(srcElement);
 
   return (
     <div className="p-card height-100 p-3 d-flex justify-content-center">
