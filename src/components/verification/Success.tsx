@@ -1,6 +1,5 @@
 import { Proof, Record } from "@bloock/sdk";
 import moment from "moment";
-import { Accordion, AccordionTab } from "primereact/accordion";
 import { Button } from "primereact/button";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
@@ -145,63 +144,60 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
       </div>
       <div>BLOOCK</div>
       <Divider className="my-2 pb-2" />
-      <Accordion>
-        <AccordionTab header="Detailed info" contentClassName="bg-light">
-          {recordProof ? (
-            <>
-              <Divider className="my-2 pb-2" />
-              <TooltipComponent
-                title="Anchor"
-                description="An anchor is a snapshot of the state tree which is registered to blockchain protocol. It is formed by the resulting state of the state transition."
-              >
-                <div className="bold-text">
-                  <p>
-                    Anchor
-                    <i className="pi pi-question-circle px-2 py-1 text-secondary "></i>
-                  </p>
-                </div>
-              </TooltipComponent>
 
-              <div>{(recordProof as any).anchor.anchor_id}</div>
+      {recordProof ? (
+        <>
+          <Divider className="my-2 pb-2" />
+          <TooltipComponent
+            title="Anchor"
+            description="An anchor is a snapshot of the state tree which is registered to blockchain protocol. It is formed by the resulting state of the state transition."
+          >
+            <div className="bold-text">
+              <p>
+                Anchor
+                <i className="pi pi-question-circle px-2 py-1 text-secondary "></i>
+              </p>
+            </div>
+          </TooltipComponent>
 
-              <Divider className="my-2 pb-2" />
-              <TooltipComponent
-                title="Root"
-                description="This value represents the root of the state tree. Users can easily verify the root of your blockchain in any of the public sources of Ethereum (i.e. https://etherscan.io/)."
-              >
-                <div className="bold-text">
-                  <p>
-                    Root
-                    <i className="pi pi-question-circle px-2 py-1 text-secondary "></i>
-                  </p>
-                </div>
-              </TooltipComponent>
+          <div>{(recordProof as any).anchor.anchor_id}</div>
 
-              <div style={{ overflowWrap: "break-word" }}>
-                <div>{(recordProof as any).root}</div>
-              </div>
-              <Divider className="my-2 pb-2" />
-            </>
-          ) : null}
-          <div className="bold-text">Networks</div>
-          <div className="card my-3">
-            <DataTable
-              value={tableNetworksData}
-              expandedRows={expandedRows}
-              onRowToggle={(e) => setExpandedRows(e.data)}
-              rowExpansionTemplate={rowExpansionTemplate}
-              responsiveLayout="scroll"
-              dataKey="id"
-            >
-              <Column expander style={{ width: "3em" }} />
-              <Column field="label" header="Name"></Column>
-              <Column field="state" header="State"></Column>
-              <Column field="created_at" header="Timestamp"></Column>
-            </DataTable>
+          <Divider className="my-2 pb-2" />
+          <TooltipComponent
+            title="Root"
+            description="This value represents the root of the state tree. Users can easily verify the root of your blockchain in any of the public sources of Ethereum (i.e. https://etherscan.io/)."
+          >
+            <div className="bold-text">
+              <p>
+                Root
+                <i className="pi pi-question-circle px-2 py-1 text-secondary "></i>
+              </p>
+            </div>
+          </TooltipComponent>
+
+          <div style={{ overflowWrap: "break-word" }}>
+            <div>{(recordProof as any).root}</div>
           </div>
           <Divider className="my-2 pb-2" />
-        </AccordionTab>
-      </Accordion>
+        </>
+      ) : null}
+      <div className="bold-text">Networks</div>
+      <div className="card my-3">
+        <DataTable
+          value={tableNetworksData}
+          expandedRows={expandedRows}
+          onRowToggle={(e) => setExpandedRows(e.data)}
+          rowExpansionTemplate={rowExpansionTemplate}
+          responsiveLayout="scroll"
+          dataKey="id"
+        >
+          <Column expander style={{ width: "3em" }} />
+          <Column field="label" header="Name"></Column>
+          <Column field="state" header="State"></Column>
+          <Column field="created_at" header="Timestamp"></Column>
+        </DataTable>
+      </div>
+      <Divider className="my-2 pb-2" />
     </>
   );
 };

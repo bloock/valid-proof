@@ -93,8 +93,8 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
           }
 
           const timestamp = await client.verifyProof(recordProof);
-          if (0) {
-            setRecordTimestamp(0);
+          if (timestamp) {
+            setRecordTimestamp(2);
           } else {
             setErrorStep(2);
           }
