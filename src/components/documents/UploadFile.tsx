@@ -50,7 +50,7 @@ const FileSection: React.FC<FileSectionProps> = ({
 }) => {
   const [currentRecord, setCurrentRecord] = useState<Record | null>(null);
   const [selectedFile, setSelectedFile] = useState<{
-    name: string;
+    name: string | undefined;
     value: string | ArrayBuffer | null;
   } | null>(null);
 
@@ -74,7 +74,6 @@ const FileSection: React.FC<FileSectionProps> = ({
     onRecordChange(currentRecord);
     onElementChange(selectedFile);
     onFileChange(selectedFile?.name ? selectedFile.name : null);
-    console.log(currentRecord && currentRecord.getHash());
   }, [currentRecord, selectedFile]);
 
   function fileToBytes(file: File): Promise<Uint8Array> {
@@ -116,15 +115,27 @@ const FileSection: React.FC<FileSectionProps> = ({
   const handleFileChange = async (file: File | null) => {
     if (file != null) {
       let fileType = fileTypeDetect(file.type);
+
       switch (fileType) {
         case "application/pdf":
           setCurrentRecord(await Record.fromPDF(await fileToBytes(file)));
+          setSelectedFile({ name: file?.name, value: await fileToBytes(file) });
           break;
         case "application/json":
           setCurrentRecord(await Record.fromJSON(await fileToJSON(file)));
+          setSelectedFile({
+            name: file?.name,
+            value: await fileToJSON(file),
+          });
+
           break;
         default:
           setCurrentRecord(Record.fromTypedArray(await fileToBytes(file)));
+          setSelectedFile({
+            name: file?.name,
+            value: await fileToBytes(file),
+          });
+
           break;
       }
     }

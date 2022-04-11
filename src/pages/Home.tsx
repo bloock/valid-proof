@@ -13,6 +13,8 @@ import demoimage1 from "../images/howitworks-1.jpg";
 import demoimage2 from "../images/howitworks-2.jpg";
 import demoimage3 from "../images/howitworks-3.jpg";
 import "../styles.css";
+import { useFileType } from "../utils/use-file-type";
+import { useIsJson } from "../utils/use-is-json";
 
 const Home = () => {
   const [record, setRecord] = useState<Record | null>(null);
@@ -24,21 +26,32 @@ const Home = () => {
   const [searchParams] = useSearchParams();
 
   async function fileLoader(urlParam: any) {
+    const isJSONValid = useIsJson;
+    const fileDetect = useFileType;
+
     urlParam = new URL(urlParam);
     let bytes = await axios
       .get(urlParam, {
         responseType: "arraybuffer",
       })
       .then((res) => {
-        let arrayContentType = res.headers["content-type"].split(";");
-        setElement({ name: urlParam, value: arrayContentType[0] });
         setFileName(urlParam.path);
-
         return Buffer.from(res.data);
       });
 
     let array = new Uint8Array(bytes);
-    setRecord(Record.fromUint8Array(array));
+    var string = new TextDecoder().decode(array);
+
+    if (isJSONValid(string)) {
+      setRecord(await Record.fromJSON(JSON.parse(string)));
+      setElement({ name: urlParam.href, value: JSON.parse(string) });
+    } else if (fileDetect(urlParam.href) === "application/pdf") {
+      setRecord(await Record.fromPDF(array));
+      setElement({ name: urlParam.href, value: urlParam.href });
+    } else {
+      setRecord(await Record.fromTypedArray(array));
+      setElement({ name: urlParam.href, value: array });
+    }
     return;
   }
 

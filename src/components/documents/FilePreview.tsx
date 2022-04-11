@@ -17,10 +17,26 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
   const isJSONValid = useIsJson;
   let detectedFile = fileDetect(element);
 
-  const srcElement =
-    element.name instanceof URL ? element.name.href : element.value;
+  let srcElement: any;
 
-  const previewBasedOnMimeType = () => {
+  if (element) {
+    if (element?.name instanceof URL) {
+      srcElement = element.name.href;
+    } else if (isJSONValid(element.value)) {
+      srcElement = element.value;
+    } else if (element.value instanceof Uint8Array) {
+      if (detectedFile === "application/json") {
+        srcElement = element.value;
+      } else {
+        let btoaElement = btoa(String.fromCharCode.apply(null, element.value));
+        srcElement = `data:${detectedFile};base64,${btoaElement}`;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  function previewBasedOnMimeType() {
     switch (detectedFile) {
       case "image/png":
       case "image/jpg":
@@ -28,8 +44,10 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
       case "image/jpeg":
       case "image/svg+xml":
         return <img className="img-contain" src={srcElement}></img>;
+      case "application/x-msdownload":
       case "application/json":
-        if (isJSONValid(element)) {
+        if (isJSONValid(JSON.stringify(element.value))) {
+          debugger;
           return (
             <ReactJson
               style={{
@@ -40,7 +58,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
               displayDataTypes={false}
               displayObjectSize={false}
               name={false}
-              src={JSON.parse(element)}
+              src={srcElement}
             />
           );
         } else {
@@ -57,7 +75,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
       default:
         return null;
     }
-  };
+  }
 
   return (
     <div className="p-card height-100 p-3 d-flex justify-content-center">
