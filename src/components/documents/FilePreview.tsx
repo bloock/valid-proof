@@ -4,6 +4,7 @@ import { Document, Page, pdfjs } from "react-pdf";
 import { useFileType } from "../../utils/use-file-type";
 import { useIsJson } from "../../utils/use-is-json";
 
+
 const ReactJson = loadable(() => import("react-json-view"));
 
 type FilePreviewProps = {
