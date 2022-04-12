@@ -24,7 +24,10 @@ const VerificationError: React.FC<VerificationErrorProps> = ({
         <span className="mx-2 bold-text">{fileName}</span>
         <div className="my-3">
           <p className="color-error">
-            <i className="pi pi-check-circle px-1 py-1 "></i>
+            <i
+              className="pi pi-times-circle
+ px-1 py-1 "
+            ></i>
             Your record couldn’t be verified
           </p>
         </div>

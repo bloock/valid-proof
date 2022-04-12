@@ -1,7 +1,6 @@
 import { BloockClient, Network, Proof, Record } from "@bloock/sdk";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "primeicons/primeicons.css";
-import { ProgressSpinner } from "primereact/progressspinner";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import React, { useEffect, useState } from "react";
@@ -27,6 +26,10 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   element,
 }) => {
   const [recordProof, setRecordProof] = useState<Proof | null>(null);
+  const [validateIntegrity, setValidateIntegrity] = useState<boolean | null>(
+    null
+  );
+
   const [recordProofVerified, setRecordProofVerified] = useState<
     boolean | null
   >(null);
@@ -47,6 +50,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   useEffect(() => {
     const getProof = async () => {
       if (record) {
+        debugger;
         try {
           const proof = await client.getProof([record]);
           if (proof != null) {
@@ -64,19 +68,30 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   }, [record]);
 
   useEffect(() => {
-    const validateRecordProof = async () => {
+    const verifyProof = async () => {
       if (recordProof != null) {
-        setRecordProofVerified(true);
+        try {
+          const record = await client.verifyProof(recordProof);
+          if (record) {
+            setRecordProofVerified(true);
+          } else {
+            setErrorStep(1);
+          }
+        } catch (e) {
+          setErrorStep(1);
+        }
       }
     };
+
     setTimeout(() => {
-      validateRecordProof();
+      verifyProof();
     }, getRandomInterval(1000, 2000));
   }, [recordProof]);
 
   useEffect(() => {
     const getRecordTimestamp = async () => {
-      if (recordProof != null) {
+      if (recordProofVerified != null) {
+        debugger;
         try {
           let recordNetwork = (recordProof as any).anchor.networks[0];
           let network = Network.ETHEREUM_MAINNET;
@@ -92,11 +107,11 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
               break;
           }
 
-          const timestamp = await client.verifyProof(recordProof);
-          if (timestamp) {
+          const timestamp = await client.validateRoot(record, network);
+          debugger;
+          if (timestamp != null) {
+            debugger;
             setRecordTimestamp(2);
-          } else {
-            setErrorStep(2);
           }
         } catch (e) {
           setErrorStep(2);
@@ -112,10 +127,10 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   return (
     <div className="container-lg mt-5 verification-section">
       <div
-        className=" horizontal-center timeline-margins mb-5 stepper"
-        style={{ paddingTop: "30px", paddingBottom: "70px" }}
+        className=" horizontal-center timeline-margins mb-5 stepper bg-light "
+        style={{ paddingTop: "30px", paddingBottom: "40px" }}
       >
-        <div className="bold-text header-title mb-4 mt-4">
+        <div className="bold-text header-title j mb-4 mt-4">
           Your verification:
         </div>
         <StepperVerification
@@ -127,13 +142,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
       </div>
       <div className="little-top-margin "></div>
       <div className="horizontal-center">
-        {recordTimestamp == null && errorStep == null ? (
-          <div className="progressSpinner" style={{ paddingBottom: "40px" }}>
-            <ProgressSpinner style={{ color: "#06d7be" }} />
-            <p className="text-secondary">Your record is being verified...</p>
-            <div className="mt-5">{""}</div>
-          </div>
-        ) : (
+        {recordTimestamp == null && errorStep == null ? null : (
           <div className="pt-2 mb-5">
             {recordTimestamp && errorStep == null ? (
               <div>
@@ -166,7 +175,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
               </div>
             )}
             <div
-              className="mt-5 py-4 border-0 bg-light verification-container"
+              className="mt-5 py-4 border-0 bg-light 5 verification-container"
               style={{ textAlign: "left" }}
             >
               <Row className="justify-content-between pt-3 pb-3">

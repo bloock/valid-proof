@@ -87,7 +87,7 @@ p {
 
 @media (min-width: 750px) {
   .top-margin {
-    height: 10rem;
+    height: 3rem;
   }
 }
 
@@ -204,11 +204,11 @@ textarea {
   }
 }
 
-@media (max-width: 600px) {
+/* @media (max-width: 600px) {
   .stepper {
     display: none;
   }
-}
+} */
 
 .validateButton:disabled {
   opacity: 50%;
@@ -274,6 +274,28 @@ textarea {
   padding-top: 1rem !important;
 }
 
-.react-pdf__Page__annotations .annotationLayer {
-  display: none;
+.react-pdf__Page__annotations.annotationLayer {
+  display: none !important;
+}
+
+/* Vertical Timeline */
+
+.p-timeline-event {
+  display: flex;
+}
+
+.p-timeline-event-content {
+  flex: 3 0;
+  padding: 0 1rem;
+}
+
+.stepper {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  margin-bottom: 4rem !important;
+}
+
+.p-timeline-event-opposite {
+  flex: 0 1;
 }

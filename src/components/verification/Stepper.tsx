@@ -21,15 +21,15 @@ const StepperVerification: React.FC<StepperVerificationProps> = ({
     idle: "#d7d7d7",
   };
 
+  debugger;
   const events = [
     {
       status: "Retrieve integrity proof",
-      description: "",
       icon:
         errorStep === 0
           ? "pi pi-times px-2 py-2 click-icon"
-          : recordTimestamp == null
-          ? "pi pi-check px-2 py-2 click-icon"
+          : recordProof == null
+          ? "pi pi-check px-2 py-2 click-icon pi pi-spin pi-spinner"
           : "pi pi-check px-2 py-2 click-icon",
       color:
         errorStep === 0
@@ -40,12 +40,11 @@ const StepperVerification: React.FC<StepperVerificationProps> = ({
     },
     {
       status: "Validate integrity proof",
-      description: "",
       icon:
         errorStep === 1
           ? "pi pi-times px-2 py-2 click-icon"
-          : recordProofVerified === null
-          ? "pi pi-check px-2 py-2 click-icon"
+          : recordProofVerified === null && errorStep !== 0
+          ? "pi pi-check px-2 py-2 click-icon pi pi-spin pi-spinner"
           : "pi pi-check px-2 py-2 click-icon",
       color:
         errorStep === 1
@@ -56,12 +55,11 @@ const StepperVerification: React.FC<StepperVerificationProps> = ({
     },
     {
       status: "Validate existence in blockchain",
-      description: "",
       icon:
         errorStep === 2
           ? "pi pi-times px-2 py-2 click-icon"
-          : recordTimestamp === null
-          ? "pi pi-check px-2 py-2 click-icon"
+          : recordTimestamp === null && errorStep !== 0 && errorStep !== 1
+          ? "pi pi-check px-2 py-2 click-icon pi pi-spin pi-spinner"
           : "pi pi-check px-2 py-2 click-icon",
       color:
         errorStep === 2
@@ -86,21 +84,21 @@ const StepperVerification: React.FC<StepperVerificationProps> = ({
   const customizedContent = (item: any) => {
     if (item.status === events[events.length - 1].status) {
       return (
-        <div>
+        <>
           <div>{item.status}</div>
           <div className="px-4">
             <span>{item.description}</span>
           </div>
-        </div>
+        </>
       );
     } else {
       return (
-        <div className="">
+        <>
           <div>{item.status}</div>
           <div className="px-4">
             <span>{item.description}</span>
           </div>
-        </div>
+        </>
       );
     }
   };
@@ -108,10 +106,9 @@ const StepperVerification: React.FC<StepperVerificationProps> = ({
   return (
     <Timeline
       value={events}
-      layout="horizontal"
       content={customizedContent}
       marker={customizedMarker}
-      className="px-5"
+      className="steper"
     />
   );
 };
