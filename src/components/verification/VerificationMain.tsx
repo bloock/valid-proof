@@ -50,7 +50,6 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   useEffect(() => {
     const getProof = async () => {
       if (record) {
-        debugger;
         try {
           const proof = await client.getProof([record]);
           if (proof != null) {
@@ -91,7 +90,6 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   useEffect(() => {
     const getRecordTimestamp = async () => {
       if (recordProofVerified != null) {
-        debugger;
         try {
           let recordNetwork = (recordProof as any).anchor.networks[0];
           let network = Network.ETHEREUM_MAINNET;
@@ -108,9 +106,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
           }
 
           const timestamp = await client.validateRoot(record, network);
-          debugger;
           if (timestamp != null) {
-            debugger;
             setRecordTimestamp(2);
           }
         } catch (e) {
@@ -127,7 +123,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   return (
     <div className="container-lg mt-5 verification-section">
       <div
-        className=" horizontal-center timeline-margins mb-5 stepper bg-light "
+        className=" horizontal-center timeline-margins mb-5 stepper bg-light"
         style={{ paddingTop: "30px", paddingBottom: "40px" }}
       >
         <div className="bold-text header-title j mb-4 mt-4">
@@ -140,10 +136,10 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
           recordProofVerified={recordProofVerified}
         />
       </div>
-      <div className="little-top-margin "></div>
+      <div className="little-top-margin"></div>
       <div className="horizontal-center">
         {recordTimestamp == null && errorStep == null ? null : (
-          <div className="pt-2 mb-5">
+          <div className="pt-2 mb-5 animated fadeIn">
             {recordTimestamp && errorStep == null ? (
               <div>
                 <div className="d-flex flex-row justify-content-center align-items-center">

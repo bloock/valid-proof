@@ -189,10 +189,10 @@ const FileSection: React.FC<FileSectionProps> = ({
                 <p>Drag and drop your file</p>
                 <p>or</p>
 
-                <div className="button mt-1">
+                <button className="button">
                   <input {...getInputProps()} />
-                  <label htmlFor="file">Select file</label>
-                </div>
+                  Select file
+                </button>
               </div>
             )}
           </div>

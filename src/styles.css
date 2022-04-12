@@ -50,10 +50,12 @@ p {
 .button,
 .button:focus {
   background-color: #06d7be;
+  border: none;
   color: white;
   margin: 0 20px 0 20px;
   padding: 8px 12px;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 .button:hover {

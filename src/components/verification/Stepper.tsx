@@ -21,7 +21,6 @@ const StepperVerification: React.FC<StepperVerificationProps> = ({
     idle: "#d7d7d7",
   };
 
-  debugger;
   const events = [
     {
       status: "Retrieve integrity proof",

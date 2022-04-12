@@ -79,16 +79,16 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
               onLoadSuccess={onDocumentLoadSuccess}
             >
               <Page pageNumber={pageNumber} />
-              <div className="d-flex align-items-center justify-content-center">
-                <div className=" w-25">
+              <div className="d-flex align-items-center justify-content-center ">
+                <div className="w-25 d-flex flex-column align-items-end">
                   {pageNumber > 1 ? (
-                    <div
+                    <button
+                      className="button mt-1 text-center w-25"
                       style={{ padding: "2px" }}
-                      className="button mt-1 text-center"
                       onClick={() => setPageNumber(pageNumber - 1)}
                     >
-                      <small>&lt;</small>
-                    </div>
+                      <small className="cursor-pointer">&lt;</small>
+                    </button>
                   ) : null}
                 </div>
                 <div>
@@ -98,13 +98,13 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
                 </div>
                 <div className="w-25">
                   {numPages > pageNumber ? (
-                    <div
+                    <button
                       style={{ padding: "2px" }}
-                      className="button mt-1 text-center"
+                      className="button mt-1 text-center w-25"
                       onClick={() => setPageNumber(pageNumber + 1)}
                     >
-                      <small>&gt;</small>
-                    </div>
+                      <small className="cursor-pointer">&gt;</small>
+                    </button>
                   ) : null}
                 </div>
               </div>
