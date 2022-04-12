@@ -25,6 +25,8 @@ const Home = () => {
   const verificationRef = useRef<HTMLInputElement>(null);
   const [searchParams] = useSearchParams();
 
+  const primaryColor = (window as any).env.PRIMARY_COLOR;
+
   async function fileLoader(urlParam: any) {
     const isJSONValid = useIsJson;
     const fileDetect = useFileType;
@@ -88,14 +90,20 @@ const Home = () => {
                 <li className="mt-2">
                   <i
                     className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
-                    style={{ marginRight: "10px", backgroundColor: "#06D7BE" }}
+                    style={{
+                      marginRight: "10px",
+                      backgroundColor: primaryColor,
+                    }}
                   ></i>
                   <p>Get a simple summary of the evidence details</p>
                 </li>
                 <li className="mt-3">
                   <i
                     className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
-                    style={{ marginRight: "10px", backgroundColor: "#06D7BE" }}
+                    style={{
+                      marginRight: "10px",
+                      backgroundColor: primaryColor,
+                    }}
                   ></i>
 
                   <p>Verify independently your records on blockchain</p>
@@ -103,7 +111,10 @@ const Home = () => {
                 <li className="mt-3">
                   <i
                     className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
-                    style={{ marginRight: "10px", backgroundColor: "#06D7BE" }}
+                    style={{
+                      marginRight: "10px",
+                      backgroundColor: primaryColor,
+                    }}
                   ></i>
 
                   <p>Completely transparent and opensource</p>

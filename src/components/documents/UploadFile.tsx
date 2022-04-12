@@ -14,6 +14,8 @@ type FileSectionProps = {
   onElementChange: (element: any) => any;
 };
 
+const primaryColor = (window as any).env.PRIMARY_COLOR;
+
 const baseStyle = {
   flex: 1,
   display: "flex",
@@ -27,7 +29,7 @@ const baseStyle = {
   color: "#bdbdbd",
   transition: "border .24s ease-in-out",
   height: "323px",
-  outline: "2px dashed #07D1B6",
+  outline: `2px dashed ${primaryColor}`,
   outlineOffset: "-24px",
 };
 

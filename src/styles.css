@@ -1,3 +1,7 @@
+:root {
+  --primary-color: process.env.PRIMARY_COLOR;
+}
+
 * {
   font-family: "Work Sans", sans-serif;
 }
