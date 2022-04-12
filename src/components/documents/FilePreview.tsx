@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { useFileType } from "../../utils/use-file-type";
 import { useIsJson } from "../../utils/use-is-json";
+import Button from "../elements/Button";
 
 const ReactJson = loadable(() => import("react-json-view"));
 
@@ -82,13 +83,12 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
               <div className="d-flex align-items-center justify-content-center ">
                 <div className="w-25 d-flex flex-column align-items-end">
                   {pageNumber > 1 ? (
-                    <button
-                      className="button mt-1 text-center w-25"
-                      style={{ padding: "2px" }}
-                      onClick={() => setPageNumber(pageNumber - 1)}
+                    <Button
+                      className="mt-1 text-center "
+                      cta={() => setPageNumber(pageNumber - 1)}
                     >
                       <small className="cursor-pointer">&lt;</small>
-                    </button>
+                    </Button>
                   ) : null}
                 </div>
                 <div>
@@ -98,13 +98,12 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
                 </div>
                 <div className="w-25">
                   {numPages > pageNumber ? (
-                    <button
-                      style={{ padding: "2px" }}
-                      className="button mt-1 text-center w-25"
-                      onClick={() => setPageNumber(pageNumber + 1)}
+                    <Button
+                      className="mt-1 text-center"
+                      cta={() => setPageNumber(pageNumber + 1)}
                     >
                       <small className="cursor-pointer">&gt;</small>
-                    </button>
+                    </Button>
                   ) : null}
                 </div>
               </div>

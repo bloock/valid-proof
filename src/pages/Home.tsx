@@ -25,7 +25,9 @@ const Home = () => {
   const verificationRef = useRef<HTMLInputElement>(null);
   const [searchParams] = useSearchParams();
 
-  const primaryColor = (window as any).env.PRIMARY_COLOR;
+  const primaryColor = (window as any).env.PRIMARY_COLOR
+    ? (window as any).env.PRIMARY_COLOR
+    : "#07D1B6";
 
   async function fileLoader(urlParam: any) {
     const isJSONValid = useIsJson;

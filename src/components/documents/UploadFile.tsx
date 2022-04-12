@@ -7,6 +7,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import "../../styles.css";
 import { useFileType } from "../../utils/use-file-type";
+import Button from "../elements/Button";
 
 type FileSectionProps = {
   onFileChange: (name: string | null) => any;
@@ -14,8 +15,9 @@ type FileSectionProps = {
   onElementChange: (element: any) => any;
 };
 
-const primaryColor = (window as any).env.PRIMARY_COLOR;
-
+const primaryColor = (window as any).env.PRIMARY_COLOR
+  ? (window as any).env.PRIMARY_COLOR
+  : "#07D1B6";
 const baseStyle = {
   flex: 1,
   display: "flex",
@@ -191,10 +193,10 @@ const FileSection: React.FC<FileSectionProps> = ({
                 <p>Drag and drop your file</p>
                 <p>or</p>
 
-                <button className="button">
+                <Button className="button">
                   <input {...getInputProps()} />
                   Select file
-                </button>
+                </Button>
               </div>
             )}
           </div>
