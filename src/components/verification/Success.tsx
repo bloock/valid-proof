@@ -1,4 +1,4 @@
-import { Proof, Record } from "@bloock/sdk";
+import { Proof } from "@bloock/sdk";
 import moment from "moment";
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { Button } from "primereact/button";
@@ -7,17 +7,16 @@ import { DataTable } from "primereact/datatable";
 import { Divider } from "primereact/divider";
 import { Tag } from "primereact/tag";
 import React, { useState } from "react";
+import { FileElement } from "../../pages/Home";
 import TooltipComponent from "../elements/Tooltip";
 
 type VerificationSuccessProps = {
-  fileName: string | null;
-  record: Record;
+  element: FileElement;
   recordProof: Proof | null;
 };
 
 const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
-  fileName,
-  record,
+  element,
   recordProof,
 }) => {
   const [expandedRows, setExpandedRows] = useState<any>(null);
@@ -96,12 +95,12 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
 
   return (
     <>
-      {fileName !== undefined ? (
-        <div className={fileName ? "mb-5" : "mb-0"}>
+      {element.name !== undefined ? (
+        <div className={element.name ? "mb-5" : "mb-0"}>
           <i
             className=" pi pi-file px-2 py-1 click-icon "
             style={
-              fileName
+              element.name
                 ? {
                     display: "inline",
                     color: "#495057",
@@ -116,7 +115,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
                   }
             }
           ></i>
-          <span className="mx-2 bold-text">{fileName}</span>
+          <span className="mx-2 bold-text">{element.name}</span>
         </div>
       ) : null}
       <div>
@@ -136,7 +135,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
         </TooltipComponent>
       </div>
       <div style={{ overflowWrap: "break-word" }}>
-        {record && record.getHash()}
+        {element.record && element.record.getHash()}
       </div>
       <Divider className="my-2 pb-2" />
       <div className="bold-text">

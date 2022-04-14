@@ -5,6 +5,7 @@ import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
+import { FileElement } from "../../pages/Home";
 import "../../styles.css";
 import FilePreview from "../documents/FilePreview";
 import StepperVerification from "../elements/Stepper";
@@ -21,14 +22,10 @@ const colors = {
 };
 
 type VerificationSectionProps = {
-  record: Record;
-  fileName: string | null;
-  element: any;
+  element: FileElement;
 };
 
 const VerificationSection: React.FC<VerificationSectionProps> = ({
-  record,
-  fileName,
   element,
 }) => {
   const [recordProof, setRecordProof] = useState<Proof | null>(null);
@@ -48,13 +45,13 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     setRecordProof(null);
     setRecordProofVerified(null);
     setRecordTimestamp(null);
-  }, [record]);
+  }, [element]);
 
   useEffect(() => {
     const getProof = async () => {
-      if (record) {
+      if (element) {
         try {
-          const proof = await client.getProof([record]);
+          const proof = await client.getProof([element.record as Record]);
           if (proof != null) {
             setActiveStep(0);
             setRecordProof(proof);
@@ -68,7 +65,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     };
 
     setTimeout(() => getProof(), getRandomInterval(2000, 3000));
-  }, [record]);
+  }, [element]);
 
   useEffect(() => {
     const verifyProof = async () => {
@@ -113,7 +110,10 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
               break;
           }
 
-          const timestamp = await client.validateRoot(record, network);
+          const timestamp = await client.validateRoot(
+            element.record as Record,
+            network
+          );
           if (timestamp !== 0 && timestamp !== null) {
             setActiveStep(2);
             setRecordTimestamp(timestamp);
@@ -235,14 +235,12 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
                 <Col lg={6} className="mb-4 mt-2">
                   {recordTimestamp && errorStep === null ? (
                     <VerificationSuccess
-                      fileName={fileName}
-                      record={record}
+                      element={element}
                       recordProof={recordProof}
                     />
                   ) : (
                     <VerificationError
-                      fileName={fileName}
-                      record={record}
+                      element={element}
                       errorStep={errorStep}
                     />
                   )}

@@ -1,28 +1,26 @@
-import { Record } from "@bloock/sdk";
 import { Divider } from "primereact/divider";
 import React from "react";
+import { FileElement } from "../../pages/Home";
 
 type VerificationErrorProps = {
-  fileName: string | null;
-  record: Record;
+  element: FileElement;
   errorStep: number | null;
 };
 
 const VerificationError: React.FC<VerificationErrorProps> = ({
-  fileName,
-  record,
+  element,
   errorStep,
 }) => {
   return (
     <>
-      {fileName ? (
+      {element.name ? (
         <div className="mb-4">
           <i
             className={`pi pi-file px-1 py-1 click-icon text-secondary ${
-              fileName ? "d-inline font-bold" : "d-none"
+              element.name ? "d-inline font-bold" : "d-none"
             }`}
           ></i>
-          <span className="mx-2 bold-text">{fileName}</span>
+          <span className="mx-2 bold-text">{element.name}</span>
         </div>
       ) : null}
       <div className="mb-3">
@@ -72,7 +70,7 @@ const VerificationError: React.FC<VerificationErrorProps> = ({
       <Divider className="my-4" />
       <div className="bold-text">Document hash</div>
       <div className="" style={{ overflowWrap: "break-word" }}>
-        {record && record.getHash()}
+        {element.record && element.record.getHash()}
       </div>
     </>
   );

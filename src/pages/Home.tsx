@@ -16,9 +16,14 @@ import "../styles.css";
 import { useFileType } from "../utils/use-file-type";
 import { useIsJson } from "../utils/use-is-json";
 
+export type FileElement = {
+  name?: string | null;
+  value?: any | null;
+  record?: Record | null;
+};
+
 const Home = () => {
   const [record, setRecord] = useState<Record | null>(null);
-  const [fileName, setFileName] = useState<string | null>(null);
   const [element, setElement] = useState<string | null | any>(null);
   const [validateFromUrl, setValidateFromUrl] = useState<boolean>(false);
 
@@ -39,7 +44,6 @@ const Home = () => {
         responseType: "arraybuffer",
       })
       .then((res) => {
-        setFileName(urlParam.path);
         return Buffer.from(res.data);
       });
 
@@ -125,8 +129,6 @@ const Home = () => {
 
             <Col className="mb-10" style={{ marginBottom: "30px" }}>
               <FileSection
-                onFileChange={(fileName) => setFileName(fileName)}
-                onRecordChange={(record) => setRecord(record)}
                 onElementChange={(element) => setElement(element)}
               ></FileSection>
             </Col>
@@ -135,11 +137,7 @@ const Home = () => {
 
         {record ? (
           <div ref={verificationRef}>
-            <VerificationSection
-              record={record}
-              fileName={fileName}
-              element={element}
-            />
+            <VerificationSection element={element} />
           </div>
         ) : null}
       </div>
