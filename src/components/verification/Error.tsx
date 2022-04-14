@@ -15,22 +15,21 @@ const VerificationError: React.FC<VerificationErrorProps> = ({
 }) => {
   return (
     <>
-      <div className={fileName ? "mb-4" : "mb-0"}>
-        <i
-          className={`pi pi-file px-1 py-1 click-icon text-secondary ${
-            fileName ? "d-inline font-bold" : "d-none"
-          }`}
-        ></i>
-        <span className="mx-2 bold-text">{fileName}</span>
-        <div className="my-3">
-          <p className="color-error">
-            <i
-              className="pi pi-times-circle
- px-1 py-1 "
-            ></i>
-            Your record couldn’t be verified
-          </p>
+      {fileName ? (
+        <div className="mb-4">
+          <i
+            className={`pi pi-file px-1 py-1 click-icon text-secondary ${
+              fileName ? "d-inline font-bold" : "d-none"
+            }`}
+          ></i>
+          <span className="mx-2 bold-text">{fileName}</span>
         </div>
+      ) : null}
+      <div className="mb-3">
+        <p className="color-error">
+          <i className="pi pi-times-circle px-1 py-1 "></i>
+          Your record couldn’t be verified
+        </p>
       </div>
 
       {errorStep === 0 ? (

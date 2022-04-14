@@ -48,7 +48,6 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
     switch (detectedFile) {
       case "image/png":
       case "image/jpg":
-      case "image/jpg":
       case "image/jpeg":
       case "image/svg+xml":
         return <img className="img-contain" src={srcElement}></img>;

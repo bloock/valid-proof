@@ -56,7 +56,6 @@ const Home = () => {
       setRecord(await Record.fromTypedArray(array));
       setElement({ name: urlParam.href, value: array });
     }
-    return;
   }
 
   useEffect(() => {

@@ -7,7 +7,7 @@ import { DataTable } from "primereact/datatable";
 import { Divider } from "primereact/divider";
 import { Tag } from "primereact/tag";
 import React, { useState } from "react";
-import TooltipComponent from "./Tooltip";
+import TooltipComponent from "../elements/Tooltip";
 
 type VerificationSuccessProps = {
   fileName: string | null;
@@ -21,8 +21,6 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
   recordProof,
 }) => {
   const [expandedRows, setExpandedRows] = useState<any>(null);
-
-  console.log(fileName);
 
   const tableNetworksData = (recordProof as any)?.anchor.networks.map(
     (network: any) => {
