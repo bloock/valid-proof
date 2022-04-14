@@ -116,7 +116,10 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
   }
 
   return (
-    <div className="p-card height-100 p-3 d-flex justify-content-center">
+    <div
+      className="p-card p-3 d-flex justify-content-center"
+      style={{ maxHeight: "500px" }}
+    >
       {previewBasedOnMimeType() !== null ? (
         previewBasedOnMimeType()
       ) : (

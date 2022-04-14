@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import "../../styles.css";
 import FilePreview from "../documents/FilePreview";
@@ -35,6 +35,9 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   >(null);
   const [recordTimestamp, setRecordTimestamp] = useState<number | null>(null);
   const [errorStep, setErrorStep] = useState<number | null>(null);
+  const [proofView, setProofView] = useState<boolean>(false);
+
+  const proofRef = useRef<HTMLInputElement>(null);
 
   function getRandomInterval(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -52,6 +55,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
       if (record) {
         try {
           const proof = await client.getProof([record]);
+          setProofView(true);
           if (proof != null) {
             setRecordProof(proof);
           } else {
@@ -174,7 +178,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
               className="mt-5 py-4 border-0 bg-light 5 verification-container"
               style={{ textAlign: "left" }}
             >
-              <Row className="justify-content-between pt-3 pb-3">
+              <Row className="justify-content-between pt-3 pb-3 ">
                 <Col lg={5} className="mb-4">
                   <FilePreview element={element} />
                 </Col>

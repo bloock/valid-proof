@@ -305,3 +305,7 @@ textarea {
 .p-timeline-event-opposite {
   flex: 0 1;
 }
+
+.p-accordion-header-link {
+  padding-bottom: 10px !important;
+}
