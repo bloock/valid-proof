@@ -22,16 +22,14 @@ const colors = {
 };
 
 type VerificationSectionProps = {
-  element: FileElement;
+  element: FileElement | null;
 };
 
 const VerificationSection: React.FC<VerificationSectionProps> = ({
   element,
 }) => {
   const [recordProof, setRecordProof] = useState<Proof | null>(null);
-  const [recordProofVerified, setRecordProofVerified] = useState<
-    boolean | null
-  >(null);
+  const [recordRoot, setRecordRoot] = useState<Record | null>(null);
   const [recordTimestamp, setRecordTimestamp] = useState<number | null>(null);
   const [errorStep, setErrorStep] = useState<number | null>(null);
   const [activeStep, setActiveStep] = useState<number | null>(null);
@@ -40,15 +38,19 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
+  console.log(element);
+
   useEffect(() => {
+    debugger;
     setErrorStep(null);
     setRecordProof(null);
-    setRecordProofVerified(null);
+    setRecordRoot(null);
     setRecordTimestamp(null);
   }, [element]);
 
   useEffect(() => {
     const getProof = async () => {
+      debugger;
       if (element) {
         try {
           const proof = await client.getProof([element.record as Record]);
@@ -75,7 +77,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
           if (record) {
             setActiveStep(1);
 
-            setRecordProofVerified(true);
+            setRecordRoot(record);
           } else {
             setErrorStep(1);
           }
@@ -94,7 +96,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     const getRecordTimestamp = async () => {
       debugger;
 
-      if (recordProofVerified != null) {
+      if (recordRoot != null) {
         try {
           let recordNetwork = (recordProof as any).anchor.networks[0];
           let network = Network.ETHEREUM_MAINNET;
@@ -111,7 +113,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
           }
 
           const timestamp = await client.validateRoot(
-            element.record as Record,
+            recordRoot as Record,
             network
           );
           if (timestamp !== 0 && timestamp !== null) {
@@ -129,7 +131,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     setTimeout(() => {
       getRecordTimestamp();
     }, getRandomInterval(1000, 2000));
-  }, [recordProofVerified]);
+  }, [recordRoot]);
 
   const events = [
     {
@@ -152,13 +154,13 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
       icon:
         errorStep === 1
           ? "pi pi-times px-2 py-2 click-icon"
-          : activeStep !== 1 && errorStep !== 0
+          : (activeStep as number) < 1 && errorStep !== 0
           ? "pi pi-check px-2 py-2 click-icon pi pi-spin pi-spinner"
           : "pi pi-check px-2 py-2 click-icon",
       color:
         errorStep === 1
           ? colors.error
-          : activeStep !== 1
+          : (activeStep as number) < 1
           ? colors.idle
           : colors.success,
     },

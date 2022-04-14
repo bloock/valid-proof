@@ -8,10 +8,11 @@ import { Divider } from "primereact/divider";
 import { Tag } from "primereact/tag";
 import React, { useState } from "react";
 import { FileElement } from "../../pages/Home";
+import { Truncate } from "../../utils/truncate";
 import TooltipComponent from "../elements/Tooltip";
 
 type VerificationSuccessProps = {
-  element: FileElement;
+  element: FileElement | null;
   recordProof: Proof | null;
 };
 
@@ -95,7 +96,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
 
   return (
     <>
-      {element.name !== undefined ? (
+      {element?.name !== undefined ? (
         <div className={element.name ? "mb-5" : "mb-0"}>
           <i
             className=" pi pi-file px-2 py-1 click-icon "
@@ -115,7 +116,9 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
                   }
             }
           ></i>
-          <span className="mx-2 bold-text">{element.name}</span>
+          <span className="mx-2 bold-text">
+            {Truncate(element.name as string, 50, "...")}
+          </span>
         </div>
       ) : null}
       <div>
@@ -135,7 +138,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
         </TooltipComponent>
       </div>
       <div style={{ overflowWrap: "break-word" }}>
-        {element.record && element.record.getHash()}
+        {element?.record && element.record.getHash()}
       </div>
       <Divider className="my-2 pb-2" />
       <div className="bold-text">

@@ -24,11 +24,13 @@ export type FileElement = {
 
 const Home = () => {
   const [record, setRecord] = useState<Record | null>(null);
-  const [element, setElement] = useState<string | null | any>(null);
+  const [element, setElement] = useState<FileElement | null>(null);
   const [validateFromUrl, setValidateFromUrl] = useState<boolean>(false);
 
   const verificationRef = useRef<HTMLInputElement>(null);
   const [searchParams] = useSearchParams();
+
+  console.log(element);
 
   const primaryColor = (window as any).env.PRIMARY_COLOR
     ? (window as any).env.PRIMARY_COLOR
@@ -51,14 +53,24 @@ const Home = () => {
     var string = new TextDecoder().decode(array);
 
     if (isJSONValid(string)) {
-      setRecord(await Record.fromJSON(JSON.parse(string)));
-      setElement({ name: urlParam.href, value: JSON.parse(string) });
+      setElement({
+        name: urlParam.href,
+        value: JSON.parse(string),
+        record: await Record.fromJSON(JSON.parse(string)),
+      });
     } else if (fileDetect(urlParam.href) === "application/pdf") {
-      setRecord(await Record.fromPDF(array));
-      setElement({ name: urlParam.href, value: urlParam.href });
+      setElement({
+        name: urlParam.href,
+        value: urlParam.href,
+        record: await Record.fromPDF(array),
+      });
     } else {
-      setRecord(await Record.fromTypedArray(array));
-      setElement({ name: urlParam.href, value: array });
+      debugger;
+      setElement({
+        name: urlParam.href,
+        value: array,
+        record: await Record.fromTypedArray(array),
+      });
     }
   }
 
@@ -71,10 +83,10 @@ const Home = () => {
   }, [searchParams]);
 
   useEffect(() => {
-    if (record && verificationRef && verificationRef.current) {
+    if (element && verificationRef && verificationRef.current) {
       verificationRef.current.scrollIntoView();
     }
-  }, [verificationRef, record]);
+  }, [verificationRef, element]);
 
   return (
     <Fragment>
@@ -135,7 +147,7 @@ const Home = () => {
           </Row>
         )}
 
-        {record ? (
+        {element ? (
           <div ref={verificationRef}>
             <VerificationSection element={element} />
           </div>

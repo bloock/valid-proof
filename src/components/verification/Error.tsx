@@ -1,9 +1,10 @@
 import { Divider } from "primereact/divider";
 import React from "react";
 import { FileElement } from "../../pages/Home";
+import { Truncate } from "../../utils/truncate";
 
 type VerificationErrorProps = {
-  element: FileElement;
+  element: FileElement | null;
   errorStep: number | null;
 };
 
@@ -13,14 +14,16 @@ const VerificationError: React.FC<VerificationErrorProps> = ({
 }) => {
   return (
     <>
-      {element.name ? (
+      {element?.name ? (
         <div className="mb-4">
           <i
             className={`pi pi-file px-1 py-1 click-icon text-secondary ${
               element.name ? "d-inline font-bold" : "d-none"
             }`}
           ></i>
-          <span className="mx-2 bold-text">{element.name}</span>
+          <span className="mx-2 bold-text">
+            {Truncate(element.name as string, 50, "...")}
+          </span>
         </div>
       ) : null}
       <div className="mb-3">
@@ -70,7 +73,7 @@ const VerificationError: React.FC<VerificationErrorProps> = ({
       <Divider className="my-4" />
       <div className="bold-text">Document hash</div>
       <div className="" style={{ overflowWrap: "break-word" }}>
-        {element.record && element.record.getHash()}
+        {element?.record && element.record.getHash()}
       </div>
     </>
   );
