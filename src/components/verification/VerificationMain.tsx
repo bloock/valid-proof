@@ -7,8 +7,8 @@ import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import "../../styles.css";
 import FilePreview from "../documents/FilePreview";
+import StepperVerification from "../elements/Stepper";
 import VerificationError from "./Error";
-import StepperVerification from "./Stepper";
 import VerificationSuccess from "./Success";
 
 const apiKey = (window as any).env.API_KEY;
