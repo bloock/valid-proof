@@ -38,10 +38,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
-  console.log(element);
-
   useEffect(() => {
-    debugger;
     setErrorStep(null);
     setRecordProof(null);
     setRecordRoot(null);
@@ -50,7 +47,6 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
 
   useEffect(() => {
     const getProof = async () => {
-      debugger;
       if (element) {
         try {
           const proof = await client.getProof([element.record as Record]);
@@ -94,8 +90,6 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
 
   useEffect(() => {
     const getRecordTimestamp = async () => {
-      debugger;
-
       if (recordRoot != null) {
         try {
           let recordNetwork = (recordProof as any).anchor.networks[0];

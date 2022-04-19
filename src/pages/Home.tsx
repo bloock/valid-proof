@@ -23,14 +23,11 @@ export type FileElement = {
 };
 
 const Home = () => {
-  const [record, setRecord] = useState<Record | null>(null);
   const [element, setElement] = useState<FileElement | null>(null);
   const [validateFromUrl, setValidateFromUrl] = useState<boolean>(false);
 
   const verificationRef = useRef<HTMLInputElement>(null);
   const [searchParams] = useSearchParams();
-
-  console.log(element);
 
   const primaryColor = (window as any).env.PRIMARY_COLOR
     ? (window as any).env.PRIMARY_COLOR
@@ -65,7 +62,6 @@ const Home = () => {
         record: await Record.fromPDF(array),
       });
     } else {
-      debugger;
       setElement({
         name: urlParam.href,
         value: array,
