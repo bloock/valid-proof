@@ -1,4 +1,4 @@
-import { Proof, Record } from "@bloock/sdk";
+import { Proof } from "@bloock/sdk";
 import moment from "moment";
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { Button } from "primereact/button";
@@ -7,17 +7,17 @@ import { DataTable } from "primereact/datatable";
 import { Divider } from "primereact/divider";
 import { Tag } from "primereact/tag";
 import React, { useState } from "react";
-import TooltipComponent from "./Tooltip";
+import { FileElement } from "../../pages/Home";
+import { Truncate } from "../../utils/truncate";
+import TooltipComponent from "../elements/Tooltip";
 
 type VerificationSuccessProps = {
-  fileName: string | null;
-  record: Record;
+  element: FileElement | null;
   recordProof: Proof | null;
 };
 
 const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
-  fileName,
-  record,
+  element,
   recordProof,
 }) => {
   const [expandedRows, setExpandedRows] = useState<any>(null);
@@ -96,29 +96,35 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
 
   return (
     <>
-      <div className={fileName ? "mb-5" : "mb-0"}>
-        <i
-          className=" pi pi-file px-2 py-1 click-icon "
-          style={
-            fileName
-              ? {
-                  display: "inline",
-                  color: "#495057",
-                  fontSize: "1.3rem",
-                  fontWeight: 100,
-                }
-              : {
-                  display: "none",
-                  color: "#495057",
-                  fontSize: "1.3rem",
-                  fontWeight: 100,
-                }
-          }
-        ></i>
-        <span className="mx-2 bold-text">{fileName}</span>
+      {element?.name !== undefined ? (
+        <div className={element.name ? "mb-5" : "mb-0"}>
+          <i
+            className=" pi pi-file px-2 py-1 click-icon "
+            style={
+              element.name
+                ? {
+                    display: "inline",
+                    color: "#495057",
+                    fontSize: "1.3rem",
+                    fontWeight: 100,
+                  }
+                : {
+                    display: "none",
+                    color: "#495057",
+                    fontSize: "1.3rem",
+                    fontWeight: 100,
+                  }
+            }
+          ></i>
+          <span className="mx-2 bold-text">
+            {Truncate(element.name as string, 50, "...")}
+          </span>
+        </div>
+      ) : null}
+      <div>
         <div className="my-3">
           <p className="color-success">
-            <i className="pi pi-check-circle px-2 py-1 "></i>
+            <i className="pi pi-check-circle px-1 "></i>
             Your document has been verified
           </p>
         </div>
@@ -132,7 +138,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
         </TooltipComponent>
       </div>
       <div style={{ overflowWrap: "break-word" }}>
-        {record && record.getHash()}
+        {element?.record && element.record.getHash()}
       </div>
       <Divider className="my-2 pb-2" />
       <div className="bold-text">
@@ -146,7 +152,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
       <div>BLOOCK</div>
       <Divider className="my-2 pb-2" />
       <Accordion>
-        <AccordionTab header="Detailed info" contentClassName="bg-light">
+        <AccordionTab header="More Details">
           {recordProof ? (
             <>
               <Divider className="my-2 pb-2" />
@@ -199,9 +205,10 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
               <Column field="created_at" header="Timestamp"></Column>
             </DataTable>
           </div>
-          <Divider className="my-2 pb-2" />
         </AccordionTab>
       </Accordion>
+
+      <Divider className="my-2 pb-2" />
     </>
   );
 };

@@ -1,37 +1,38 @@
 import { BloockClient, Network, Proof, Record } from "@bloock/sdk";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "primeicons/primeicons.css";
-import { ProgressSpinner } from "primereact/progressspinner";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
+import { FileElement } from "../../pages/Home";
 import "../../styles.css";
 import FilePreview from "../documents/FilePreview";
+import StepperVerification from "../elements/Stepper";
 import VerificationError from "./Error";
-import StepperVerification from "./Stepper";
 import VerificationSuccess from "./Success";
-
-type VerificationSectionProps = {
-  record: Record;
-  fileName: string | null;
-  element: any;
-};
 
 const apiKey = (window as any).env.API_KEY;
 const client = new BloockClient(apiKey);
 
+const colors = {
+  success: "#06d7be",
+  error: "#F55845",
+  idle: "#d7d7d7",
+};
+
+type VerificationSectionProps = {
+  element: FileElement | null;
+};
+
 const VerificationSection: React.FC<VerificationSectionProps> = ({
-  record,
-  fileName,
   element,
 }) => {
   const [recordProof, setRecordProof] = useState<Proof | null>(null);
-  const [recordProofVerified, setRecordProofVerified] = useState<
-    boolean | null
-  >(null);
+  const [recordRoot, setRecordRoot] = useState<Record | null>(null);
   const [recordTimestamp, setRecordTimestamp] = useState<number | null>(null);
   const [errorStep, setErrorStep] = useState<number | null>(null);
+  const [activeStep, setActiveStep] = useState<number | null>(null);
 
   function getRandomInterval(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -40,16 +41,17 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   useEffect(() => {
     setErrorStep(null);
     setRecordProof(null);
-    setRecordProofVerified(null);
+    setRecordRoot(null);
     setRecordTimestamp(null);
-  }, [record]);
+  }, [element]);
 
   useEffect(() => {
     const getProof = async () => {
-      if (record) {
+      if (element) {
         try {
-          const proof = await client.getProof([record]);
+          const proof = await client.getProof([element.record as Record]);
           if (proof != null) {
+            setActiveStep(0);
             setRecordProof(proof);
           } else {
             setErrorStep(0);
@@ -61,22 +63,34 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     };
 
     setTimeout(() => getProof(), getRandomInterval(2000, 3000));
-  }, [record]);
+  }, [element]);
 
   useEffect(() => {
-    const validateRecordProof = async () => {
+    const verifyProof = async () => {
       if (recordProof != null) {
-        setRecordProofVerified(true);
+        try {
+          const record = await client.verifyProof(recordProof);
+          if (record) {
+            setActiveStep(1);
+
+            setRecordRoot(record);
+          } else {
+            setErrorStep(1);
+          }
+        } catch (e) {
+          setErrorStep(1);
+        }
       }
     };
+
     setTimeout(() => {
-      validateRecordProof();
+      verifyProof();
     }, getRandomInterval(1000, 2000));
   }, [recordProof]);
 
   useEffect(() => {
     const getRecordTimestamp = async () => {
-      if (recordProof != null) {
+      if (recordRoot != null) {
         try {
           let recordNetwork = (recordProof as any).anchor.networks[0];
           let network = Network.ETHEREUM_MAINNET;
@@ -92,9 +106,13 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
               break;
           }
 
-          const timestamp = await client.verifyProof(recordProof);
-          if (0) {
-            setRecordTimestamp(0);
+          const timestamp = await client.validateRoot(
+            recordRoot as Record,
+            network
+          );
+          if (timestamp !== 0 && timestamp !== null) {
+            setActiveStep(2);
+            setRecordTimestamp(timestamp);
           } else {
             setErrorStep(2);
           }
@@ -107,34 +125,71 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     setTimeout(() => {
       getRecordTimestamp();
     }, getRandomInterval(1000, 2000));
-  }, [recordProofVerified]);
+  }, [recordRoot]);
+
+  const events = [
+    {
+      status: "Retrieve integrity proof",
+      icon:
+        errorStep === 0
+          ? "pi pi-times px-2 py-2 click-icon"
+          : !activeStep && activeStep !== 0
+          ? "pi pi-check px-2 py-2 click-icon pi pi-spin pi-spinner"
+          : "pi pi-check px-2 py-2 click-icon",
+      color:
+        errorStep === 0
+          ? colors.error
+          : !activeStep && activeStep !== 0
+          ? colors.idle
+          : colors.success,
+    },
+    {
+      status: "Validate integrity proof",
+      icon:
+        errorStep === 1
+          ? "pi pi-times px-2 py-2 click-icon"
+          : (activeStep as number) < 1 && errorStep !== 0
+          ? "pi pi-check px-2 py-2 click-icon pi pi-spin pi-spinner"
+          : "pi pi-check px-2 py-2 click-icon",
+      color:
+        errorStep === 1
+          ? colors.error
+          : (activeStep as number) < 1
+          ? colors.idle
+          : colors.success,
+    },
+    {
+      status: "Validate existence in blockchain",
+      icon:
+        errorStep === 2
+          ? "pi pi-times px-2 py-2 click-icon"
+          : activeStep !== 2 && errorStep !== 0 && errorStep !== 1
+          ? "pi pi-check px-2 py-2 click-icon pi pi-spin pi-spinner"
+          : "pi pi-check px-2 py-2 click-icon",
+      color:
+        errorStep === 2
+          ? colors.error
+          : activeStep !== 2
+          ? colors.idle
+          : colors.success,
+    },
+  ];
 
   return (
     <div className="container-lg mt-5 verification-section">
       <div
-        className=" horizontal-center timeline-margins mb-5 stepper"
-        style={{ paddingTop: "30px", paddingBottom: "70px" }}
+        className=" horizontal-center timeline-margins mb-5 stepper bg-light"
+        style={{ paddingTop: "30px", paddingBottom: "40px" }}
       >
-        <div className="bold-text header-title mb-4 mt-4">
+        <div className="bold-text header-title j mb-4 mt-4">
           Your verification:
         </div>
-        <StepperVerification
-          errorStep={errorStep}
-          recordTimestamp={recordTimestamp}
-          recordProof={recordProof}
-          recordProofVerified={recordProofVerified}
-        />
+        <StepperVerification events={events} />
       </div>
-      <div className="little-top-margin "></div>
+      <div className="little-top-margin"></div>
       <div className="horizontal-center">
-        {recordTimestamp == null && errorStep == null ? (
-          <div className="progressSpinner" style={{ paddingBottom: "40px" }}>
-            <ProgressSpinner style={{ color: "#06d7be" }} />
-            <p className="text-secondary">Your record is being verified...</p>
-            <div className="mt-5">{""}</div>
-          </div>
-        ) : (
-          <div className="pt-2 mb-5">
+        {recordTimestamp == null && errorStep == null ? null : (
+          <div className="pt-2 mb-5 animated fadeIn">
             {recordTimestamp && errorStep == null ? (
               <div>
                 <div className="d-flex flex-row justify-content-center align-items-center">
@@ -166,24 +221,22 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
               </div>
             )}
             <div
-              className="mt-5 py-4 border-0 bg-light verification-container"
+              className="mt-5 py-4 border-0 bg-light 5 verification-container"
               style={{ textAlign: "left" }}
             >
-              <Row className="justify-content-between pt-3 pb-3">
+              <Row className="justify-content-between pt-3 pb-3 ">
                 <Col lg={5} className="mb-4">
                   <FilePreview element={element} />
                 </Col>
                 <Col lg={6} className="mb-4 mt-2">
                   {recordTimestamp && errorStep === null ? (
                     <VerificationSuccess
-                      fileName={fileName}
-                      record={record}
+                      element={element}
                       recordProof={recordProof}
                     />
                   ) : (
                     <VerificationError
-                      fileName={fileName}
-                      record={record}
+                      element={element}
                       errorStep={errorStep}
                     />
                   )}

@@ -16,14 +16,22 @@ import "../styles.css";
 import { useFileType } from "../utils/use-file-type";
 import { useIsJson } from "../utils/use-is-json";
 
+export type FileElement = {
+  name?: string | null;
+  value?: any | null;
+  record?: Record | null;
+};
+
 const Home = () => {
-  const [record, setRecord] = useState<Record | null>(null);
-  const [fileName, setFileName] = useState<string | null>(null);
-  const [element, setElement] = useState<string | null | any>(null);
+  const [element, setElement] = useState<FileElement | null>(null);
   const [validateFromUrl, setValidateFromUrl] = useState<boolean>(false);
 
   const verificationRef = useRef<HTMLInputElement>(null);
   const [searchParams] = useSearchParams();
+
+  const primaryColor = (window as any).env.PRIMARY_COLOR
+    ? (window as any).env.PRIMARY_COLOR
+    : "#07D1B6";
 
   async function fileLoader(urlParam: any) {
     const isJSONValid = useIsJson;
@@ -35,7 +43,6 @@ const Home = () => {
         responseType: "arraybuffer",
       })
       .then((res) => {
-        setFileName(urlParam.path);
         return Buffer.from(res.data);
       });
 
@@ -43,16 +50,24 @@ const Home = () => {
     var string = new TextDecoder().decode(array);
 
     if (isJSONValid(string)) {
-      setRecord(await Record.fromJSON(JSON.parse(string)));
-      setElement({ name: urlParam.href, value: JSON.parse(string) });
+      setElement({
+        name: urlParam.href,
+        value: JSON.parse(string),
+        record: await Record.fromJSON(JSON.parse(string)),
+      });
     } else if (fileDetect(urlParam.href) === "application/pdf") {
-      setRecord(await Record.fromPDF(array));
-      setElement({ name: urlParam.href, value: urlParam.href });
+      setElement({
+        name: urlParam.href,
+        value: urlParam.href,
+        record: await Record.fromPDF(array),
+      });
     } else {
-      setRecord(await Record.fromTypedArray(array));
-      setElement({ name: urlParam.href, value: array });
+      setElement({
+        name: urlParam.href,
+        value: array,
+        record: await Record.fromTypedArray(array),
+      });
     }
-    return;
   }
 
   useEffect(() => {
@@ -64,10 +79,10 @@ const Home = () => {
   }, [searchParams]);
 
   useEffect(() => {
-    if (record && verificationRef && verificationRef.current) {
+    if (element && verificationRef && verificationRef.current) {
       verificationRef.current.scrollIntoView();
     }
-  }, [verificationRef, record]);
+  }, [verificationRef, element]);
 
   return (
     <Fragment>
@@ -88,14 +103,20 @@ const Home = () => {
                 <li className="mt-2">
                   <i
                     className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
-                    style={{ marginRight: "10px", backgroundColor: "#06D7BE" }}
+                    style={{
+                      marginRight: "10px",
+                      backgroundColor: primaryColor,
+                    }}
                   ></i>
                   <p>Get a simple summary of the evidence details</p>
                 </li>
                 <li className="mt-3">
                   <i
                     className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
-                    style={{ marginRight: "10px", backgroundColor: "#06D7BE" }}
+                    style={{
+                      marginRight: "10px",
+                      backgroundColor: primaryColor,
+                    }}
                   ></i>
 
                   <p>Verify independently your records on blockchain</p>
@@ -103,7 +124,10 @@ const Home = () => {
                 <li className="mt-3">
                   <i
                     className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
-                    style={{ marginRight: "10px", backgroundColor: "#06D7BE" }}
+                    style={{
+                      marginRight: "10px",
+                      backgroundColor: primaryColor,
+                    }}
                   ></i>
 
                   <p>Completely transparent and opensource</p>
@@ -113,21 +137,15 @@ const Home = () => {
 
             <Col className="mb-10" style={{ marginBottom: "30px" }}>
               <FileSection
-                onFileChange={(fileName) => setFileName(fileName)}
-                onRecordChange={(record) => setRecord(record)}
                 onElementChange={(element) => setElement(element)}
               ></FileSection>
             </Col>
           </Row>
         )}
 
-        {record ? (
+        {element ? (
           <div ref={verificationRef}>
-            <VerificationSection
-              record={record}
-              fileName={fileName}
-              element={element}
-            />
+            <VerificationSection element={element} />
           </div>
         ) : null}
       </div>
