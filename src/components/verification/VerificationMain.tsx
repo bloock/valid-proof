@@ -7,7 +7,7 @@ import "primereact/resources/themes/saga-blue/theme.css";
 import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import "../../styles.css";
-import FilePreview from "../FilePreview";
+import FilePreview from "../documents/FilePreview";
 import VerificationError from "./Error";
 import StepperVerification from "./Stepper";
 import VerificationSuccess from "./Success";
@@ -92,9 +92,9 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
               break;
           }
 
-          const timestamp = await client.verifyProof(recordProof, network);
-          if (timestamp > 0) {
-            setRecordTimestamp(timestamp);
+          const timestamp = await client.verifyProof(recordProof);
+          if (0) {
+            setRecordTimestamp(0);
           } else {
             setErrorStep(2);
           }
