@@ -12,8 +12,8 @@ h1 {
 }
 
 h2 {
-  font-size: 36px;
-  line-height: 3.5rem;
+  font-size: 32px;
+  line-height: 2.4rem;
 }
 
 h3 {
@@ -311,8 +311,7 @@ textarea {
 }
 
 @media (max-width: 670px) {
-  .features,
-  .uploadFileDesktop {
+  .features {
     display: none;
   }
   .container {
@@ -325,8 +324,12 @@ textarea {
   }
 }
 
-@media (min-width: 671px) {
-  .uploadFileMobile {
-    display: none;
-  }
+i:hover {
+  opacity: 70%;
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
 }

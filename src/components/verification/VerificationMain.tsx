@@ -130,6 +130,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   const events = [
     {
       status: "Retrieve integrity proof",
+      description: "Step 1",
       icon:
         errorStep === 0
           ? "pi pi-times px-2 py-2 click-icon"
@@ -145,6 +146,8 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     },
     {
       status: "Validate integrity proof",
+      description: "Step 2",
+
       icon:
         errorStep === 1
           ? "pi pi-times px-2 py-2 click-icon"
@@ -160,6 +163,8 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     },
     {
       status: "Validate existence in blockchain",
+      description: "Step 3",
+
       icon:
         errorStep === 2
           ? "pi pi-times px-2 py-2 click-icon"
@@ -178,11 +183,11 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   return (
     <div className="container-lg mt-5 verification-section">
       <div
-        className=" horizontal-center timeline-margins mb-5 stepper bg-light"
+        className="horizontal-center timeline-margins mb-5 stepper bg-light rounded"
         style={{ paddingTop: "30px", paddingBottom: "40px" }}
       >
-        <div className="bold-text header-title j mb-4 mt-4">
-          Your verification:
+        <div className="header-title mb-4 mt-3">
+          Please wait for your file to be verified
         </div>
         <StepperVerification events={events} />
       </div>
@@ -190,7 +195,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
       <div className="horizontal-center">
         {recordTimestamp == null && errorStep == null ? null : (
           <div className="pt-2 mb-5 animated fadeIn">
-            {recordTimestamp && errorStep == null ? (
+            {/*  {recordTimestamp && errorStep == null ? (
               <div>
                 <div className="d-flex flex-row justify-content-center align-items-center">
                   <p className="px-2 fs-2">Done!</p>
@@ -219,7 +224,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
                   )}
                 </div>
               </div>
-            )}
+            )} */}
             <div
               className="mt-5 py-4 border-0 bg-light 5 verification-container"
               style={{ textAlign: "left" }}

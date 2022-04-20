@@ -8,11 +8,9 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
 import FileSection from "../components/documents/UploadFile";
-import MobileFileSection from "../components/documents/UploadFileOnMobile";
 import VerificationSection from "../components/verification/VerificationMain";
-import demoimage3 from "../images/check_results.jpg";
-import demoimage2 from "../images/howitworks-2.jpg";
-import demoimage1 from "../images/try_demo.jpg";
+import demoimage3 from "../images/get_results.jpg";
+import demoimage2 from "../images/verify_documents.jpg";
 import "../styles.css";
 import { useFileType } from "../utils/use-file-type";
 import { useIsJson } from "../utils/use-is-json";
@@ -91,9 +89,9 @@ const Home = () => {
       <div className="container-md px-4">
         {!validateFromUrl && (
           <Row className="flex-column flex-lg-row pt-8 align-items-center">
-            <Col style={{ paddingRight: "50px", paddingTop: "10px" }}>
-              <h1 className="">Verify any document's authenticity </h1>
-              <h3 className="mt-4">
+            <Col style={{ paddingRight: "10px", paddingTop: "10px" }}>
+              <h1 className="">Verify document's authenticity </h1>
+              <h3 className="mt-3">
                 Check unequivocally on blockchain whether a document has been
                 tampered with
               </h3>
@@ -119,7 +117,7 @@ const Home = () => {
 
                   <p>Verify independently your records on blockchain</p>
                 </li>
-                <li className="container mt-3">
+                <li className=" mt-3">
                   <i
                     className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
                     style={{
@@ -133,24 +131,13 @@ const Home = () => {
               </ul>
             </Col>
 
-            <Col
-              className="mb-10 uploadFileDesktop"
-              style={{ marginBottom: "30px" }}
-            >
-              <FileSection
-                onElementChange={(element) => setElement(element)}
-              ></FileSection>
-            </Col>
-            <Col
-              className="mb-10 uploadFileMobile"
-              style={{ marginBottom: "30px" }}
-            >
-              <MobileFileSection
-                onFileChange={(fileName) => setFileName(fileName)}
-                onRecordChange={(record) => setRecord(record)}
-                onElementChange={(element) => setElement(element)}
-              ></MobileFileSection>
-            </Col>
+            {!element ? (
+              <Col className="mb-10" style={{ marginBottom: "30px" }}>
+                <FileSection
+                  onElementChange={(element) => setElement(element)}
+                ></FileSection>
+              </Col>
+            ) : null}
           </Row>
         )}
 
@@ -164,46 +151,94 @@ const Home = () => {
       <div className="top-margin"></div>
       <div className="bg-light">
         <div className="container-md px-4 pt-10 ">
-          <h2 className="mb-5 text-center pt-6">Test the verification tool</h2>
+          <h2 className="mb-4 text-center pt-5">Test the verification tool</h2>
           <Row className="pt-2">
-            <Col className="text-center text-lg-start text-break">
-              <h4 className="bold-text">Try out with demo documents</h4>
-              <div className="mb-4">
+            <Col className="text-center text-lg-start text-break d-flex flex-column align-items-center">
+              <div
+                className="shadow-sm p-3 mb-4 d-flex justify-content-center bg-body  rounded align-items-center  "
+                style={{
+                  width: "400px",
+                  height: "240px",
+                  minWidth: "200px",
+                  maxWidth: "100%",
+                }}
+              >
+                <div className="d-flex ">
+                  <a href="../images/try_out.pdf" download>
+                    <div className="px-3 align-items-center d-flex flex-column">
+                      <i
+                        className="circle check-success pi pi-arrow-down px-3 py-3 click-icon icon-medium"
+                        style={{
+                          backgroundColor: primaryColor,
+                          fontSize: "20px",
+                        }}
+                      ></i>
+                      <p className="text-center mt-3">Valid test certificate</p>
+                    </div>
+                  </a>
+                  <div>
+                    <hr
+                      style={{
+                        height: "100%",
+                        borderRight: "1px solid black",
+                        margin: "0",
+                      }}
+                    ></hr>
+                  </div>
+                  <div className="px-3 align-items-center d-flex flex-column">
+                    <i
+                      className="circle check-success pi pi-arrow-down px-3 py-3 click-icon icon-medium"
+                      style={{
+                        backgroundColor: primaryColor,
+                        fontSize: "20px",
+                      }}
+                    ></i>
+                    <p className="text-center mt-3">Invalid test certificate</p>
+                  </div>
+                </div>
+              </div>
+              <h4 className="bold-text text-center text-lg-start">
+                Try out with demo documents
+              </h4>
+              <div className="mb-5">
                 Download the demo documents or read the demo QR to see how it’s
                 done.
               </div>
-              <img
-                alt="Card"
-                src={demoimage1}
-                style={{ width: "400px", minWidth: "200px", maxWidth: "100%" }}
-                className="shadow-sm p-3 mb-5 bg-body rounded"
-              />
             </Col>
-            <Col className="text-center text-lg-start text-break">
+            <Col className="text-center text-lg-start text-break d-flex flex-column align-items-center">
+              <div
+                className="shadow-sm p-3 mb-4 d-flex justify-content-center bg-body rounded align-items-center "
+                style={{
+                  width: "400px",
+                  height: "240px",
+                  minWidth: "200px",
+                  maxWidth: "100%",
+                }}
+              >
+                <img alt="Card" src={demoimage2} />
+              </div>
               <h4 className="bold-text">Verify the documents</h4>
-              <div className="mb-4">
+              <div className="mb-5">
                 Drag and drop each document into the tool or click on the tool
                 to open your file browser.
               </div>
-              <img
-                alt="Card"
-                src={demoimage2}
-                style={{ width: "400px", minWidth: "200px", maxWidth: "100%" }}
-                className="shadow-sm p-3 mb-5 bg-body rounded"
-              />
             </Col>
-            <Col className="text-center text-lg-start text-break">
-              <h4 className="bold-text">Check the results</h4>
-              <div className="mb-4">
-                Obtain a summarised mathematical evidence proving the
-                authenticity and integrity of your record.
+            <Col className="text-center text-lg-start text-break d-flex flex-column align-items-center">
+              <div
+                className="shadow-sm p-3 mb-4 d-flex justify-content-center bg-body rounded align-items-center "
+                style={{
+                  width: "400px",
+                  height: "240px",
+                  minWidth: "200px",
+                  maxWidth: "100%",
+                }}
+              >
+                <img alt="Card" src={demoimage3} />
               </div>
-              <img
-                alt="Card"
-                src={demoimage3}
-                style={{ width: "400px", minWidth: "200px", maxWidth: "100%" }}
-                className="shadow-sm p-3 mb-5 bg-body rounded"
-              />
+              <h4 className="bold-text">Check the results</h4>
+              <div className="mb-5">
+                Check if the certification is valid and get the evidence report.
+              </div>
             </Col>
           </Row>
           <Row className="little-top-margin"></Row>
