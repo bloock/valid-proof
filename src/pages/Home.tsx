@@ -8,10 +8,11 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
 import FileSection from "../components/documents/UploadFile";
+import MobileFileSection from "../components/documents/UploadFileOnMobile";
 import VerificationSection from "../components/verification/VerificationMain";
-import demoimage1 from "../images/howitworks-1.jpg";
+import demoimage3 from "../images/check_results.jpg";
 import demoimage2 from "../images/howitworks-2.jpg";
-import demoimage3 from "../images/howitworks-3.jpg";
+import demoimage1 from "../images/try_demo.jpg";
 import "../styles.css";
 import { useFileType } from "../utils/use-file-type";
 import { useIsJson } from "../utils/use-is-json";
@@ -76,15 +77,12 @@ const Home = () => {
         {!validateFromUrl && (
           <Row className="flex-column flex-lg-row pt-8 align-items-center">
             <Col style={{ paddingRight: "50px", paddingTop: "10px" }}>
-              <h1 className="bold-text title">
-                Validate your records on blockchain
-              </h1>
+              <h1 className="">Verify any document's authenticity </h1>
               <h3 className="mt-4">
-                Open source website to obtain a mathematical evidence proving
-                irrefutably the time a record was emitted and its provenance and
-                integrity.{" "}
+                Check unequivocally on blockchain whether a document has been
+                tampered with
               </h3>
-              <ul className="mt-4">
+              <ul className="mt-4 features">
                 <li className="mt-2">
                   <i
                     className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
@@ -100,7 +98,7 @@ const Home = () => {
 
                   <p>Verify independently your records on blockchain</p>
                 </li>
-                <li className="mt-3">
+                <li className="container mt-3">
                   <i
                     className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
                     style={{ marginRight: "10px", backgroundColor: "#06D7BE" }}
@@ -111,12 +109,25 @@ const Home = () => {
               </ul>
             </Col>
 
-            <Col className="mb-10" style={{ marginBottom: "30px" }}>
+            <Col
+              className="mb-10 uploadFileDesktop"
+              style={{ marginBottom: "30px" }}
+            >
               <FileSection
                 onFileChange={(fileName) => setFileName(fileName)}
                 onRecordChange={(record) => setRecord(record)}
                 onElementChange={(element) => setElement(element)}
               ></FileSection>
+            </Col>
+            <Col
+              className="mb-10 uploadFileMobile"
+              style={{ marginBottom: "30px" }}
+            >
+              <MobileFileSection
+                onFileChange={(fileName) => setFileName(fileName)}
+                onRecordChange={(record) => setRecord(record)}
+                onElementChange={(element) => setElement(element)}
+              ></MobileFileSection>
             </Col>
           </Row>
         )}
@@ -135,19 +146,13 @@ const Home = () => {
       <div className="top-margin"></div>
       <div className="bg-light">
         <div className="container-md px-4 pt-10 ">
-          <h2 className="bold-text title mb-5 text-center pt-6">
-            How it works
-          </h2>
+          <h2 className="mb-5 text-center pt-6">Test the verification tool</h2>
           <Row className="pt-2">
-            <Col
-              className="text-center text-lg-start text-break"
-              style={{ width: "45%" }}
-            >
-              <h4 className="bold-text">
-                Select the type of record to provide
-              </h4>
+            <Col className="text-center text-lg-start text-break">
+              <h4 className="bold-text">Try out with demo documents</h4>
               <div className="mb-4">
-                Select if your data is in document format or in JSON format.
+                Download the demo documents or read the demo QR to see how it’s
+                done.
               </div>
               <img
                 alt="Card"
@@ -157,10 +162,10 @@ const Home = () => {
               />
             </Col>
             <Col className="text-center text-lg-start text-break">
-              <h4 className="bold-text">Load your record</h4>
+              <h4 className="bold-text">Verify the documents</h4>
               <div className="mb-4">
-                Select from your system or write down the record you want to
-                validate.
+                Drag and drop each document into the tool or click on the tool
+                to open your file browser.
               </div>
               <img
                 alt="Card"
@@ -170,7 +175,7 @@ const Home = () => {
               />
             </Col>
             <Col className="text-center text-lg-start text-break">
-              <h4 className="bold-text">Get your results</h4>
+              <h4 className="bold-text">Check the results</h4>
               <div className="mb-4">
                 Obtain a summarised mathematical evidence proving the
                 authenticity and integrity of your record.

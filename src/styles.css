@@ -3,12 +3,12 @@
 }
 
 h1 {
-  font-size: 52px !important;
-  line-height: 3.5rem;
+  font-size: 44px !important;
+  line-height: 3.2rem;
 }
 
 h2 {
-  font-size: 44px;
+  font-size: 36px;
   line-height: 3.5rem;
 }
 
@@ -276,4 +276,25 @@ textarea {
 
 .react-pdf__Page__annotations .annotationLayer {
   display: none;
+}
+
+@media (max-width: 670px) {
+  .features,
+  .uploadFileDesktop {
+    display: none;
+  }
+  .container {
+    height: 180px !important;
+    outline: none !important;
+    width: 100% !important;
+    margin: 30px 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+}
+
+@media (min-width: 671px) {
+  .uploadFileMobile {
+    display: none;
+  }
 }
