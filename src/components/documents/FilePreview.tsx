@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { useFileType } from "../../utils/use-file-type";
 import { useIsJson } from "../../utils/use-is-json";
+import Button from "../elements/Button";
 
 const ReactJson = loadable(() => import("react-json-view"));
 
@@ -47,7 +48,6 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
     switch (detectedFile) {
       case "image/png":
       case "image/jpg":
-      case "image/jpg":
       case "image/jpeg":
       case "image/svg+xml":
         return <img className="img-contain" src={srcElement}></img>;
@@ -79,16 +79,15 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
               onLoadSuccess={onDocumentLoadSuccess}
             >
               <Page pageNumber={pageNumber} />
-              <div className="d-flex align-items-center justify-content-center">
-                <div className=" w-25">
+              <div className="d-flex align-items-center justify-content-center ">
+                <div className="w-25 d-flex flex-column align-items-end">
                   {pageNumber > 1 ? (
-                    <div
-                      style={{ padding: "2px" }}
-                      className="button mt-1 text-center"
-                      onClick={() => setPageNumber(pageNumber - 1)}
+                    <Button
+                      className="mt-1 text-center "
+                      cta={() => setPageNumber(pageNumber - 1)}
                     >
-                      <small>&lt;</small>
-                    </div>
+                      <small className="cursor-pointer">&lt;</small>
+                    </Button>
                   ) : null}
                 </div>
                 <div>
@@ -98,13 +97,12 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
                 </div>
                 <div className="w-25">
                   {numPages > pageNumber ? (
-                    <div
-                      style={{ padding: "2px" }}
-                      className="button mt-1 text-center"
-                      onClick={() => setPageNumber(pageNumber + 1)}
+                    <Button
+                      className="mt-1 text-center"
+                      cta={() => setPageNumber(pageNumber + 1)}
                     >
-                      <small>&gt;</small>
-                    </div>
+                      <small className="cursor-pointer">&gt;</small>
+                    </Button>
                   ) : null}
                 </div>
               </div>
@@ -117,7 +115,10 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
   }
 
   return (
-    <div className="p-card height-100 p-3 d-flex justify-content-center">
+    <div
+      className="p-card p-3 d-flex justify-content-center"
+      style={{ maxHeight: "500px" }}
+    >
       {previewBasedOnMimeType() !== null ? (
         previewBasedOnMimeType()
       ) : (

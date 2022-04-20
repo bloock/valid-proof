@@ -7,13 +7,15 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import "../../styles.css";
 import { useFileType } from "../../utils/use-file-type";
+import Button from "../elements/Button";
 
 type FileSectionProps = {
-  onFileChange: (name: string | null) => any;
-  onRecordChange: (record: Record | null) => any;
   onElementChange: (element: any) => any;
 };
 
+const primaryColor = (window as any).env.PRIMARY_COLOR
+  ? (window as any).env.PRIMARY_COLOR
+  : "#07D1B6";
 const baseStyle = {
   flex: 1,
   display: "flex",
@@ -27,7 +29,7 @@ const baseStyle = {
   color: "#bdbdbd",
   transition: "border .24s ease-in-out",
   height: "323px",
-  outline: "2px dashed #07D1B6",
+  outline: `2px dashed ${primaryColor}`,
   outlineOffset: "-24px",
 };
 
@@ -44,14 +46,12 @@ const rejectStyle = {
 };
 
 const FileSection: React.FC<FileSectionProps> = ({
-  onRecordChange = () => {},
   onElementChange = () => {},
-  onFileChange = () => {},
 }) => {
-  const [currentRecord, setCurrentRecord] = useState<Record | null>(null);
-  const [selectedFile, setSelectedFile] = useState<{
+  const [element, setElement] = useState<{
     name: string | undefined;
     value: string | ArrayBuffer | null;
+    record: Record;
   } | null>(null);
 
   const fileTypeDetect = useFileType;
@@ -71,10 +71,8 @@ const FileSection: React.FC<FileSectionProps> = ({
   } = useDropzone({ onDrop });
 
   useEffect(() => {
-    onRecordChange(currentRecord);
-    onElementChange(selectedFile);
-    onFileChange(selectedFile?.name ? selectedFile.name : null);
-  }, [currentRecord, selectedFile]);
+    onElementChange(element);
+  }, [element]);
 
   function fileToBytes(file: File): Promise<Uint8Array> {
     return new Promise((resolve, reject) => {
@@ -118,29 +116,31 @@ const FileSection: React.FC<FileSectionProps> = ({
 
       switch (fileType) {
         case "application/pdf":
-          setCurrentRecord(await Record.fromPDF(await fileToBytes(file)));
-          setSelectedFile({ name: file?.name, value: await fileToBytes(file) });
+          setElement({
+            name: file?.name,
+            value: await fileToBytes(file),
+            record: await Record.fromPDF(await fileToBytes(file)),
+          });
           break;
         case "application/json":
-          setCurrentRecord(await Record.fromJSON(await fileToJSON(file)));
-          setSelectedFile({
+          setElement({
             name: file?.name,
             value: await fileToJSON(file),
+            record: await Record.fromJSON(await fileToJSON(file)),
           });
 
           break;
         default:
-          setCurrentRecord(Record.fromTypedArray(await fileToBytes(file)));
-          setSelectedFile({
+          setElement({
             name: file?.name,
             value: await fileToBytes(file),
+            record: Record.fromTypedArray(await fileToBytes(file)),
           });
 
           break;
       }
     } else {
-      setSelectedFile(null);
-      setCurrentRecord(null);
+      setElement(null);
     }
   };
 
@@ -162,13 +162,11 @@ const FileSection: React.FC<FileSectionProps> = ({
       >
         <div className="vertical-center horizontal-center">
           <div>
-            {selectedFile ? (
+            {element ? (
               <div>
                 <div>
                   <span>
-                    {selectedFile && selectedFile !== undefined
-                      ? selectedFile.name
-                      : null}
+                    {element && element !== undefined ? element.name : null}
                   </span>
                   <span onClick={() => handleFileChange(null)}>
                     <svg
@@ -189,10 +187,10 @@ const FileSection: React.FC<FileSectionProps> = ({
                 <p>Drag and drop your file</p>
                 <p>or</p>
 
-                <div className="button mt-1">
+                <Button className="button">
                   <input {...getInputProps()} />
-                  <label htmlFor="file">Select file</label>
-                </div>
+                  Select file
+                </Button>
               </div>
             )}
           </div>
