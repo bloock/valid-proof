@@ -173,6 +173,10 @@ textarea {
   display: block;
 }
 
+.p-timeline.p-timeline-vertical .p-timeline-event-content {
+  height: 80px;
+}
+
 @media (max-width: 750px) {
   .p-timeline.p-timeline-horizontal .p-timeline-event-opposite,
   .p-timeline.p-timeline-horizontal .p-timeline-event-content {
@@ -324,6 +328,23 @@ textarea {
   }
 }
 
+.networks-cards-info {
+  display: block;
+}
+
+.networks-table-info {
+  display: none;
+}
+
+@media (min-width: 671px) {
+  .networks-table-info {
+    display: block;
+  }
+  .networks-cards-info {
+    display: none;
+  }
+}
+
 i:hover {
   opacity: 70%;
   cursor: pointer;
@@ -332,4 +353,37 @@ i:hover {
 a {
   text-decoration: none;
   color: inherit;
+}
+
+.p-accordion
+  .p-accordion-header:not(.p-disabled).p-highlight:hover
+  .p-accordion-header-link,
+.p-accordion,
+.p-accordion-tab,
+.p-accordion-header,
+.p-accordion-tab:last-child,
+.p-accordion-header:not(.p-highlight),
+.p-accordion-header-link {
+  background-color: inherit;
+}
+.p-accordion-header-text {
+  font-size: 0.9rem;
+}
+
+.p-accordion-toggle-icon,
+.pi-chevron-down,
+.pi-chevron-right {
+  font-size: 0.6rem !important;
+  font-weight: 600;
+}
+
+.p-accordion
+  .p-accordion-header:not(.p-highlight):not(.p-disabled):hover
+  .p-accordion-header-link {
+  background-color: inherit;
+}
+
+:focus {
+  outline: 0 !important;
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0) !important;
 }

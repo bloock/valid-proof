@@ -129,7 +129,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
 
   const events = [
     {
-      status: "Retrieve integrity proof",
+      status: "Getting tamper proof seal",
       description: "Step 1",
       icon:
         errorStep === 0
@@ -145,7 +145,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
           : colors.success,
     },
     {
-      status: "Validate integrity proof",
+      status: "Validating seal verity",
       description: "Step 2",
 
       icon:
@@ -162,7 +162,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
           : colors.success,
     },
     {
-      status: "Validate existence in blockchain",
+      status: "Searching seal in blockchain",
       description: "Step 3",
 
       icon:
@@ -183,10 +183,10 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   return (
     <div className="container-lg mt-5 verification-section">
       <div
-        className="horizontal-center timeline-margins mb-5 stepper bg-light rounded"
-        style={{ paddingTop: "30px", paddingBottom: "40px" }}
+        className="horizontal-center timeline-margins mb-4 stepper bg-light rounded"
+        style={{ paddingTop: "30px", paddingBottom: "20px" }}
       >
-        <div className="header-title mb-4 mt-3">
+        <div className=" mb-4 mt-3">
           Please wait for your file to be verified
         </div>
         <StepperVerification events={events} />
@@ -195,41 +195,11 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
       <div className="horizontal-center">
         {recordTimestamp == null && errorStep == null ? null : (
           <div className="pt-2 mb-5 animated fadeIn">
-            {/*  {recordTimestamp && errorStep == null ? (
-              <div>
-                <div className="d-flex flex-row justify-content-center align-items-center">
-                  <p className="px-2 fs-2">Done!</p>
-                </div>
-                <div className="bold-text">
-                  <h4 className="mx-2">Your record has been verified</h4>
-                </div>
-              </div>
-            ) : (
-              <div>
-                <div>
-                  <div className="d-flex flex-row justify-content-center align-items-center">
-                    <p className="px-2 fs-2">Oops!</p>
-                  </div>
-                  {errorStep === 0 ? (
-                    <div className="bold-text">
-                      <h4 className="mx-2">Your record couldn't be verified</h4>
-                    </div>
-                  ) : (
-                    <div className="bold-text">
-                      <h4 className="mx-2">
-                        The digest of the retrieved proof couldn't be found in
-                        any blockchain protocol.
-                      </h4>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )} */}
             <div
-              className="mt-5 py-4 border-0 bg-light 5 verification-container"
+              className="mt-2 border-0 bg-light 5 verification-container"
               style={{ textAlign: "left" }}
             >
-              <Row className="justify-content-between pt-3 pb-3 ">
+              <Row className="justify-content-between d-flex flex-column-reverse p-3 ">
                 <Col lg={5} className="mb-4">
                   <FilePreview element={element} />
                 </Col>

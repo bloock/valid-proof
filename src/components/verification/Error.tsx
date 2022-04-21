@@ -1,4 +1,3 @@
-import { Divider } from "primereact/divider";
 import React from "react";
 import { FileElement } from "../../pages/Home";
 import { Truncate } from "../../utils/truncate";
@@ -15,20 +14,24 @@ const VerificationError: React.FC<VerificationErrorProps> = ({
   return (
     <>
       {element?.name ? (
-        <div className="mb-4">
+        <div className={element.name ? "mb-4 mt-2" : "mb-0"}>
           <i
             className={`pi pi-file px-1 py-1 click-icon text-secondary ${
-              element.name ? "d-inline font-bold" : "d-none"
+              element.name ? "d-inline" : "d-none"
             }`}
+            style={{ fontWeight: 300 }}
           ></i>
-          <span className="mx-2 bold-text">
+          <span className="mx-2 text-secondary">
             {Truncate(element.name as string, 50, "...")}
           </span>
         </div>
       ) : null}
-      <div className="mb-3">
-        <p className="color-error">
-          <i className="pi pi-times-circle px-1 py-1 "></i>
+      <div className="mb-4 alert alert-danger">
+        <p className="font-bold">
+          <i
+            className="pi pi-times-circle px-1 py-1 "
+            style={{ fontSize: "1.1rem" }}
+          ></i>
           Your record couldn’t be verified
         </p>
       </div>
@@ -50,10 +53,6 @@ const VerificationError: React.FC<VerificationErrorProps> = ({
               <li>- The record was unintentionally altered.</li>
             </ul>
           </p>
-          <p>
-            If you have any questions, please contact the issuer of the records
-            directly or get in touch with our support.
-          </p>
         </div>
       ) : (
         <div>
@@ -70,11 +69,6 @@ const VerificationError: React.FC<VerificationErrorProps> = ({
           <p>Please try loading your record again in a few minutes.</p>
         </div>
       )}
-      <Divider className="my-4" />
-      <div className="bold-text">Document hash</div>
-      <div className="" style={{ overflowWrap: "break-word" }}>
-        {element?.record && element.record.getHash()}
-      </div>
     </>
   );
 };

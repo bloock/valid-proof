@@ -193,7 +193,9 @@ const Home = () => {
                         fontSize: "20px",
                       }}
                     ></i>
-                    <p className="text-center mt-3">Invalid test certificate</p>
+                    <p className="text-center mt-3">
+                      Tampered test certificate
+                    </p>
                   </div>
                 </div>
               </div>
