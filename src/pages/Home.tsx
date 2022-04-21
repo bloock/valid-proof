@@ -78,6 +78,7 @@ const Home = () => {
   }, [searchParams]);
 
   useEffect(() => {
+    console.log(element);
     if (element && verificationRef && verificationRef.current) {
       verificationRef.current.scrollIntoView();
     }
@@ -135,6 +136,7 @@ const Home = () => {
               <Col className="mb-10" style={{ marginBottom: "30px" }}>
                 <FileSection
                   onElementChange={(element) => setElement(element)}
+                  element={null}
                 ></FileSection>
               </Col>
             ) : null}
@@ -144,6 +146,12 @@ const Home = () => {
         {element ? (
           <div ref={verificationRef}>
             <VerificationSection element={element} />
+            {!validateFromUrl ? (
+              <FileSection
+                onElementChange={(element) => setElement(element)}
+                element={element}
+              ></FileSection>
+            ) : null}
           </div>
         ) : null}
       </div>

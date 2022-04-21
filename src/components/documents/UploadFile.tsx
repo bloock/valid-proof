@@ -5,12 +5,14 @@ import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { FileElement } from "../../pages/Home";
 import "../../styles.css";
 import { useFileType } from "../../utils/use-file-type";
 import Button from "../elements/Button";
 
 type FileSectionProps = {
   onElementChange: (element: any) => any;
+  element: FileElement | null;
 };
 
 const primaryColor = (window as any).env.PRIMARY_COLOR
@@ -46,13 +48,10 @@ const rejectStyle = {
 };
 
 const FileSection: React.FC<FileSectionProps> = ({
-  onElementChange = () => {},
+  onElementChange,
+  element: elementType,
 }) => {
-  const [element, setElement] = useState<{
-    name: string | undefined;
-    value: string | ArrayBuffer | null;
-    record: Record;
-  } | null>(null);
+  const [element, setElement] = useState<FileElement | null>(elementType);
 
   const fileTypeDetect = useFileType;
 

@@ -125,7 +125,11 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     setTimeout(() => {
       getRecordTimestamp();
     }, getRandomInterval(1000, 2000));
-  }, [recordRoot]);
+  }, [recordRoot, recordProof]);
+
+  const timeoutBeforeResult = () => {
+    setTimeout(() => {}, getRandomInterval(2000, 3000));
+  };
 
   const events = [
     {
@@ -181,25 +185,27 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   ];
 
   return (
-    <div className="container-lg mt-5 verification-section">
-      <div
-        className="horizontal-center timeline-margins mb-4 stepper bg-light rounded"
-        style={{ paddingTop: "30px", paddingBottom: "20px" }}
-      >
-        <div className=" mb-4 mt-3">
-          Please wait for your file to be verified
+    <div className="container-lg mt-3 verification-section">
+      {!recordTimestamp ? (
+        <div
+          className="horizontal-center timeline-margins mb-4 stepper bg-light rounded"
+          style={{ paddingTop: "30px", paddingBottom: "20px" }}
+        >
+          <div className=" mb-4 mt-3">
+            Please wait for your file to be verified
+          </div>
+          <StepperVerification events={events} />
         </div>
-        <StepperVerification events={events} />
-      </div>
+      ) : null}
       <div className="little-top-margin"></div>
       <div className="horizontal-center">
         {recordTimestamp == null && errorStep == null ? null : (
-          <div className="pt-2 mb-5 animated fadeIn">
+          <div className="pt-2 mb-5 ">
             <div
               className="mt-2 border-0 bg-light 5 verification-container"
               style={{ textAlign: "left" }}
             >
-              <Row className="justify-content-between d-flex flex-column-reverse p-3 ">
+              <Row className="justify-content-between d-flex flex-column-reverse flex-lg-row p-3 ">
                 <Col lg={5} className="mb-4">
                   <FilePreview element={element} />
                 </Col>

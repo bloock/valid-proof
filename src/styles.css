@@ -262,6 +262,7 @@ textarea {
 .pdf-viewer canvas {
   width: 100% !important;
   height: auto !important;
+  max-height: 450px !important;
 }
 
 .color-success {
