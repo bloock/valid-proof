@@ -78,7 +78,6 @@ const Home = () => {
   }, [searchParams]);
 
   useEffect(() => {
-    console.log(element);
     if (element && verificationRef && verificationRef.current) {
       verificationRef.current.scrollIntoView();
     }
@@ -87,9 +86,9 @@ const Home = () => {
   return (
     <Fragment>
       <div className="top-margin"></div>
-      <div className="container-md px-4">
+      <div className="container-md pt-6 px-4">
         {!validateFromUrl && (
-          <Row className="flex-column flex-lg-row pt-8 align-items-center">
+          <Row className="flex-column flex-lg-row align-items-center">
             <Col style={{ paddingRight: "10px", paddingTop: "10px" }}>
               <h1 className="">Verify document's authenticity </h1>
               <h3 className="mt-3">
@@ -144,15 +143,19 @@ const Home = () => {
         )}
 
         {element ? (
-          <div ref={verificationRef}>
-            <VerificationSection element={element} />
-            {!validateFromUrl ? (
-              <FileSection
-                onElementChange={(element) => setElement(element)}
-                element={element}
-              ></FileSection>
-            ) : null}
-          </div>
+          <>
+            {validateFromUrl ? (
+              <VerificationSection element={element} />
+            ) : (
+              <div ref={verificationRef}>
+                <VerificationSection element={element} />
+                <FileSection
+                  onElementChange={(element) => setElement(element)}
+                  element={element}
+                ></FileSection>
+              </div>
+            )}
+          </>
         ) : null}
       </div>
 
@@ -172,7 +175,7 @@ const Home = () => {
                 }}
               >
                 <div className="d-flex ">
-                  <a href="../images/try_out.pdf" download>
+                  <a href="" download>
                     <div className="px-3 align-items-center d-flex flex-column">
                       <i
                         className="circle check-success pi pi-arrow-down px-3 py-3 click-icon icon-medium"
@@ -193,18 +196,20 @@ const Home = () => {
                       }}
                     ></hr>
                   </div>
-                  <div className="px-3 align-items-center d-flex flex-column">
-                    <i
-                      className="circle check-success pi pi-arrow-down px-3 py-3 click-icon icon-medium"
-                      style={{
-                        backgroundColor: primaryColor,
-                        fontSize: "20px",
-                      }}
-                    ></i>
-                    <p className="text-center mt-3">
-                      Tampered test certificate
-                    </p>
-                  </div>
+                  <a href="" download>
+                    <div className="px-3 align-items-center d-flex flex-column">
+                      <i
+                        className="circle check-success pi pi-arrow-down px-3 py-3 click-icon icon-medium"
+                        style={{
+                          backgroundColor: primaryColor,
+                          fontSize: "20px",
+                        }}
+                      ></i>
+                      <p className="text-center mt-3">
+                        Tampered test certificate
+                      </p>
+                    </div>
+                  </a>
                 </div>
               </div>
               <h4 className="bold-text text-center text-lg-start">

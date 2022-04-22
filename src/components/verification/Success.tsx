@@ -31,13 +31,23 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
       const dates = moment(network.created_at * 1000).format(
         "DD-MM-YYYY HH:mm:ss"
       );
+      let name = "";
+      switch (network.name) {
+        case "ethereum_mainnet":
+          name = "Ethereum Mainnet";
+          break;
+        case "ethereum_rinkeby":
+          name = "Ethereum Rinkeby";
+          break;
+        case "bloock_chain":
+          name = "Bloockchain";
+          break;
+      }
+
       return {
         created_at: dates,
         name: network.name,
-        label:
-          network.name === "ethereum_rinkeby"
-            ? "Ethereum Rinkeby"
-            : network.name,
+        label: name,
         state: (
           <Tag
             icon={
@@ -72,16 +82,26 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
       const dates = moment(network.created_at * 1000).format(
         "DD-MM-YYYY HH:mm:ss"
       );
+
+      let name = "";
+      switch (network.name) {
+        case "ethereum_mainnet":
+          name = "Ethereum Mainnet";
+          break;
+        case "ethereum_rinkeby":
+          name = "Ethereum Rinkeby";
+          break;
+        case "bloock_chain":
+          name = "Bloockchain";
+          break;
+      }
+
       return (
         <div className="card">
           <div className="card-body" style={{ fontSize: "0.9rem" }}>
             <div className="d-flex justify-content-between py-1">
               <p className="bold-text">Name</p>
-              <p>
-                {network.name === "ethereum_rinkeby"
-                  ? "Ethereum Rinkeby"
-                  : network.name}
-              </p>
+              <p>{name}</p>
             </div>
             <div className="d-flex justify-content-between py-1">
               <p className="bold-text">State</p>
@@ -164,7 +184,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
             }`}
             style={{ fontWeight: 300 }}
           ></i>
-          <span className="mx-2 text-secondary">
+          <span className="mx-2 text-secondary text-break">
             {Truncate(element.name as string, 50, "...")}
           </span>
         </div>

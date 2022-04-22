@@ -33,6 +33,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   const [recordTimestamp, setRecordTimestamp] = useState<number | null>(null);
   const [errorStep, setErrorStep] = useState<number | null>(null);
   const [activeStep, setActiveStep] = useState<number | null>(null);
+  const [componentTransition, setComponentTransition] = useState(false);
 
   function getRandomInterval(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -127,9 +128,9 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     }, getRandomInterval(1000, 2000));
   }, [recordRoot, recordProof]);
 
-  const timeoutBeforeResult = () => {
-    setTimeout(() => {}, getRandomInterval(2000, 3000));
-  };
+  useEffect(() => {
+    setTimeout(() => setComponentTransition(true), 7000);
+  }, []);
 
   const events = [
     {
@@ -186,7 +187,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
 
   return (
     <div className="container-lg mt-3 verification-section">
-      {!recordTimestamp ? (
+      {!componentTransition ? (
         <div
           className="horizontal-center timeline-margins mb-4 stepper bg-light rounded"
           style={{ paddingTop: "30px", paddingBottom: "20px" }}
@@ -199,14 +200,14 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
       ) : null}
       <div className="little-top-margin"></div>
       <div className="horizontal-center">
-        {recordTimestamp == null && errorStep == null ? null : (
-          <div className="pt-2 mb-5 ">
+        {!componentTransition ? null : (
+          <div className="pt-2 mb-5">
             <div
-              className="mt-2 border-0 bg-light 5 verification-container"
+              className="mt-2 border-0 bg-light verification-container"
               style={{ textAlign: "left" }}
             >
               <Row className="justify-content-between d-flex flex-column-reverse flex-lg-row p-3 ">
-                <Col lg={5} className="mb-4">
+                <Col lg={5} className="my-4 ">
                   <FilePreview element={element} />
                 </Col>
                 <Col lg={6} className="mb-4 mt-2">
