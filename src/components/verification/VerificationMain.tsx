@@ -5,6 +5,7 @@ import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 import { FileElement } from "../../pages/Home";
 import "../../styles.css";
 import FilePreview from "../documents/FilePreview";
@@ -28,6 +29,8 @@ type VerificationSectionProps = {
 const VerificationSection: React.FC<VerificationSectionProps> = ({
   element,
 }) => {
+  const { t } = useTranslation("verification");
+
   const [recordProof, setRecordProof] = useState<Proof | null>(null);
   const [recordRoot, setRecordRoot] = useState<Record | null>(null);
   const [recordTimestamp, setRecordTimestamp] = useState<number | null>(null);
@@ -192,9 +195,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
           className="horizontal-center timeline-margins mb-4 stepper bg-light rounded"
           style={{ paddingTop: "30px", paddingBottom: "20px" }}
         >
-          <div className=" mb-4 mt-3">
-            Please wait for your file to be verified
-          </div>
+          <div className=" mb-4 mt-3">{t("wait")}</div>
           <StepperVerification events={events} />
         </div>
       ) : null}

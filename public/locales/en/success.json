@@ -1,0 +1,17 @@
+{
+  "name": "Name",
+  "state": "State",
+  "timestamp": "timestamp",
+  "tx-hash": "Tx Hash",
+  "verified": "Your document has been verified",
+  "issuer": "Issuer",
+  "bloock": "BLOOCK",
+  "date": "Date",
+  "document-hash": " Document hash",
+  "document-hash-description": "",
+  "anchor": "Anchor",
+  "anchor-description": "An anchor is a snapshot of the state tree which is registered to blockchain protocol. It is formed by the resulting state of the state transition.",
+  "root": "Root",
+  "root-description": "This value represents the root of the state tree. Users can easily verify the root of your blockchain in any of the public sources of Ethereum (i.e. https://etherscan.io/).",
+  "networks": "Networks"
+}

@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { FileElement } from "../../pages/Home";
 import { Truncate } from "../../utils/truncate";
 
@@ -11,6 +12,8 @@ const VerificationError: React.FC<VerificationErrorProps> = ({
   element,
   errorStep,
 }) => {
+  const { t } = useTranslation("error");
+
   return (
     <>
       {element?.name ? (
@@ -32,41 +35,32 @@ const VerificationError: React.FC<VerificationErrorProps> = ({
             className="pi pi-times-circle px-1 py-1 "
             style={{ fontSize: "1.1rem" }}
           ></i>
-          Your record couldn’t be verified
+          {t("recordError")}
         </p>
       </div>
 
       {errorStep === 0 ? (
         <div>
-          <p className="pb-3">
-            There’s no proof of existence for this record. It might have been
-            modified unintentionally.
-          </p>
+          <p className="pb-3">{t("error-description")}</p>
           <p>
-            Potential error sources:
+            {t("sources")}
             <ul>
-              <li>- The issuer provided an altered version of the record.</li>
-              <li>
-                - The record was altered by a malicious third party during
-                transmission.
-              </li>
-              <li>- The record was unintentionally altered.</li>
+              <li> {t("first-source")}</li>
+              <li>{t("second-source")}</li>
+              <li>{t("third-source")}</li>
             </ul>
           </p>
         </div>
       ) : (
         <div>
           <p>
-            Potential error sources:
+            {t("sources")}
             <ul>
-              <li>- You were provided a fraudulent proof by the issuer.</li>
-              <li>
-                - Your record is still pending to be transacted into a
-                blockchain protocol by the issuer.
-              </li>
+              <li>{t("fourth-source")}</li>
+              <li>{t("fifth-source")}</li>
             </ul>
           </p>
-          <p>Please try loading your record again in a few minutes.</p>
+          <p>{t("try-again")}</p>
         </div>
       )}
     </>

@@ -7,6 +7,7 @@ import { DataTable } from "primereact/datatable";
 import { Divider } from "primereact/divider";
 import { Tag } from "primereact/tag";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FileElement } from "../../pages/Home";
 import { Truncate } from "../../utils/truncate";
 import TooltipComponent from "../elements/Tooltip";
@@ -20,6 +21,8 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
   element,
   recordProof,
 }) => {
+  const { t } = useTranslation("success");
+
   const [expandedRows, setExpandedRows] = useState<any>(null);
 
   const timestamp = moment(
@@ -100,11 +103,11 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
         <div className="card">
           <div className="card-body" style={{ fontSize: "0.9rem" }}>
             <div className="d-flex justify-content-between py-1">
-              <p className="bold-text">Name</p>
+              <p className="bold-text">{t("name")}</p>
               <p>{name}</p>
             </div>
             <div className="d-flex justify-content-between py-1">
-              <p className="bold-text">State</p>
+              <p className="bold-text">{t("state")}</p>
               <Tag
                 icon={
                   network.state === "Confirmed"
@@ -129,7 +132,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
               ></Tag>
             </div>
             <div className="d-flex justify-content-between py-1">
-              <p className="bold-text">Timestamp</p>
+              <p className="bold-text">{t("timestamp")}</p>
               <p>{dates}</p>
             </div>
           </div>
@@ -158,7 +161,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
           className="text-secondary text-uppercase bold-text"
           style={{ fontSize: "0.8rem" }}
         >
-          Tx Hash
+          {t("tx-hash")}
         </p>
         <div className="d-flex justify-content-between align-items-center text-break">
           <div style={{ width: "90%" }}>
@@ -195,22 +198,22 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
             className="pi pi-check-circle px-1"
             style={{ fontSize: "1.1rem" }}
           ></i>
-          Your document has been verified
+          {t("verified")}
         </div>
       </div>
       <div
         className="text-secondary text-uppercase bold-text"
         style={{ fontSize: "0.8rem" }}
       >
-        <p>Issuer</p>
+        <p>{t("issuer")}</p>
       </div>
-      <div>BLOOCK</div>
+      <div>{t("bloock")}</div>
       <Divider className="my-3" style={{ borderBottom: "1px solid #dbdbdb" }} />
       <div
         className="text-secondary text-uppercase bold-text"
         style={{ fontSize: "0.8rem" }}
       >
-        <p>Date</p>
+        <p>{t("date")}</p>
       </div>
       <div>{timestamp}</div>
       <Divider className="my-3" style={{ borderBottom: "1px solid #dbdbdb" }} />
@@ -223,9 +226,12 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
                 className="text-secondary text-uppercase bold-text pt-3"
                 style={{ fontSize: "0.8rem" }}
               >
-                <TooltipComponent title="Document hash" description="">
+                <TooltipComponent
+                  title={t("document-hash")}
+                  description={t("dociment-hash-description")}
+                >
                   <p>
-                    Document hash{" "}
+                    {t("document-hash")}
                     <i className="pi pi-question-circle px-1 py-1 text-secondary"></i>
                   </p>
                 </TooltipComponent>
@@ -239,15 +245,15 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
                 style={{ borderBottom: "1px solid #dbdbdb" }}
               />
               <TooltipComponent
-                title="Anchor"
-                description="An anchor is a snapshot of the state tree which is registered to blockchain protocol. It is formed by the resulting state of the state transition."
+                title={t("anchor")}
+                description={t("anchor-description")}
               >
                 <div
                   className="text-secondary text-uppercase bold-text"
                   style={{ fontSize: "0.8rem" }}
                 >
                   <p>
-                    Anchor
+                    {t("anchor")}
                     <i className="pi pi-question-circle px-1 py-1 text-secondary "></i>
                   </p>
                 </div>
@@ -260,15 +266,15 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
                 style={{ borderBottom: "1px solid #dbdbdb" }}
               />
               <TooltipComponent
-                title="Root"
-                description="This value represents the root of the state tree. Users can easily verify the root of your blockchain in any of the public sources of Ethereum (i.e. https://etherscan.io/)."
+                title={t("root")}
+                description={t("root-description")}
               >
                 <div
                   className="text-secondary text-uppercase bold-text"
                   style={{ fontSize: "0.8rem" }}
                 >
                   <p>
-                    Root
+                    {t("root")}
                     <i className="pi pi-question-circle px-1 py-1 text-secondary"></i>
                   </p>
                 </div>
@@ -288,7 +294,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
             className="text-secondary text-uppercase bold-text pb-1"
             style={{ fontSize: "0.8rem" }}
           >
-            Networks
+            {t("networks")}
           </div>
 
           <div className="card my-3 networks-table-info">

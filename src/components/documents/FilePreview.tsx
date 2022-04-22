@@ -1,5 +1,6 @@
 import loadable from "@loadable/component";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Document, Page, pdfjs } from "react-pdf";
 import { useFileType } from "../../utils/use-file-type";
 import { useIsJson } from "../../utils/use-is-json";
@@ -14,6 +15,8 @@ type FilePreviewProps = {
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
+  const { t } = useTranslation("file-preview");
+
   const fileDetect = useFileType;
   const isJSONValid = useIsJson;
   let detectedFile = fileDetect(element);
@@ -122,7 +125,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
       {previewBasedOnMimeType() !== null ? (
         previewBasedOnMimeType()
       ) : (
-        <>File not found</>
+        <>{t("not-found")}</>
       )}
     </div>
   );
