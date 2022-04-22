@@ -6,6 +6,7 @@ import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import FileSection from "../components/documents/UploadFile";
 import VerificationSection from "../components/verification/VerificationMain";
@@ -22,6 +23,8 @@ export type FileElement = {
 };
 
 const Home = () => {
+  const { t } = useTranslation("home");
+
   const [element, setElement] = useState<FileElement | null>(null);
   const [validateFromUrl, setValidateFromUrl] = useState<boolean>(false);
 
@@ -90,7 +93,7 @@ const Home = () => {
         {!validateFromUrl && (
           <Row className="flex-column flex-lg-row align-items-center">
             <Col style={{ paddingRight: "10px", paddingTop: "10px" }}>
-              <h1 className="">Verify document's authenticity </h1>
+              <h1 className="">{t("title")}</h1>
               <h3 className="mt-3">
                 Check unequivocally on blockchain whether a document has been
                 tampered with
