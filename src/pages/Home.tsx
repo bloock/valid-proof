@@ -94,10 +94,7 @@ const Home = () => {
           <Row className="flex-column flex-lg-row align-items-center">
             <Col style={{ paddingRight: "10px", paddingTop: "10px" }}>
               <h1 className="">{t("title")}</h1>
-              <h3 className="mt-3">
-                Check unequivocally on blockchain whether a document has been
-                tampered with
-              </h3>
+              <h3 className="mt-3">{t("subtitle")}</h3>
               <ul className="mt-4 features">
                 <li className="mt-2">
                   <i
@@ -107,7 +104,7 @@ const Home = () => {
                       backgroundColor: primaryColor,
                     }}
                   ></i>
-                  <p>Get a simple summary of the evidence details</p>
+                  <p>{t("feature-one")}</p>
                 </li>
                 <li className="mt-3">
                   <i
@@ -118,7 +115,7 @@ const Home = () => {
                     }}
                   ></i>
 
-                  <p>Verify independently your records on blockchain</p>
+                  <p>{t("feature-two")}</p>
                 </li>
                 <li className=" mt-3">
                   <i
@@ -129,7 +126,7 @@ const Home = () => {
                     }}
                   ></i>
 
-                  <p>Completely transparent and opensource</p>
+                  <p>{t("feature-three")}</p>
                 </li>
               </ul>
             </Col>
@@ -165,7 +162,7 @@ const Home = () => {
       <div className="top-margin"></div>
       <div className="bg-light">
         <div className="container-md px-4 pt-10 ">
-          <h2 className="mb-4 text-center pt-5">Test the verification tool</h2>
+          <h2 className="mb-4 text-center pt-5">{t("test-section")}</h2>
           <Row className="pt-2">
             <Col className="text-center text-lg-start text-break d-flex flex-column align-items-center">
               <div
@@ -187,7 +184,7 @@ const Home = () => {
                           fontSize: "20px",
                         }}
                       ></i>
-                      <p className="text-center mt-3">Valid test certificate</p>
+                      <p className="text-center mt-3">{t("valid-test")}</p>
                     </div>
                   </a>
                   <div>
@@ -208,20 +205,15 @@ const Home = () => {
                           fontSize: "20px",
                         }}
                       ></i>
-                      <p className="text-center mt-3">
-                        Tampered test certificate
-                      </p>
+                      <p className="text-center mt-3">{t("tampered-test")}</p>
                     </div>
                   </a>
                 </div>
               </div>
               <h4 className="bold-text text-center text-lg-start">
-                Try out with demo documents
+                {t("test-one-title")}
               </h4>
-              <div className="mb-5">
-                Download the demo documents or read the demo QR to see how it’s
-                done.
-              </div>
+              <div className="mb-5">{t("test-one-text")}</div>
             </Col>
             <Col className="text-center text-lg-start text-break d-flex flex-column align-items-center">
               <div
@@ -235,11 +227,8 @@ const Home = () => {
               >
                 <img alt="Card" src={demoimage2} />
               </div>
-              <h4 className="bold-text">Verify the documents</h4>
-              <div className="mb-5">
-                Drag and drop each document into the tool or click on the tool
-                to open your file browser.
-              </div>
+              <h4 className="bold-text">{t("test-two-title")}</h4>
+              <div className="mb-5">{t("test-two-text")}</div>
             </Col>
             <Col className="text-center text-lg-start text-break d-flex flex-column align-items-center">
               <div
@@ -253,10 +242,8 @@ const Home = () => {
               >
                 <img alt="Card" src={demoimage3} />
               </div>
-              <h4 className="bold-text">Check the results</h4>
-              <div className="mb-5">
-                Check if the certification is valid and get the evidence report.
-              </div>
+              <h4 className="bold-text">{t("test-three-title")}</h4>
+              <div className="mb-5">{t("test-three-text")} </div>
             </Col>
           </Row>
           <Row className="little-top-margin"></Row>
