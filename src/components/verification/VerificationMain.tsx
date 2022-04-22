@@ -137,8 +137,8 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
 
   const events = [
     {
-      status: "Getting tamper proof seal",
-      description: "Step 1",
+      status: t("first-step"),
+      description: t("first-step-helper"),
       icon:
         errorStep === 0
           ? "pi pi-times px-2 py-2 click-icon"
@@ -153,8 +153,8 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
           : colors.success,
     },
     {
-      status: "Validating seal verity",
-      description: "Step 2",
+      status: t("second-step"),
+      description: t("second-step-helper"),
 
       icon:
         errorStep === 1
@@ -170,8 +170,8 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
           : colors.success,
     },
     {
-      status: "Searching seal in blockchain",
-      description: "Step 3",
+      status: t("third-step"),
+      description: t("third-step-helper"),
 
       icon:
         errorStep === 2

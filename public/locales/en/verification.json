@@ -1,3 +1,9 @@
 {
-  "wait": "Please wait for your file to be verified"
+  "wait": "Please wait for your file to be verified",
+  "first-step": "Getting tamper proof seal",
+  "second-step": "Validating seal verity",
+  "third-step": "Searching seal in blockchain",
+  "first-step-helper": "Step 1",
+  "second-step-helper": "Step 2",
+  "third-step-helper": "Step 3"
 }

@@ -219,7 +219,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
       <Divider className="my-3" style={{ borderBottom: "1px solid #dbdbdb" }} />
 
       <Accordion>
-        <AccordionTab header="Technical details">
+        <AccordionTab header={t("details")}>
           {recordProof ? (
             <>
               <div
@@ -228,7 +228,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
               >
                 <TooltipComponent
                   title={t("document-hash")}
-                  description={t("dociment-hash-description")}
+                  description={t("document-hash-description")}
                 >
                   <p>
                     {t("document-hash")}
