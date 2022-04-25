@@ -355,6 +355,9 @@ a {
   text-decoration: none;
   color: inherit;
 }
+a:hover {
+  color: inherit;
+}
 
 .p-accordion
   .p-accordion-header:not(.p-disabled).p-highlight:hover

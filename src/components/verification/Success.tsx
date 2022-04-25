@@ -103,11 +103,11 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
         <div className="card">
           <div className="card-body" style={{ fontSize: "0.9rem" }}>
             <div className="d-flex justify-content-between py-1">
-              <p className="bold-text">{t("name")}</p>
+              <p className="bold-text text-secondary">{t("name")}</p>
               <p>{name}</p>
             </div>
             <div className="d-flex justify-content-between py-1">
-              <p className="bold-text">{t("state")}</p>
+              <p className="bold-text text-secondary">{t("state")}</p>
               <Tag
                 icon={
                   network.state === "Confirmed"
@@ -132,7 +132,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
               ></Tag>
             </div>
             <div className="d-flex justify-content-between py-1">
-              <p className="bold-text">{t("timestamp")}</p>
+              <p className="bold-text text-secondary">{t("timestamp")}</p>
               <p>{dates}</p>
             </div>
           </div>
