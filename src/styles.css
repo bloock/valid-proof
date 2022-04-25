@@ -7,13 +7,13 @@
 }
 
 h1 {
-  font-size: 52px !important;
-  line-height: 3.5rem;
+  font-size: 44px !important;
+  line-height: 3.2rem;
 }
 
 h2 {
-  font-size: 44px;
-  line-height: 3.5rem;
+  font-size: 32px;
+  line-height: 2.4rem;
 }
 
 h3 {
@@ -173,6 +173,10 @@ textarea {
   display: block;
 }
 
+.p-timeline.p-timeline-vertical .p-timeline-event-content {
+  height: 80px;
+}
+
 @media (max-width: 750px) {
   .p-timeline.p-timeline-horizontal .p-timeline-event-opposite,
   .p-timeline.p-timeline-horizontal .p-timeline-event-content {
@@ -258,6 +262,7 @@ textarea {
 .pdf-viewer canvas {
   width: 100% !important;
   height: auto !important;
+  max-height: 450px !important;
 }
 
 .color-success {
@@ -308,4 +313,92 @@ textarea {
 
 .p-accordion-header-link {
   padding-bottom: 10px !important;
+}
+
+@media (max-width: 670px) {
+  .features {
+    display: none;
+  }
+  .container {
+    height: 180px !important;
+    outline: none !important;
+    width: 100% !important;
+    margin: 30px 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+}
+
+.networks-cards-info {
+  display: block;
+}
+
+.networks-table-info {
+  display: none;
+}
+
+@media (min-width: 671px) {
+  .networks-table-info {
+    display: block;
+  }
+  .networks-cards-info {
+    display: none;
+  }
+}
+
+i:hover {
+  opacity: 70%;
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+a:hover {
+  color: inherit;
+}
+
+.p-accordion
+  .p-accordion-header:not(.p-disabled).p-highlight:hover
+  .p-accordion-header-link,
+.p-accordion,
+.p-accordion-tab,
+.p-accordion-header,
+.p-accordion-tab:last-child,
+.p-accordion-header:not(.p-highlight),
+.p-accordion-header-link {
+  background-color: inherit;
+}
+.p-accordion-header-text {
+  font-size: 0.9rem;
+}
+
+.p-accordion-toggle-icon,
+.pi-chevron-down,
+.pi-chevron-right {
+  font-size: 0.6rem !important;
+  font-weight: 600;
+}
+
+.p-accordion
+  .p-accordion-header:not(.p-highlight):not(.p-disabled):hover
+  .p-accordion-header-link {
+  background-color: inherit;
+}
+
+:focus {
+  outline: 0 !important;
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0) !important;
+}
+
+.preview-btn,
+.preview-btn::after {
+  background-color: transparent;
+  border: none;
+  padding: 0 15px;
+}
+
+.alert {
+  padding: 0.7rem 0.7rem;
 }

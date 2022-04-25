@@ -1,5 +1,5 @@
-import { Divider } from "primereact/divider";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { FileElement } from "../../pages/Home";
 import { Truncate } from "../../utils/truncate";
 
@@ -12,69 +12,57 @@ const VerificationError: React.FC<VerificationErrorProps> = ({
   element,
   errorStep,
 }) => {
+  const { t } = useTranslation("error");
+
   return (
     <>
       {element?.name ? (
-        <div className="mb-4">
+        <div className={element.name ? "mb-4 mt-2" : "mb-0"}>
           <i
             className={`pi pi-file px-1 py-1 click-icon text-secondary ${
-              element.name ? "d-inline font-bold" : "d-none"
+              element.name ? "d-inline" : "d-none"
             }`}
+            style={{ fontWeight: 300 }}
           ></i>
-          <span className="mx-2 bold-text">
+          <span className="mx-2 text-secondary text-break">
             {Truncate(element.name as string, 50, "...")}
           </span>
         </div>
       ) : null}
-      <div className="mb-3">
-        <p className="color-error">
-          <i className="pi pi-times-circle px-1 py-1 "></i>
-          Your record couldn’t be verified
+      <div className="mb-4 alert alert-danger">
+        <p className="font-bold">
+          <i
+            className="pi pi-times-circle px-1 py-1 "
+            style={{ fontSize: "1.1rem" }}
+          ></i>
+          {t("recordError")}
         </p>
       </div>
 
       {errorStep === 0 ? (
         <div>
-          <p className="pb-3">
-            There’s no proof of existence for this record. It might have been
-            modified unintentionally.
-          </p>
+          <p className="pb-3">{t("error-description")}</p>
           <p>
-            Potential error sources:
+            {t("sources")}
             <ul>
-              <li>- The issuer provided an altered version of the record.</li>
-              <li>
-                - The record was altered by a malicious third party during
-                transmission.
-              </li>
-              <li>- The record was unintentionally altered.</li>
+              <li> {t("first-source")}</li>
+              <li>{t("second-source")}</li>
+              <li>{t("third-source")}</li>
             </ul>
-          </p>
-          <p>
-            If you have any questions, please contact the issuer of the records
-            directly or get in touch with our support.
           </p>
         </div>
       ) : (
         <div>
           <p>
-            Potential error sources:
+            {t("sources")}
             <ul>
-              <li>- You were provided a fraudulent proof by the issuer.</li>
-              <li>
-                - Your record is still pending to be transacted into a
-                blockchain protocol by the issuer.
-              </li>
+              <li>{t("fourth-source")}</li>
+              <li>{t("fifth-source")}</li>
             </ul>
           </p>
-          <p>Please try loading your record again in a few minutes.</p>
+          <p>{t("try-again")}</p>
         </div>
       )}
-      <Divider className="my-4" />
-      <div className="bold-text">Document hash</div>
-      <div className="" style={{ overflowWrap: "break-word" }}>
-        {element?.record && element.record.getHash()}
-      </div>
     </>
   );
 };

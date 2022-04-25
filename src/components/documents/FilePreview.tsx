@@ -1,9 +1,9 @@
 import loadable from "@loadable/component";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Document, Page, pdfjs } from "react-pdf";
 import { useFileType } from "../../utils/use-file-type";
 import { useIsJson } from "../../utils/use-is-json";
-import Button from "../elements/Button";
 
 const ReactJson = loadable(() => import("react-json-view"));
 
@@ -14,6 +14,8 @@ type FilePreviewProps = {
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
+  const { t } = useTranslation("file-preview");
+
   const fileDetect = useFileType;
   const isJSONValid = useIsJson;
   let detectedFile = fileDetect(element);
@@ -79,15 +81,15 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
               onLoadSuccess={onDocumentLoadSuccess}
             >
               <Page pageNumber={pageNumber} />
-              <div className="d-flex align-items-center justify-content-center ">
+              <div className="d-flex align-items-center justify-content-center text-secondary mt-2">
                 <div className="w-25 d-flex flex-column align-items-end">
                   {pageNumber > 1 ? (
-                    <Button
-                      className="mt-1 text-center "
-                      cta={() => setPageNumber(pageNumber - 1)}
+                    <button
+                      className="mt-1 text-center preview-btn text-secondary "
+                      onClick={() => setPageNumber(pageNumber - 1)}
                     >
                       <small className="cursor-pointer">&lt;</small>
-                    </Button>
+                    </button>
                   ) : null}
                 </div>
                 <div>
@@ -97,12 +99,12 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
                 </div>
                 <div className="w-25">
                   {numPages > pageNumber ? (
-                    <Button
-                      className="mt-1 text-center"
-                      cta={() => setPageNumber(pageNumber + 1)}
+                    <button
+                      className="mt-1 text-center preview-btn text-secondary"
+                      onClick={() => setPageNumber(pageNumber + 1)}
                     >
                       <small className="cursor-pointer">&gt;</small>
-                    </Button>
+                    </button>
                   ) : null}
                 </div>
               </div>
@@ -117,12 +119,12 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
   return (
     <div
       className="p-card p-3 d-flex justify-content-center"
-      style={{ maxHeight: "500px" }}
+      style={{ maxHeight: "550px" }}
     >
       {previewBasedOnMimeType() !== null ? (
         previewBasedOnMimeType()
       ) : (
-        <>File not found</>
+        <>{t("not-found")}</>
       )}
     </div>
   );

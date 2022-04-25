@@ -5,12 +5,15 @@ import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { useTranslation } from "react-i18next";
+import { FileElement } from "../../pages/Home";
 import "../../styles.css";
 import { useFileType } from "../../utils/use-file-type";
 import Button from "../elements/Button";
 
 type FileSectionProps = {
   onElementChange: (element: any) => any;
+  element: FileElement | null;
 };
 
 const primaryColor = (window as any).env.PRIMARY_COLOR
@@ -46,13 +49,12 @@ const rejectStyle = {
 };
 
 const FileSection: React.FC<FileSectionProps> = ({
-  onElementChange = () => {},
+  onElementChange,
+  element: elementType,
 }) => {
-  const [element, setElement] = useState<{
-    name: string | undefined;
-    value: string | ArrayBuffer | null;
-    record: Record;
-  } | null>(null);
+  const { t } = useTranslation("upload-file");
+
+  const [element, setElement] = useState<FileElement | null>(elementType);
 
   const fileTypeDetect = useFileType;
 
@@ -184,12 +186,12 @@ const FileSection: React.FC<FileSectionProps> = ({
               </div>
             ) : (
               <div>
-                <p>Drag and drop your file</p>
-                <p>or</p>
+                <p>{t("drag&drop")}</p>
+                <p>{t("or")}</p>
 
                 <Button className="button">
                   <input {...getInputProps()} />
-                  Select file
+                  {t("select")}
                 </Button>
               </div>
             )}

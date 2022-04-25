@@ -6,12 +6,12 @@ import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import FileSection from "../components/documents/UploadFile";
 import VerificationSection from "../components/verification/VerificationMain";
-import demoimage1 from "../images/howitworks-1.jpg";
-import demoimage2 from "../images/howitworks-2.jpg";
-import demoimage3 from "../images/howitworks-3.jpg";
+import demoimage3 from "../images/get_results.jpg";
+import demoimage2 from "../images/verify_documents.jpg";
 import "../styles.css";
 import { useFileType } from "../utils/use-file-type";
 import { useIsJson } from "../utils/use-is-json";
@@ -23,6 +23,8 @@ export type FileElement = {
 };
 
 const Home = () => {
+  const { t } = useTranslation("home");
+
   const [element, setElement] = useState<FileElement | null>(null);
   const [validateFromUrl, setValidateFromUrl] = useState<boolean>(false);
 
@@ -87,19 +89,13 @@ const Home = () => {
   return (
     <Fragment>
       <div className="top-margin"></div>
-      <div className="container-md px-4">
+      <div className="container-md pt-6 px-4">
         {!validateFromUrl && (
-          <Row className="flex-column flex-lg-row pt-8 align-items-center">
-            <Col style={{ paddingRight: "50px", paddingTop: "10px" }}>
-              <h1 className="bold-text title">
-                Validate your records on blockchain
-              </h1>
-              <h3 className="mt-4">
-                Open source website to obtain a mathematical evidence proving
-                irrefutably the time a record was emitted and its provenance and
-                integrity.{" "}
-              </h3>
-              <ul className="mt-4">
+          <Row className="flex-column flex-lg-row align-items-center">
+            <Col style={{ paddingRight: "10px", paddingTop: "10px" }}>
+              <h1 className="">{t("title")}</h1>
+              <h3 className="mt-3">{t("subtitle")}</h3>
+              <ul className="mt-4 features">
                 <li className="mt-2">
                   <i
                     className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
@@ -108,7 +104,7 @@ const Home = () => {
                       backgroundColor: primaryColor,
                     }}
                   ></i>
-                  <p>Get a simple summary of the evidence details</p>
+                  <p>{t("feature-one")}</p>
                 </li>
                 <li className="mt-3">
                   <i
@@ -119,9 +115,9 @@ const Home = () => {
                     }}
                   ></i>
 
-                  <p>Verify independently your records on blockchain</p>
+                  <p>{t("feature-two")}</p>
                 </li>
-                <li className="mt-3">
+                <li className=" mt-3">
                   <i
                     className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
                     style={{
@@ -130,75 +126,124 @@ const Home = () => {
                     }}
                   ></i>
 
-                  <p>Completely transparent and opensource</p>
+                  <p>{t("feature-three")}</p>
                 </li>
               </ul>
             </Col>
 
-            <Col className="mb-10" style={{ marginBottom: "30px" }}>
-              <FileSection
-                onElementChange={(element) => setElement(element)}
-              ></FileSection>
-            </Col>
+            {!element ? (
+              <Col className="mb-10" style={{ marginBottom: "30px" }}>
+                <FileSection
+                  onElementChange={(element) => setElement(element)}
+                  element={null}
+                ></FileSection>
+              </Col>
+            ) : null}
           </Row>
         )}
 
         {element ? (
-          <div ref={verificationRef}>
-            <VerificationSection element={element} />
-          </div>
+          <>
+            {validateFromUrl ? (
+              <VerificationSection element={element} />
+            ) : (
+              <div ref={verificationRef}>
+                <VerificationSection element={element} />
+                <FileSection
+                  onElementChange={(element) => setElement(element)}
+                  element={element}
+                ></FileSection>
+              </div>
+            )}
+          </>
         ) : null}
       </div>
 
       <div className="top-margin"></div>
       <div className="bg-light">
         <div className="container-md px-4 pt-10 ">
-          <h2 className="bold-text title mb-5 text-center pt-6">
-            How it works
-          </h2>
+          <h2 className="mb-4 text-center pt-5">{t("test-section")}</h2>
           <Row className="pt-2">
-            <Col
-              className="text-center text-lg-start text-break"
-              style={{ width: "45%" }}
-            >
-              <h4 className="bold-text">
-                Select the type of record to provide
+            <Col className="text-center text-lg-start text-break d-flex flex-column align-items-center">
+              <div
+                className="shadow-sm p-3 mb-4 d-flex justify-content-center bg-body  rounded align-items-center  "
+                style={{
+                  width: "400px",
+                  height: "240px",
+                  minWidth: "200px",
+                  maxWidth: "100%",
+                }}
+              >
+                <div className="d-flex ">
+                  <a href="" download>
+                    <div className="px-3 align-items-center d-flex flex-column">
+                      <i
+                        className="circle check-success pi pi-arrow-down px-3 py-3 click-icon icon-medium"
+                        style={{
+                          backgroundColor: primaryColor,
+                          fontSize: "20px",
+                        }}
+                      ></i>
+                      <p className="text-center mt-3">{t("valid-test")}</p>
+                    </div>
+                  </a>
+                  <div>
+                    <hr
+                      style={{
+                        height: "100%",
+                        borderRight: "1px solid black",
+                        margin: "0",
+                      }}
+                    ></hr>
+                  </div>
+                  <a href="" download>
+                    <div className="px-3 align-items-center d-flex flex-column">
+                      <i
+                        className="circle check-success pi pi-arrow-down px-3 py-3 click-icon icon-medium"
+                        style={{
+                          backgroundColor: primaryColor,
+                          fontSize: "20px",
+                        }}
+                      ></i>
+                      <p className="text-center mt-3">{t("tampered-test")}</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <h4 className="bold-text text-center text-lg-start">
+                {t("test-one-title")}
               </h4>
-              <div className="mb-4">
-                Select if your data is in document format or in JSON format.
-              </div>
-              <img
-                alt="Card"
-                src={demoimage1}
-                style={{ width: "400px", minWidth: "200px", maxWidth: "100%" }}
-                className="shadow-sm p-3 mb-5 bg-body rounded"
-              />
+              <div className="mb-5">{t("test-one-text")}</div>
             </Col>
-            <Col className="text-center text-lg-start text-break">
-              <h4 className="bold-text">Load your record</h4>
-              <div className="mb-4">
-                Select from your system or write down the record you want to
-                validate.
+            <Col className="text-center text-lg-start text-break d-flex flex-column align-items-center">
+              <div
+                className="shadow-sm p-3 mb-4 d-flex justify-content-center bg-body rounded align-items-center "
+                style={{
+                  width: "400px",
+                  height: "240px",
+                  minWidth: "200px",
+                  maxWidth: "100%",
+                }}
+              >
+                <img alt="Card" src={demoimage2} />
               </div>
-              <img
-                alt="Card"
-                src={demoimage2}
-                style={{ width: "400px", minWidth: "200px", maxWidth: "100%" }}
-                className="shadow-sm p-3 mb-5 bg-body rounded"
-              />
+              <h4 className="bold-text">{t("test-two-title")}</h4>
+              <div className="mb-5">{t("test-two-text")}</div>
             </Col>
-            <Col className="text-center text-lg-start text-break">
-              <h4 className="bold-text">Get your results</h4>
-              <div className="mb-4">
-                Obtain a summarised mathematical evidence proving the
-                authenticity and integrity of your record.
+            <Col className="text-center text-lg-start text-break d-flex flex-column align-items-center">
+              <div
+                className="shadow-sm p-3 mb-4 d-flex justify-content-center bg-body rounded align-items-center "
+                style={{
+                  width: "400px",
+                  height: "240px",
+                  minWidth: "200px",
+                  maxWidth: "100%",
+                }}
+              >
+                <img alt="Card" src={demoimage3} />
               </div>
-              <img
-                alt="Card"
-                src={demoimage3}
-                style={{ width: "400px", minWidth: "200px", maxWidth: "100%" }}
-                className="shadow-sm p-3 mb-5 bg-body rounded"
-              />
+              <h4 className="bold-text">{t("test-three-title")}</h4>
+              <div className="mb-5">{t("test-three-text")} </div>
             </Col>
           </Row>
           <Row className="little-top-margin"></Row>

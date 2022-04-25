@@ -29,19 +29,27 @@ const StepperVerification: React.FC<StepperVerificationProps> = ({
     if (item.status === events[events.length - 1].status) {
       return (
         <>
+          <span
+            className="text-uppercase text-secondary"
+            style={{ fontSize: "11px" }}
+          >
+            {item.description}
+          </span>
           <div>{item.status}</div>
-          <div className="px-4">
-            <span>{item.description}</span>
-          </div>
+          <div className="px-4"></div>
         </>
       );
     } else {
       return (
         <>
+          <span
+            className="text-uppercase text-secondary"
+            style={{ fontSize: "11px" }}
+          >
+            {item.description}
+          </span>
           <div>{item.status}</div>
-          <div className="px-4">
-            <span>{item.description}</span>
-          </div>
+          <div className="px-4"></div>
         </>
       );
     }

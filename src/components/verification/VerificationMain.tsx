@@ -5,6 +5,7 @@ import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 import { FileElement } from "../../pages/Home";
 import "../../styles.css";
 import FilePreview from "../documents/FilePreview";
@@ -28,11 +29,14 @@ type VerificationSectionProps = {
 const VerificationSection: React.FC<VerificationSectionProps> = ({
   element,
 }) => {
+  const { t } = useTranslation("verification");
+
   const [recordProof, setRecordProof] = useState<Proof | null>(null);
   const [recordRoot, setRecordRoot] = useState<Record | null>(null);
   const [recordTimestamp, setRecordTimestamp] = useState<number | null>(null);
   const [errorStep, setErrorStep] = useState<number | null>(null);
   const [activeStep, setActiveStep] = useState<number | null>(null);
+  const [componentTransition, setComponentTransition] = useState(false);
 
   function getRandomInterval(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -125,11 +129,16 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     setTimeout(() => {
       getRecordTimestamp();
     }, getRandomInterval(1000, 2000));
-  }, [recordRoot]);
+  }, [recordRoot, recordProof]);
+
+  useEffect(() => {
+    setTimeout(() => setComponentTransition(true), 7000);
+  }, []);
 
   const events = [
     {
-      status: "Retrieve integrity proof",
+      status: t("first-step"),
+      description: t("first-step-helper"),
       icon:
         errorStep === 0
           ? "pi pi-times px-2 py-2 click-icon"
@@ -144,7 +153,9 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
           : colors.success,
     },
     {
-      status: "Validate integrity proof",
+      status: t("second-step"),
+      description: t("second-step-helper"),
+
       icon:
         errorStep === 1
           ? "pi pi-times px-2 py-2 click-icon"
@@ -159,7 +170,9 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
           : colors.success,
     },
     {
-      status: "Validate existence in blockchain",
+      status: t("third-step"),
+      description: t("third-step-helper"),
+
       icon:
         errorStep === 2
           ? "pi pi-times px-2 py-2 click-icon"
@@ -176,56 +189,26 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   ];
 
   return (
-    <div className="container-lg mt-5 verification-section">
-      <div
-        className=" horizontal-center timeline-margins mb-5 stepper bg-light"
-        style={{ paddingTop: "30px", paddingBottom: "40px" }}
-      >
-        <div className="bold-text header-title j mb-4 mt-4">
-          Your verification:
+    <div className="container-lg mt-3 verification-section">
+      {!componentTransition ? (
+        <div
+          className="horizontal-center timeline-margins mb-4 stepper bg-light rounded"
+          style={{ paddingTop: "30px", paddingBottom: "20px" }}
+        >
+          <div className=" mb-4 mt-3">{t("wait")}</div>
+          <StepperVerification events={events} />
         </div>
-        <StepperVerification events={events} />
-      </div>
+      ) : null}
       <div className="little-top-margin"></div>
       <div className="horizontal-center">
-        {recordTimestamp == null && errorStep == null ? null : (
-          <div className="pt-2 mb-5 animated fadeIn">
-            {recordTimestamp && errorStep == null ? (
-              <div>
-                <div className="d-flex flex-row justify-content-center align-items-center">
-                  <p className="px-2 fs-2">Done!</p>
-                </div>
-                <div className="bold-text">
-                  <h4 className="mx-2">Your record has been verified</h4>
-                </div>
-              </div>
-            ) : (
-              <div>
-                <div>
-                  <div className="d-flex flex-row justify-content-center align-items-center">
-                    <p className="px-2 fs-2">Oops!</p>
-                  </div>
-                  {errorStep === 0 ? (
-                    <div className="bold-text">
-                      <h4 className="mx-2">Your record couldn't be verified</h4>
-                    </div>
-                  ) : (
-                    <div className="bold-text">
-                      <h4 className="mx-2">
-                        The digest of the retrieved proof couldn't be found in
-                        any blockchain protocol.
-                      </h4>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
+        {!componentTransition ? null : (
+          <div className="pt-2 mb-5">
             <div
-              className="mt-5 py-4 border-0 bg-light 5 verification-container"
+              className="mt-2 border-0 bg-light verification-container"
               style={{ textAlign: "left" }}
             >
-              <Row className="justify-content-between pt-3 pb-3 ">
-                <Col lg={5} className="mb-4">
+              <Row className="justify-content-between d-flex flex-column-reverse flex-lg-row p-3 ">
+                <Col lg={5} className="my-4 ">
                   <FilePreview element={element} />
                 </Col>
                 <Col lg={6} className="mb-4 mt-2">
