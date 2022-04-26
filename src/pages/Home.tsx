@@ -89,7 +89,7 @@ const Home = () => {
   return (
     <Fragment>
       <div className="top-margin"></div>
-      <div className="container-md pt-6 px-4">
+      <div className="container-md pt-6 pb-5 px-4">
         {!validateFromUrl && (
           <Row className="flex-column flex-lg-row align-items-center">
             <Col style={{ paddingRight: "10px", paddingTop: "10px" }}>

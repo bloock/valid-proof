@@ -12,7 +12,8 @@ i18n
   .use(initReactI18next)
   .init({
     debug: true,
-    supportedLngs: ["en"],
+    lng: "en",
+    supportedLngs: ["en", "es"],
     fallbackLng: "en",
     nonExplicitSupportedLngs: true,
     backend: {
