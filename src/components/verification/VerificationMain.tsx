@@ -118,11 +118,9 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
             setActiveStep(2);
             setRecordTimestamp(timestamp);
           } else {
-            debugger;
             setErrorStep(2);
           }
         } catch (e) {
-          debugger;
           setErrorStep(2);
         }
       }
@@ -134,7 +132,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   }, [recordRoot]);
 
   useEffect(() => {
-    if (recordTimestamp || errorStep) {
+    if (recordTimestamp || errorStep !== null) {
       setTimeout(() => setComponentTransition(true), 500);
     }
   }, [recordTimestamp, errorStep]);
