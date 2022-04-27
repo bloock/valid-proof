@@ -320,6 +320,8 @@ textarea {
     display: none;
   }
   .container {
+    height: 180px !important;
+
     outline: none !important;
     width: 100% !important;
     margin: 20px 0 !important;

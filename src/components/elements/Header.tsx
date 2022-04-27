@@ -29,6 +29,7 @@ const Header = () => {
     <>
       <Navbar
         bg="white"
+        className="fixed-top"
         style={{
           borderBottom: "1px solid rgba(0, 0, 0, 0.1)",
           boxShadow: "0 1px 2px 0 rgb(0 0 0 / 7%)",
@@ -38,7 +39,6 @@ const Header = () => {
           <Navbar.Brand href="#">
             <img alt="Card" src={logo} style={{ width: "140px" }} />
           </Navbar.Brand>
-
           <Nav>
             <NavDropdown title={language} id="basic-nav-dropdown">
               {languages.map((language) => {

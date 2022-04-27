@@ -175,7 +175,12 @@ const Home = () => {
                 }}
               >
                 <div className="d-flex ">
-                  <a href="" download>
+                  <a
+                    href="https://bloock.com/wp-content/uploads/2022/04/valid_certificate.pdf"
+                    download
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     <div className="px-3 align-items-center d-flex flex-column">
                       <i
                         className="circle check-success pi pi-arrow-down px-3 py-3 click-icon icon-medium"
@@ -196,7 +201,10 @@ const Home = () => {
                       }}
                     ></hr>
                   </div>
-                  <a href="" download>
+                  <a
+                    href="https://bloock.com/wp-content/uploads/2022/04/tampered_certificate.pdf"
+                    download
+                  >
                     <div className="px-3 align-items-center d-flex flex-column">
                       <i
                         className="circle check-success pi pi-arrow-down px-3 py-3 click-icon icon-medium"
