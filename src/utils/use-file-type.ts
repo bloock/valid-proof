@@ -12,8 +12,8 @@ enum FileType {
 
 export const useFileType = (file: any) => {
   if (file) {
+    let fileEncode;
     if (file?.value) {
-      let fileEncode;
       fileEncode = lookup(file.name);
       if (fileEncode) {
         if (Object.values(FileType).includes(fileEncode)) {
@@ -25,7 +25,16 @@ export const useFileType = (file: any) => {
     } else if (Object.values(FileType).includes(file)) {
       return file;
     } else {
-      return null;
+      fileEncode = lookup(file);
+      if (fileEncode) {
+        if (Object.values(FileType).includes(fileEncode)) {
+          return fileEncode;
+        } else {
+          return null;
+        }
+      } else {
+        return null;
+      }
     }
   } else {
     return null;

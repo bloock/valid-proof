@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Document, Page, pdfjs } from "react-pdf";
 import { useFileType } from "../../utils/use-file-type";
 import { useIsJson } from "../../utils/use-is-json";
+import { useIsUrl } from "../../utils/use-is-url";
 
 const ReactJson = loadable(() => import("react-json-view"));
 
@@ -18,6 +19,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
 
   const fileDetect = useFileType;
   const isJSONValid = useIsJson;
+  const isURL = useIsUrl;
   let detectedFile = fileDetect(element);
   const [numPages, setNumPage] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState(1);
@@ -29,8 +31,8 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
   let srcElement: any;
 
   if (element) {
-    if (element?.name instanceof URL) {
-      srcElement = element.name.href;
+    if (isURL(element?.name)) {
+      srcElement = element.name;
     } else if (isJSONValid(element.value)) {
       srcElement = element.value;
     } else if (element.value instanceof Uint8Array) {
