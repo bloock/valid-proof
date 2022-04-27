@@ -8,30 +8,35 @@ import i18n from "../../i18n";
 import logo from "../../images/validProof_logo.jpg";
 import "../../styles.css";
 
+type ILanguage = {
+  label: string;
+  value: string;
+};
+
 const Header = () => {
-  const languages = [
+  const languagesArray: ILanguage[] = [
     { label: "English", value: "en" },
     { label: "Spanish", value: "es" },
   ];
 
   const envLanguage = (window as any).env.LANGUAGE;
 
-  const envLanguageLabel = () => {
-    if (envLanguage && envLanguage === "es") {
-      return "Spanish";
+  let defaultLanguage;
+  languagesArray.filter((language) => {
+    if (language.value === envLanguage) {
+      defaultLanguage = language;
     } else {
-      return "English";
+      defaultLanguage = languagesArray[0];
     }
-  };
-
-  const [language, setLanguage] = useState(envLanguageLabel);
+  });
+  const [selectedLanguage, setSelectedLanguage] =
+    useState<any>(defaultLanguage);
 
   const changeLanguageHandler = (lang: any) => {
-    i18n.changeLanguage(lang);
-    languages.filter((language) => {
-      console.log(languages);
-      if (language.value === lang) {
-        setLanguage(language.label);
+    i18n.changeLanguage(lang.value);
+    languagesArray.filter((item) => {
+      if (item?.value === lang.value) {
+        setSelectedLanguage(item);
       }
     });
   };
@@ -51,14 +56,14 @@ const Header = () => {
             <img alt="Card" src={logo} style={{ width: "140px" }} />
           </Navbar.Brand>
           <Nav>
-            <NavDropdown title={language} id="basic-nav-dropdown">
-              {languages.map((language) => {
+            <NavDropdown title={selectedLanguage.label} id="basic-nav-dropdown">
+              {languagesArray.map((lang) => {
                 return (
                   <NavDropdown.Item
                     href="#"
-                    onClick={() => changeLanguageHandler(language?.value)}
+                    onClick={() => changeLanguageHandler(lang)}
                   >
-                    {language?.label}
+                    {lang?.label}
                   </NavDropdown.Item>
                 );
               })}
