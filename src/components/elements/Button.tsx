@@ -4,11 +4,13 @@ type ButtonProps = {
   children?: any;
   cta?: () => void;
   className?: string;
+  disabled?: boolean;
 };
 
 const Button: React.FC<ButtonProps> = ({
   children,
   cta = () => {},
+  disabled,
   className,
 }) => {
   const primaryColor = (window as any).env.PRIMARY_COLOR

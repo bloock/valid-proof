@@ -55,6 +55,7 @@ const FileSection: React.FC<FileSectionProps> = ({
   const { t } = useTranslation("upload-file");
 
   const [element, setElement] = useState<FileElement | null>(elementType);
+  const [disabledButton, setDisabledButton] = useState(true);
 
   const fileTypeDetect = useFileType;
 
@@ -174,7 +175,11 @@ const FileSection: React.FC<FileSectionProps> = ({
             {element ? (
               <div>
                 {element && element !== undefined ? (
-                  <Button className="button" cta={() => handleFileChange(null)}>
+                  <Button
+                    className="button"
+                    cta={() => handleFileChange(null)}
+                    disabled={disabledButton ? true : false}
+                  >
                     {t("verify-another")}
                   </Button>
                 ) : null}
