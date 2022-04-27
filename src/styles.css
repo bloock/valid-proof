@@ -321,9 +321,10 @@ textarea {
   }
   .container {
     height: 180px !important;
+
     outline: none !important;
     width: 100% !important;
-    margin: 30px 0 !important;
+    margin: 20px 0 !important;
     padding: 0 !important;
     max-width: 100% !important;
   }
@@ -401,4 +402,22 @@ a:hover {
 
 .alert {
   padding: 0.7rem 0.7rem;
+}
+
+.p-dropdown-panel,
+.p-dropdown-items,
+.p-dropdown-item.p-highlight {
+  background: "gray" !important;
+}
+
+.p-dropdown,
+.p-component,
+.p-inputwrapper,
+.p-inputwrapper-filled,
+.p-inputwrapper-focus,
+.p-dropdown-trigger,
+.p-dropdown:not(.p-disabled):hover {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: gray;
 }

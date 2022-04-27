@@ -1,0 +1,11 @@
+{
+  "recordError": "Your record couldn’t be verified",
+  "error-description": "There’s no proof of existence for this record. It might have been modified unintentionally.",
+  "sources": " Potential error sources:",
+  "first-source": "- The issuer provided an altered version of the record.",
+  "second-source": "- The record was altered by a malicious third party during transmission.",
+  "third-source": "- The record was unintentionally altered.",
+  "fourth-source": "- You were provided a fraudulent proof by the issuer.",
+  "fifth-source": "- Your record is still pending to be transacted into a blockchain protocol by the issuer.",
+  "try-again": "Please try loading your record again in a few minutes."
+}
