@@ -21,12 +21,10 @@ const Header = () => {
 
   const envLanguage = (window as any).env.LANGUAGE;
 
-  let defaultLanguage;
+  let defaultLanguage = languagesArray[0];
   languagesArray.filter((language) => {
     if (language.value === envLanguage) {
       defaultLanguage = language;
-    } else {
-      defaultLanguage = languagesArray[0];
     }
   });
   const [selectedLanguage, setSelectedLanguage] =
