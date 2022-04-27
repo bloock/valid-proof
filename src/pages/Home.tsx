@@ -90,72 +90,64 @@ const Home = () => {
     <Fragment>
       <div className="top-margin"></div>
       <div className="container-md pt-6 px-4">
-        {!validateFromUrl && (
-          <Row className="flex-column flex-lg-row align-items-center">
-            <Col style={{ paddingRight: "10px", paddingTop: "10px" }}>
-              <h1 className="">{t("title")}</h1>
-              <h3 className="mt-3">{t("subtitle")}</h3>
-              <ul className="mt-4 features">
-                <li className="mt-2">
-                  <i
-                    className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
-                    style={{
-                      marginRight: "10px",
-                      backgroundColor: primaryColor,
-                    }}
-                  ></i>
-                  <p>{t("feature-one")}</p>
-                </li>
-                <li className="mt-3">
-                  <i
-                    className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
-                    style={{
-                      marginRight: "10px",
-                      backgroundColor: primaryColor,
-                    }}
-                  ></i>
+        <Row className="flex-column flex-lg-row align-items-center">
+          <Col style={{ paddingRight: "10px", paddingTop: "10px" }}>
+            <h1 className="">{t("title")}</h1>
+            <h3 className="mt-3">{t("subtitle")}</h3>
+            <ul className="mt-4 features">
+              <li className="mt-2">
+                <i
+                  className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
+                  style={{
+                    marginRight: "10px",
+                    backgroundColor: primaryColor,
+                  }}
+                ></i>
+                <p>{t("feature-one")}</p>
+              </li>
+              <li className="mt-3">
+                <i
+                  className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
+                  style={{
+                    marginRight: "10px",
+                    backgroundColor: primaryColor,
+                  }}
+                ></i>
 
-                  <p>{t("feature-two")}</p>
-                </li>
-                <li className=" mt-3">
-                  <i
-                    className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
-                    style={{
-                      marginRight: "10px",
-                      backgroundColor: primaryColor,
-                    }}
-                  ></i>
+                <p>{t("feature-two")}</p>
+              </li>
+              <li className=" mt-3">
+                <i
+                  className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
+                  style={{
+                    marginRight: "10px",
+                    backgroundColor: primaryColor,
+                  }}
+                ></i>
 
-                  <p>{t("feature-three")}</p>
-                </li>
-              </ul>
+                <p>{t("feature-three")}</p>
+              </li>
+            </ul>
+          </Col>
+
+          {!element ? (
+            <Col className="mb-10" style={{ marginBottom: "30px" }}>
+              <FileSection
+                onElementChange={(element) => setElement(element)}
+                element={null}
+              ></FileSection>
             </Col>
-
-            {!element ? (
-              <Col className="mb-10" style={{ marginBottom: "30px" }}>
-                <FileSection
-                  onElementChange={(element) => setElement(element)}
-                  element={null}
-                ></FileSection>
-              </Col>
-            ) : null}
-          </Row>
-        )}
+          ) : null}
+        </Row>
 
         {element ? (
-          <>
-            {validateFromUrl ? (
-              <VerificationSection element={element} />
-            ) : (
-              <div ref={verificationRef}>
-                <VerificationSection element={element} />
-                <FileSection
-                  onElementChange={(element) => setElement(element)}
-                  element={element}
-                ></FileSection>
-              </div>
-            )}
-          </>
+          <div ref={verificationRef}>
+            <VerificationSection element={element} />
+            <FileSection
+              onElementChange={(element) => setElement(element)}
+              element={element}
+            ></FileSection>
+          </div>
         ) : null}
       </div>
 
