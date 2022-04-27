@@ -115,7 +115,6 @@ const FileSection: React.FC<FileSectionProps> = ({
   const handleFileChange = async (file: File | null) => {
     if (file != null) {
       let fileType = fileTypeDetect(file.type);
-
       switch (fileType) {
         case "application/pdf":
           setElement({

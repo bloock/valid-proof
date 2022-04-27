@@ -15,6 +15,7 @@ import demoimage2 from "../images/verify_documents.jpg";
 import "../styles.css";
 import { useFileType } from "../utils/use-file-type";
 import { useIsJson } from "../utils/use-is-json";
+import { useIsUrl } from "../utils/use-is-url";
 
 export type FileElement = {
   name?: string | null;
@@ -40,43 +41,58 @@ const Home = () => {
     const fileDetect = useFileType;
 
     urlParam = new URL(urlParam);
+    let error;
+
     let bytes = await axios
       .get(urlParam, {
         responseType: "arraybuffer",
       })
       .then((res) => {
         return Buffer.from(res.data);
+      })
+      .catch((e) => {
+        error = true;
+        return undefined;
       });
 
-    let array = new Uint8Array(bytes);
+    let array = new Uint8Array(bytes != undefined ? bytes : []);
     var string = new TextDecoder().decode(array);
 
-    if (isJSONValid(string)) {
-      setElement({
-        name: urlParam.href,
-        value: JSON.parse(string),
-        record: await Record.fromJSON(JSON.parse(string)),
-      });
-    } else if (fileDetect(urlParam.href) === "application/pdf") {
-      setElement({
-        name: urlParam.href,
-        value: urlParam.href,
-        record: await Record.fromPDF(array),
-      });
+    if (!error) {
+      if (isJSONValid(string)) {
+        setElement({
+          name: urlParam.href,
+          value: JSON.parse(string),
+          record: await Record.fromJSON(JSON.parse(string)),
+        });
+      } else if (fileDetect(urlParam.href) === "application/pdf") {
+        setElement({
+          name: urlParam.href,
+          value: urlParam.href,
+          record: await Record.fromPDF(array),
+        });
+      } else if (fileDetect(urlParam.href)) {
+        setElement({
+          name: urlParam.href,
+          value: array,
+          record: await Record.fromTypedArray(array),
+        });
+      } else {
+        setValidateFromUrl(false);
+      }
     } else {
-      setElement({
-        name: urlParam.href,
-        value: array,
-        record: await Record.fromTypedArray(array),
-      });
+      setValidateFromUrl(false);
     }
   }
 
   useEffect(() => {
     const recordQuery = searchParams.get("record");
-    if (recordQuery) {
-      setValidateFromUrl(true);
+    const isURL = useIsUrl;
+    if (isURL(recordQuery)) {
       fileLoader(recordQuery);
+      setValidateFromUrl(true);
+    } else {
+      setValidateFromUrl(false);
     }
   }, [searchParams]);
 
