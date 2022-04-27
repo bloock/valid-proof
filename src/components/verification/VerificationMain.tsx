@@ -66,7 +66,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
       }
     };
 
-    setTimeout(() => getProof(), getRandomInterval(2000, 3000));
+    setTimeout(() => getProof(), getRandomInterval(1000, 1500));
   }, [element]);
 
   useEffect(() => {
@@ -89,7 +89,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
 
     setTimeout(() => {
       verifyProof();
-    }, getRandomInterval(1000, 2000));
+    }, getRandomInterval(500, 1000));
   }, [recordProof]);
 
   useEffect(() => {
@@ -118,9 +118,11 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
             setActiveStep(2);
             setRecordTimestamp(timestamp);
           } else {
+            debugger;
             setErrorStep(2);
           }
         } catch (e) {
+          debugger;
           setErrorStep(2);
         }
       }
@@ -128,12 +130,14 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
 
     setTimeout(() => {
       getRecordTimestamp();
-    }, getRandomInterval(1000, 2000));
-  }, [recordRoot, recordProof]);
+    }, getRandomInterval(500, 1000));
+  }, [recordRoot]);
 
   useEffect(() => {
-    setTimeout(() => setComponentTransition(true), 7000);
-  }, []);
+    if (recordTimestamp || errorStep) {
+      setTimeout(() => setComponentTransition(true), 500);
+    }
+  }, [recordTimestamp, errorStep]);
 
   const events = [
     {
@@ -172,7 +176,6 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     {
       status: t("third-step"),
       description: t("third-step-helper"),
-
       icon:
         errorStep === 2
           ? "pi pi-times px-2 py-2 click-icon"
