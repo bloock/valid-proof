@@ -89,7 +89,7 @@ const Home = () => {
   return (
     <Fragment>
       <div className="top-margin"></div>
-      <div className="container-md pt-6 pb-5 px-4">
+      <div className="container-md pt-6 pb-1 px-4">
         {!validateFromUrl && (
           <Row className="flex-column flex-lg-row align-items-center">
             <Col style={{ paddingRight: "10px", paddingTop: "10px" }}>
@@ -218,7 +218,7 @@ const Home = () => {
                   </a>
                 </div>
               </div>
-              <h4 className="bold-text text-center text-lg-start">
+              <h4 className="bold-text w-100 text-md-left text-lg-start">
                 {t("test-one-title")}
               </h4>
               <div className="mb-5">{t("test-one-text")}</div>
@@ -235,7 +235,9 @@ const Home = () => {
               >
                 <img alt="Card" src={demoimage2} />
               </div>
-              <h4 className="bold-text">{t("test-two-title")}</h4>
+              <h4 className="bold-text w-100 text-md-left">
+                {t("test-two-title")}
+              </h4>
               <div className="mb-5">{t("test-two-text")}</div>
             </Col>
             <Col className="text-center text-lg-start text-break d-flex flex-column align-items-center">
@@ -250,7 +252,9 @@ const Home = () => {
               >
                 <img alt="Card" src={demoimage3} />
               </div>
-              <h4 className="bold-text">{t("test-three-title")}</h4>
+              <h4 className="bold-text w-100 text-md-left">
+                {t("test-three-title")}
+              </h4>
               <div className="mb-5">{t("test-three-text")} </div>
             </Col>
           </Row>

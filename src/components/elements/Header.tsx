@@ -14,11 +14,22 @@ const Header = () => {
     { label: "Spanish", value: "es" },
   ];
 
-  const [language, setLanguage] = useState(languages[0].label);
+  const envLanguage = (window as any).env.LANGUAGE;
+
+  const envLanguageLabel = () => {
+    if (envLanguage && envLanguage === "es") {
+      return "Spanish";
+    } else {
+      return "English";
+    }
+  };
+
+  const [language, setLanguage] = useState(envLanguageLabel);
 
   const changeLanguageHandler = (lang: any) => {
     i18n.changeLanguage(lang);
     languages.filter((language) => {
+      console.log(languages);
       if (language.value === lang) {
         setLanguage(language.label);
       }
