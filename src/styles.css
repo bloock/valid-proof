@@ -421,3 +421,13 @@ a:hover {
   box-shadow: none !important;
   border-color: gray;
 }
+
+.dropdown-item {
+  background-color: inherit !important;
+  color: #000000;
+}
+
+.dropdown-item:active {
+  background-color: inherit !important;
+  color: #000000;
+}
