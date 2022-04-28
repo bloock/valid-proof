@@ -10,7 +10,7 @@
   "document-hash": "Hash del documento",
   "document-hash-description": "Huella digital del documento.",
   "anchor": "Anchor",
-  "anchor-description": "Identificador del estado de la transición de BLOOCK en la que el documento ha sido incluido.",
+  "anchor-description": "Identificador del estado de la transición de BLOOCK en la que se ha incluido el documento.",
   "root": "Root",
   "root-description": "Huella digital que representa todos los records incluidos en el estado de BLOOCK desde su inicio.",
   "networks": "Redes",
