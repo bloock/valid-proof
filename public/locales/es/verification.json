@@ -1,0 +1,9 @@
+{
+  "wait": "Por favor espera mientras se verifica tu documento",
+  "first-step": "Obteniendo prueba del selle",
+  "second-step": "Validando la veracidad del sello",
+  "third-step": "Buscando el sello en blockchain",
+  "first-step-helper": "Paso 1",
+  "second-step-helper": "Paso 2",
+  "third-step-helper": "Paso 3"
+}

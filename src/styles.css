@@ -194,7 +194,7 @@ textarea {
 
 @media (min-width: 970px) {
   .verification-section {
-    width: 95%;
+    width: 100%;
   }
   .verification-container {
     padding-left: 4rem;
@@ -205,6 +205,7 @@ textarea {
 @media (max-width: 970px) {
   .verification-section {
     width: 100%;
+    padding: 0;
   }
 
   .verification-container {
@@ -321,14 +322,17 @@ textarea {
   }
   .container {
     height: 180px !important;
+
     outline: none !important;
     width: 100% !important;
-    margin: 30px 0 !important;
+    margin: 20px 0 !important;
     padding: 0 !important;
     max-width: 100% !important;
   }
 }
-
+.container {
+  max-width: 100%;
+}
 .networks-cards-info {
   display: block;
 }
@@ -401,4 +405,32 @@ a:hover {
 
 .alert {
   padding: 0.7rem 0.7rem;
+}
+
+.p-dropdown-panel,
+.p-dropdown-items,
+.p-dropdown-item.p-highlight {
+  background: "gray" !important;
+}
+
+.p-dropdown,
+.p-component,
+.p-inputwrapper,
+.p-inputwrapper-filled,
+.p-inputwrapper-focus,
+.p-dropdown-trigger,
+.p-dropdown:not(.p-disabled):hover {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: gray;
+}
+
+.dropdown-item {
+  background-color: inherit !important;
+  color: #000000;
+}
+
+.dropdown-item:active {
+  background-color: inherit !important;
+  color: #000000;
 }

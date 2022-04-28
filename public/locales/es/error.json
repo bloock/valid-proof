@@ -1,0 +1,11 @@
+{
+  "recordError": "Tu record no ha podido verificarse",
+  "error-description": "No hay prueba de la existencia de este record. Es posible que haya sido modificado inintencionadamente.",
+  "sources": "Posibles causas:",
+  "first-source": "- El emisor proporcionó una versión alterada del record.",
+  "second-source": "- El record fue alterado por un tercero durante la transmisión.",
+  "third-source": "- El record fue alterado inintencionadamente.",
+  "fourth-source": "- El emisor proporcionó una prueba fraudulenta.",
+  "fifth-source": "- Tu record aún está pendiente de ser transaccionado en el protocolo blockchain por el emisor.",
+  "try-again": "Por favor intenta cargar tu record de nuevo pasados unos minutos."
+}

@@ -16,6 +16,7 @@ import demoimage2 from "../images/verify_documents.jpg";
 import "../styles.css";
 import { useFileType } from "../utils/use-file-type";
 import { useIsJson } from "../utils/use-is-json";
+import { useIsUrl } from "../utils/use-is-url";
 
 export type FileElement = {
   name?: string | null;
@@ -41,43 +42,58 @@ const Home = () => {
     const fileDetect = useFileType;
 
     urlParam = new URL(urlParam);
+    let error;
+
     let bytes = await axios
       .get(urlParam, {
         responseType: "arraybuffer",
       })
       .then((res) => {
         return Buffer.from(res.data);
+      })
+      .catch((e) => {
+        error = true;
+        return undefined;
       });
 
-    let array = new Uint8Array(bytes);
+    let array = new Uint8Array(bytes != undefined ? bytes : []);
     var string = new TextDecoder().decode(array);
 
-    if (isJSONValid(string)) {
-      setElement({
-        name: urlParam.href,
-        value: JSON.parse(string),
-        record: await Record.fromJSON(JSON.parse(string)),
-      });
-    } else if (fileDetect(urlParam.href) === "application/pdf") {
-      setElement({
-        name: urlParam.href,
-        value: urlParam.href,
-        record: await Record.fromPDF(array),
-      });
+    if (!error) {
+      if (isJSONValid(string)) {
+        setElement({
+          name: urlParam.href,
+          value: JSON.parse(string),
+          record: await Record.fromJSON(JSON.parse(string)),
+        });
+      } else if (fileDetect(urlParam.href) === "application/pdf") {
+        setElement({
+          name: urlParam.href,
+          value: urlParam.href,
+          record: await Record.fromPDF(array),
+        });
+      } else if (fileDetect(urlParam.href)) {
+        setElement({
+          name: urlParam.href,
+          value: array,
+          record: await Record.fromTypedArray(array),
+        });
+      } else {
+        setValidateFromUrl(false);
+      }
     } else {
-      setElement({
-        name: urlParam.href,
-        value: array,
-        record: await Record.fromTypedArray(array),
-      });
+      setValidateFromUrl(false);
     }
   }
 
   useEffect(() => {
     const recordQuery = searchParams.get("record");
-    if (recordQuery) {
-      setValidateFromUrl(true);
+    const isURL = useIsUrl;
+    if (isURL(recordQuery)) {
       fileLoader(recordQuery);
+      setValidateFromUrl(true);
+    } else {
+      setValidateFromUrl(false);
     }
   }, [searchParams]);
 
@@ -227,7 +243,7 @@ const Home = () => {
                   </div>
                 </div>
               </div>
-              <h4 className="bold-text text-center text-lg-start">
+              <h4 className="bold-text w-100 text-md-left text-lg-start">
                 {t("test-one-title")}
               </h4>
               <div className="mb-5">{t("test-one-text")}</div>
@@ -244,7 +260,9 @@ const Home = () => {
               >
                 <img alt="Card" src={demoimage2} />
               </div>
-              <h4 className="bold-text">{t("test-two-title")}</h4>
+              <h4 className="bold-text w-100 text-md-left">
+                {t("test-two-title")}
+              </h4>
               <div className="mb-5">{t("test-two-text")}</div>
             </Col>
             <Col className="text-center text-lg-start text-break d-flex flex-column align-items-center">
@@ -259,7 +277,9 @@ const Home = () => {
               >
                 <img alt="Card" src={demoimage3} />
               </div>
-              <h4 className="bold-text">{t("test-three-title")}</h4>
+              <h4 className="bold-text w-100 text-md-left">
+                {t("test-three-title")}
+              </h4>
               <div className="mb-5">{t("test-three-text")} </div>
             </Col>
           </Row>
