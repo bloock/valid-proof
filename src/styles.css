@@ -421,7 +421,3 @@ a:hover {
   box-shadow: none !important;
   border-color: gray;
 }
-
-.scroll-offset {
-  scroll-margin-top: 5rem !important;
-}
