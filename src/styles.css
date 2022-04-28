@@ -355,6 +355,11 @@ i:hover {
   cursor: pointer;
 }
 
+i:visited {
+  color: inherit !important;
+  background-color: inherit !important;
+}
+
 a {
   text-decoration: none;
   color: inherit;
