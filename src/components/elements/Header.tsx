@@ -16,7 +16,7 @@ type ILanguage = {
 const Header = () => {
   const languagesArray: ILanguage[] = [
     { label: "English", value: "en" },
-    { label: "Spanish", value: "es" },
+    { label: "Español", value: "es" },
   ];
 
   const envLanguage = (window as any).env.LANGUAGE;
