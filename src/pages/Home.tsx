@@ -1,6 +1,7 @@
 import { Record } from "@bloock/sdk";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
+import fileDownload from "js-file-download";
 import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
@@ -86,6 +87,16 @@ const Home = () => {
     }
   }, [verificationRef, element]);
 
+  const handleDownload = (url: any, filename: any) => {
+    axios
+      .get(url, {
+        responseType: "blob",
+      })
+      .then((res) => {
+        fileDownload(res.data, filename);
+      });
+  };
+
   return (
     <Fragment>
       <div className="top-margin"></div>
@@ -166,19 +177,26 @@ const Home = () => {
                   maxWidth: "100%",
                 }}
               >
-                <div className="d-flex ">
-                  <a href="" download>
-                    <div className="px-3 align-items-center d-flex flex-column">
-                      <i
-                        className="circle check-success pi pi-arrow-down px-3 py-3 click-icon icon-medium"
-                        style={{
-                          backgroundColor: primaryColor,
-                          fontSize: "20px",
-                        }}
-                      ></i>
-                      <p className="text-center mt-3">{t("valid-test")}</p>
-                    </div>
-                  </a>
+                <div className="d-flex">
+                  <div
+                    className="px-3 align-items-center d-flex flex-column"
+                    onClick={() =>
+                      handleDownload(
+                        "http://bloock.com/wp-content/uploads/2022/04/valid_certificate.pdf",
+                        "valid_certificate.pdf"
+                      )
+                    }
+                  >
+                    <i
+                      className="circle check-success pi pi-arrow-down px-3 py-3 click-icon icon-medium"
+                      style={{
+                        backgroundColor: primaryColor,
+                        fontSize: "20px",
+                      }}
+                    ></i>
+                    <p className="text-center mt-3">{t("valid-test")}</p>
+                  </div>
+
                   <div>
                     <hr
                       style={{
@@ -188,18 +206,25 @@ const Home = () => {
                       }}
                     ></hr>
                   </div>
-                  <a href="" download>
-                    <div className="px-3 align-items-center d-flex flex-column">
-                      <i
-                        className="circle check-success pi pi-arrow-down px-3 py-3 click-icon icon-medium"
-                        style={{
-                          backgroundColor: primaryColor,
-                          fontSize: "20px",
-                        }}
-                      ></i>
-                      <p className="text-center mt-3">{t("tampered-test")}</p>
-                    </div>
-                  </a>
+
+                  <div
+                    className="px-3 align-items-center d-flex flex-column"
+                    onClick={() =>
+                      handleDownload(
+                        "http://bloock.com/wp-content/uploads/2022/04/tampered_certificate.pdf",
+                        "tampered_certificate.pdf"
+                      )
+                    }
+                  >
+                    <i
+                      className="circle check-success pi pi-arrow-down px-3 py-3 click-icon icon-medium"
+                      style={{
+                        backgroundColor: primaryColor,
+                        fontSize: "20px",
+                      }}
+                    ></i>
+                    <p className="text-center mt-3">{t("tampered-test")}</p>
+                  </div>
                 </div>
               </div>
               <h4 className="bold-text text-center text-lg-start">
