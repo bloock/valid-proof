@@ -103,7 +103,7 @@ const Home = () => {
     }
   }, [verificationRef, element]);
 
-  const handleDownload = (url: any, filename: any) => {
+  const handleDownload = (url: string, filename: string) => {
     axios
       .get(url, {
         responseType: "blob",
