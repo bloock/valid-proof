@@ -99,12 +99,32 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
           break;
       }
 
+      let etherscanUrl = `https://etherscan.io/tx/${network.tx_hash}`;
+      switch (network.name) {
+        case "ethereum_mainnet":
+          etherscanUrl = `https://etherscan.io/tx/${network.tx_hash}`;
+          break;
+        case "ethereum_rinkeby":
+          etherscanUrl = `https://rinkeby.etherscan.io/tx/${network.tx_hash}`;
+          break;
+        case "bloock_chain":
+          etherscanUrl = "";
+          break;
+      }
+
       return (
         <div className="card">
           <div className="card-body" style={{ fontSize: "0.9rem" }}>
-            <div className="d-flex justify-content-between py-1">
+            <div className="d-flex justify-content-between align-items-center py-1">
               <p className="bold-text text-secondary">{t("name")}</p>
-              <p>{name}</p>
+              <div className="d-flex align-items-center">
+                <p>{name}</p>
+                <Button
+                  style={{ marginLeft: "7px", width: "10%" }}
+                  icon="p-button-icon p-c pi pi-external-link"
+                  onClick={() => window.open(etherscanUrl, "_blank")}
+                />
+              </div>
             </div>
             <div className="d-flex justify-content-between py-1">
               <p className="bold-text text-secondary">{t("state")}</p>

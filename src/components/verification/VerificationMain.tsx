@@ -190,7 +190,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   ];
 
   return (
-    <div className="container-lg mt-3 verification-section">
+    <div className="mt-3 verification-section">
       {!componentTransition ? (
         <div
           className="horizontal-center timeline-margins mb-4 stepper bg-light rounded"

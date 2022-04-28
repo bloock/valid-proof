@@ -1,6 +1,7 @@
 import { Record } from "@bloock/sdk";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
+import fileDownload from "js-file-download";
 import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
@@ -111,80 +112,79 @@ const Home = () => {
     }
   }, [verificationRef, element]);
 
+  const handleDownload = (url: string, filename: string) => {
+    axios
+      .get(url, {
+        responseType: "blob",
+      })
+      .then((res) => {
+        fileDownload(res.data, filename);
+      });
+  };
+
   return (
     <Fragment>
       <div className="top-margin"></div>
-      <div className="container-md pt-6 pb-1 px-4">
-        {!validateFromUrl && (
-          <Row className="flex-column flex-lg-row align-items-center">
-            <Col style={{ paddingRight: "10px", paddingTop: "10px" }}>
-              <h1 className="">{t("title")}</h1>
-              <h3 className="mt-3">{t("subtitle")}</h3>
-              <ul className="mt-4 features">
-                <li className="mt-2">
-                  <i
-                    className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
-                    style={{
-                      marginRight: "10px",
-                      backgroundColor: primaryColor,
-                    }}
-                  ></i>
-                  <p>{t("feature-one")}</p>
-                </li>
-                <li className="mt-3">
-                  <i
-                    className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
-                    style={{
-                      marginRight: "10px",
-                      backgroundColor: primaryColor,
-                    }}
-                  ></i>
+      <div className="container-md pt-6 px-4">
+        <Row className="flex-column flex-lg-row align-items-center">
+          <Col style={{ paddingRight: "10px", paddingTop: "10px" }}>
+            <h1 className="">{t("title")}</h1>
+            <h3 className="mt-3">{t("subtitle")}</h3>
+            <ul className="mt-4 features">
+              <li className="mt-2">
+                <i
+                  className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
+                  style={{
+                    marginRight: "10px",
+                    backgroundColor: primaryColor,
+                  }}
+                ></i>
+                <p>{t("feature-one")}</p>
+              </li>
+              <li className="mt-3">
+                <i
+                  className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
+                  style={{
+                    marginRight: "10px",
+                    backgroundColor: primaryColor,
+                  }}
+                ></i>
 
-                  <p>{t("feature-two")}</p>
-                </li>
-                <li className=" mt-3">
-                  <i
-                    className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
-                    style={{
-                      marginRight: "10px",
-                      backgroundColor: primaryColor,
-                    }}
-                  ></i>
+                <p>{t("feature-two")}</p>
+              </li>
+              <li className=" mt-3">
+                <i
+                  className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
+                  style={{
+                    marginRight: "10px",
+                    backgroundColor: primaryColor,
+                  }}
+                ></i>
 
-                  <p>{t("feature-three")}</p>
-                </li>
-              </ul>
+                <p>{t("feature-three")}</p>
+              </li>
+            </ul>
+          </Col>
+
+          {!element ? (
+            <Col className="mb-10" style={{ marginBottom: "30px" }}>
+              <FileSection
+                onElementChange={(element) => setElement(element)}
+                element={null}
+              ></FileSection>
             </Col>
-
-            {!element ? (
-              <Col className="mb-10" style={{ marginBottom: "30px" }}>
-                <FileSection
-                  onElementChange={(element) => setElement(element)}
-                  element={null}
-                ></FileSection>
-              </Col>
-            ) : null}
-          </Row>
-        )}
-        <div id="scoll-offset">
-          {element ? (
-            <>
-              {validateFromUrl ? (
-                <div ref={verificationRef} className="scoll-offset">
-                  <VerificationSection element={element} />
-                </div>
-              ) : (
-                <div ref={verificationRef} className="scoll-offset">
-                  <VerificationSection element={element} />
-                  <FileSection
-                    onElementChange={(element) => setElement(element)}
-                    element={element}
-                  ></FileSection>
-                </div>
-              )}
-            </>
           ) : null}
-        </div>
+        </Row>
+
+        {element ? (
+          <div ref={verificationRef} id="scoll-offset">
+            <VerificationSection element={element} />
+            <FileSection
+              onElementChange={(element) => setElement(element)}
+              element={element}
+            ></FileSection>
+          </div>
+        ) : null}
       </div>
 
       <div className="top-margin"></div>
@@ -202,24 +202,26 @@ const Home = () => {
                   maxWidth: "100%",
                 }}
               >
-                <div className="d-flex ">
-                  <a
-                    href="https://bloock.com/wp-content/uploads/2022/04/valid_certificate.pdf"
-                    download
-                    target="_blank"
-                    rel="noreferrer"
+                <div className="d-flex">
+                  <div
+                    className="px-3 align-items-center d-flex flex-column"
+                    onClick={() =>
+                      handleDownload(
+                        "https://bloock.com/wp-content/uploads/2022/04/valid_certificate.pdf",
+                        "valid_certificate.pdf"
+                      )
+                    }
                   >
-                    <div className="px-3 align-items-center d-flex flex-column">
-                      <i
-                        className="circle check-success pi pi-arrow-down px-3 py-3 click-icon icon-medium"
-                        style={{
-                          backgroundColor: primaryColor,
-                          fontSize: "20px",
-                        }}
-                      ></i>
-                      <p className="text-center mt-3">{t("valid-test")}</p>
-                    </div>
-                  </a>
+                    <i
+                      className="circle check-success pi pi-arrow-down px-3 py-3 click-icon icon-medium"
+                      style={{
+                        backgroundColor: primaryColor,
+                        fontSize: "20px",
+                      }}
+                    ></i>
+                    <p className="text-center mt-3">{t("valid-test")}</p>
+                  </div>
+
                   <div>
                     <hr
                       style={{
@@ -229,21 +231,25 @@ const Home = () => {
                       }}
                     ></hr>
                   </div>
-                  <a
-                    href="https://bloock.com/wp-content/uploads/2022/04/tampered_certificate.pdf"
-                    download
+
+                  <div
+                    className="px-3 align-items-center d-flex flex-column"
+                    onClick={() =>
+                      handleDownload(
+                        "https://bloock.com/wp-content/uploads/2022/04/tampered_certificate.pdf",
+                        "tampered_certificate.pdf"
+                      )
+                    }
                   >
-                    <div className="px-3 align-items-center d-flex flex-column">
-                      <i
-                        className="circle check-success pi pi-arrow-down px-3 py-3 click-icon icon-medium"
-                        style={{
-                          backgroundColor: primaryColor,
-                          fontSize: "20px",
-                        }}
-                      ></i>
-                      <p className="text-center mt-3">{t("tampered-test")}</p>
-                    </div>
-                  </a>
+                    <i
+                      className="circle check-success pi pi-arrow-down px-3 py-3 click-icon icon-medium"
+                      style={{
+                        backgroundColor: primaryColor,
+                        fontSize: "20px",
+                      }}
+                    ></i>
+                    <p className="text-center mt-3">{t("tampered-test")}</p>
+                  </div>
                 </div>
               </div>
               <h4 className="bold-text w-100 text-md-left text-lg-start">
