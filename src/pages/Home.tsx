@@ -198,7 +198,7 @@ const Home = () => {
                     className="px-3 align-items-center d-flex flex-column"
                     onClick={() =>
                       handleDownload(
-                        "http://bloock.com/wp-content/uploads/2022/04/valid_certificate.pdf",
+                        "https://bloock.com/wp-content/uploads/2022/04/valid_certificate.pdf",
                         "valid_certificate.pdf"
                       )
                     }
@@ -227,7 +227,7 @@ const Home = () => {
                     className="px-3 align-items-center d-flex flex-column"
                     onClick={() =>
                       handleDownload(
-                        "http://bloock.com/wp-content/uploads/2022/04/tampered_certificate.pdf",
+                        "https://bloock.com/wp-content/uploads/2022/04/tampered_certificate.pdf",
                         "tampered_certificate.pdf"
                       )
                     }
