@@ -158,7 +158,7 @@ const FileSection: React.FC<FileSectionProps> = ({
   return (
     <section>
       <div
-        className="container mt-5"
+        className="container mt-3"
         {...getRootProps({ style: style as any })}
       >
         <div className="vertical-center horizontal-center">
