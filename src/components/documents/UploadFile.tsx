@@ -55,7 +55,6 @@ const FileSection: React.FC<FileSectionProps> = ({
   const { t } = useTranslation("upload-file");
 
   const [element, setElement] = useState<FileElement | null>(elementType);
-
   const fileTypeDetect = useFileType;
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -142,6 +141,7 @@ const FileSection: React.FC<FileSectionProps> = ({
       }
     } else {
       setElement(null);
+      goToTop();
     }
   };
 
@@ -155,6 +155,12 @@ const FileSection: React.FC<FileSectionProps> = ({
     [isDragActive, isDragReject, isDragAccept]
   );
 
+  const goToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
   return (
     <section>
       <div
@@ -165,26 +171,14 @@ const FileSection: React.FC<FileSectionProps> = ({
           <div>
             {element ? (
               <div>
-                <div>
-                  <span>
-                    {element && element !== undefined ? element.name : null}
-                  </span>
-                  <span onClick={() => handleFileChange(null)}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      fill="currentColor"
-                      className="bi bi-x"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-                    </svg>
-                  </span>
-                </div>
+                {element && element !== undefined ? (
+                  <Button className="button" cta={() => handleFileChange(null)}>
+                    {t("verify-another")}
+                  </Button>
+                ) : null}
               </div>
             ) : (
-              <div>
+              <div id="select-file">
                 <p>{t("drag&drop")}</p>
                 <p>{t("or")}</p>
 
