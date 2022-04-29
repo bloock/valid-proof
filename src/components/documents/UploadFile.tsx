@@ -182,7 +182,7 @@ const FileSection: React.FC<FileSectionProps> = ({
                 <p>{t("drag&drop")}</p>
                 <p>{t("or")}</p>
 
-                <Button className="button">
+                <Button className="button mt-1">
                   <input {...getInputProps()} />
                   {t("select")}
                 </Button>
