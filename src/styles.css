@@ -242,10 +242,6 @@ textarea {
   box-shadow: none !important;
 }
 
-.p-button:hover {
-  color: #06d7be !important;
-}
-
 .p-card {
   box-shadow: 2px 3px 10px 2px #eeeeee;
 }
@@ -435,5 +431,11 @@ a:hover {
   color: #000000;
 }
 
-.pi {
+.downloadBtn {
+  filter: invert(25%) sepia(3%) saturate(14%) hue-rotate(350deg) brightness(93%)
+    contrast(85%);
+}
+.downloadBtn:hover {
+  cursor: pointer;
+  opacity: 90%;
 }

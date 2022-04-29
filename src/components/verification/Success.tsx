@@ -120,7 +120,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
               <div className="d-flex align-items-center">
                 <p style={{ textAlign: "right" }}>{name}</p>
                 <Button
-                  style={{ marginLeft: "7px", width: "10%" }}
+                  style={{ marginLeft: "7px", width: "15%" }}
                   icon="p-button-icon p-c pi pi-external-link"
                   onClick={() => window.open(etherscanUrl, "_blank")}
                 />

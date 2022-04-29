@@ -198,13 +198,12 @@ const Home = () => {
                     href={`${process.env.PUBLIC_URL}/pdf/valid_certificate.pdf`}
                     download
                   >
-                    <i
-                      className="circle check-success pi pi-arrow-down px-3 py-3 click-icon icon-medium"
-                      style={{
-                        backgroundColor: primaryColor,
-                        fontSize: "20px",
-                      }}
-                    ></i>
+                    <img
+                      src="../../icons/download_file.svg"
+                      alt="Download"
+                      width={"50px"}
+                      className="downloadBtn"
+                    />
                     <p className="text-center mt-3 px-2">{t("valid-test")}</p>
                   </a>
 
@@ -224,13 +223,12 @@ const Home = () => {
                     href={`${process.env.PUBLIC_URL}/pdf/valid_certificate.pdf`}
                     download
                   >
-                    <i
-                      className="circle check-success pi pi-arrow-down px-3 py-3 click-icon icon-medium"
-                      style={{
-                        backgroundColor: primaryColor,
-                        fontSize: "20px",
-                      }}
-                    ></i>
+                    <img
+                      src="../../icons/download_file.svg"
+                      alt="Download"
+                      width={"50px"}
+                      className="downloadBtn"
+                    />
                     <p className="text-center mt-3 px-2">
                       {t("tampered-test")}
                     </p>
