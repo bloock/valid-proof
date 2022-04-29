@@ -181,7 +181,7 @@ const Home = () => {
         <div className="container-md px-4 pt-10 ">
           <h2 className="mb-4 text-center pt-5">{t("test-section")}</h2>
           <Row className="pt-2">
-            <Col className="text-center text-lg-start text-break d-flex flex-column align-items-center">
+            <Col className="text-center text-md-start text-break d-flex flex-column align-items-center">
               <div
                 className="shadow-sm p-3 mb-4 d-flex justify-content-center bg-body  rounded align-items-center  "
                 style={{
@@ -191,20 +191,20 @@ const Home = () => {
                   maxWidth: "100%",
                 }}
               >
-                <div className="d-flex">
+                <div className="d-flex w-100">
                   <a
                     className="px-3 align-items-center d-flex flex-column"
+                    style={{ width: "49%" }}
                     href={`${process.env.PUBLIC_URL}/pdf/valid_certificate.pdf`}
                     download
                   >
-                    <i
-                      className="circle check-success pi pi-arrow-down px-3 py-3 click-icon icon-medium"
-                      style={{
-                        backgroundColor: primaryColor,
-                        fontSize: "20px",
-                      }}
-                    ></i>
-                    <p className="text-center mt-3">{t("valid-test")}</p>
+                    <img
+                      src="../../icons/download_file.svg"
+                      alt="Download"
+                      width={"50px"}
+                      className="downloadBtn"
+                    />
+                    <p className="text-center mt-3 px-2">{t("valid-test")}</p>
                   </a>
 
                   <div>
@@ -219,24 +219,24 @@ const Home = () => {
 
                   <a
                     className="px-3 align-items-center d-flex flex-column"
+                    style={{ width: "49%" }}
                     href={`${process.env.PUBLIC_URL}/pdf/valid_certificate.pdf`}
                     download
                   >
-                    <i
-                      className="circle check-success pi pi-arrow-down px-3 py-3 click-icon icon-medium"
-                      style={{
-                        backgroundColor: primaryColor,
-                        fontSize: "20px",
-                      }}
-                    ></i>
-                    <p className="text-center mt-3">{t("tampered-test")}</p>
+                    <img
+                      src="../../icons/download_file.svg"
+                      alt="Download"
+                      width={"50px"}
+                      className="downloadBtn"
+                    />
+                    <p className="text-center mt-3 px-2">
+                      {t("tampered-test")}
+                    </p>
                   </a>
                 </div>
               </div>
-              <h4 className="bold-text w-100 text-md-left text-lg-start">
-                {t("test-one-title")}
-              </h4>
-              <div className="mb-5">{t("test-one-text")}</div>
+              <h4 className="bold-text">{t("test-one-title")}</h4>
+              <div className="mb-5 text-center">{t("test-one-text")}</div>
             </Col>
             <Col className="text-center text-lg-start text-break d-flex flex-column align-items-center">
               <div
@@ -250,10 +250,8 @@ const Home = () => {
               >
                 <img alt="Card" src={demoimage2} />
               </div>
-              <h4 className="bold-text w-100 text-md-left">
-                {t("test-two-title")}
-              </h4>
-              <div className="mb-5">{t("test-two-text")}</div>
+              <h4 className="bold-text">{t("test-two-title")}</h4>
+              <div className="mb-5 text-center">{t("test-two-text")}</div>
             </Col>
             <Col className="text-center text-lg-start text-break d-flex flex-column align-items-center">
               <div
@@ -267,10 +265,8 @@ const Home = () => {
               >
                 <img alt="Card" src={demoimage3} />
               </div>
-              <h4 className="bold-text w-100 text-md-left">
-                {t("test-three-title")}
-              </h4>
-              <div className="mb-5">{t("test-three-text")} </div>
+              <h4 className="bold-text">{t("test-three-title")}</h4>
+              <div className="mb-5 text-center">{t("test-three-text")} </div>
             </Col>
           </Row>
           <Row className="little-top-margin"></Row>
