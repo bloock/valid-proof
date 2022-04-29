@@ -116,9 +116,9 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
         <div className="card">
           <div className="card-body" style={{ fontSize: "0.9rem" }}>
             <div className="d-flex justify-content-between align-items-center py-1">
-              <p className="bold-text text-secondary">{t("name")}</p>
+              <p className="bold-text text-secondary ">{t("name")}</p>
               <div className="d-flex align-items-center">
-                <p>{name}</p>
+                <p style={{ textAlign: "right" }}>{name}</p>
                 <Button
                   style={{ marginLeft: "7px", width: "10%" }}
                   icon="p-button-icon p-c pi pi-external-link"
@@ -153,7 +153,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
             </div>
             <div className="d-flex justify-content-between py-1">
               <p className="bold-text text-secondary">{t("timestamp")}</p>
-              <p>{dates}</p>
+              <p style={{ textAlign: "right" }}>{dates}</p>
             </div>
           </div>
         </div>

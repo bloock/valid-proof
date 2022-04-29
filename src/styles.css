@@ -8,7 +8,7 @@
 
 h1 {
   font-size: 44px !important;
-  line-height: 3.2rem;
+  line-height: 2.8rem;
 }
 
 h2 {
@@ -355,11 +355,6 @@ i:hover {
   cursor: pointer;
 }
 
-i:visited {
-  color: inherit !important;
-  background-color: inherit !important;
-}
-
 a {
   text-decoration: none;
   color: inherit;
@@ -438,4 +433,7 @@ a:hover {
 .dropdown-item:active {
   background-color: inherit !important;
   color: #000000;
+}
+
+.pi {
 }
