@@ -1,7 +1,6 @@
 import { Record } from "@bloock/sdk";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-import fileDownload from "js-file-download";
 import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
@@ -111,16 +110,6 @@ const Home = () => {
       window.scrollTo({ top: y, behavior: "smooth" });
     }
   }, [verificationRef, element]);
-
-  const handleDownload = (url: string, filename: string) => {
-    axios
-      .get(url, {
-        responseType: "blob",
-      })
-      .then((res) => {
-        fileDownload(res.data, filename);
-      });
-  };
 
   return (
     <Fragment>
