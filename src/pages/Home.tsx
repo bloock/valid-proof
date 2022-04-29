@@ -183,7 +183,7 @@ const Home = () => {
 
         <div className="top-margin"></div>
         {!!session === false ? (
-          <div className="bg-light">
+          <div className="bg-light pt-3 pb-5">
             <div className="container-md px-4 pt-10">
               <h2 className="mb-4 text-center pt-5">{t("test-section")}</h2>
               <Row className="pt-2">
