@@ -32,6 +32,7 @@ const Home = () => {
 
   const verificationRef = useRef<HTMLInputElement>(null);
   const [searchParams] = useSearchParams();
+  const yOffset = -10;
 
   const primaryColor = (window as any).env.PRIMARY_COLOR
     ? (window as any).env.PRIMARY_COLOR
@@ -99,7 +100,15 @@ const Home = () => {
 
   useEffect(() => {
     if (element && verificationRef && verificationRef.current) {
-      verificationRef.current.scrollIntoView();
+      const id: string = "scoll-offset";
+      const yOffset: number = -80;
+      const div: HTMLElement | null = document.getElementById(id);
+      const y =
+        (div as HTMLElement).getBoundingClientRect().top +
+        window.pageYOffset +
+        yOffset;
+
+      window.scrollTo({ top: y, behavior: "smooth" });
     }
   }, [verificationRef, element]);
 
@@ -168,7 +177,7 @@ const Home = () => {
         </Row>
 
         {element ? (
-          <div ref={verificationRef}>
+          <div ref={verificationRef} id="scoll-offset">
             <VerificationSection element={element} />
             <FileSection
               onElementChange={(element) => setElement(element)}
