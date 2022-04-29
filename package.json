@@ -4,7 +4,7 @@
   "private": true,
   "homepage": ".",
   "dependencies": {
-    "@bloock/sdk": "^1.5.0",
+    "@bloock/sdk": "^1.5.3",
     "@loadable/component": "^5.15.2",
     "@react-pdf/renderer": "^2.1.1",
     "@testing-library/jest-dom": "^5.14.1",
@@ -16,7 +16,6 @@
     "i18next": "^21.6.16",
     "i18next-browser-languagedetector": "^6.1.4",
     "i18next-http-backend": "^1.4.0",
-    "js-file-download": "^0.4.12",
     "mime-types": "^2.1.35",
     "moment": "^2.29.1",
     "pdfjs-dist": "^2.13.216",
