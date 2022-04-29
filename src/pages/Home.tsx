@@ -1,7 +1,6 @@
 import { Record } from "@bloock/sdk";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-import fileDownload from "js-file-download";
 import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
@@ -32,6 +31,7 @@ const Home = () => {
 
   const verificationRef = useRef<HTMLInputElement>(null);
   const [searchParams] = useSearchParams();
+  const yOffset = -10;
 
   const primaryColor = (window as any).env.PRIMARY_COLOR
     ? (window as any).env.PRIMARY_COLOR
@@ -99,19 +99,17 @@ const Home = () => {
 
   useEffect(() => {
     if (element && verificationRef && verificationRef.current) {
-      verificationRef.current.scrollIntoView();
+      const id: string = "scoll-offset";
+      const yOffset: number = -80;
+      const div: HTMLElement | null = document.getElementById(id);
+      const y =
+        (div as HTMLElement).getBoundingClientRect().top +
+        window.pageYOffset +
+        yOffset;
+
+      window.scrollTo({ top: y, behavior: "smooth" });
     }
   }, [verificationRef, element]);
-
-  const handleDownload = (url: string, filename: string) => {
-    axios
-      .get(url, {
-        responseType: "blob",
-      })
-      .then((res) => {
-        fileDownload(res.data, filename);
-      });
-  };
 
   return (
     <Fragment>
@@ -168,7 +166,7 @@ const Home = () => {
         </Row>
 
         {element ? (
-          <div ref={verificationRef}>
+          <div ref={verificationRef} id="scoll-offset">
             <VerificationSection element={element} />
             <FileSection
               onElementChange={(element) => setElement(element)}
@@ -194,15 +192,11 @@ const Home = () => {
                 }}
               >
                 <div className="d-flex w-100">
-                  <div
+                  <a
                     className="px-3 align-items-center d-flex flex-column"
                     style={{ width: "49%" }}
-                    onClick={() =>
-                      handleDownload(
-                        "http://bloock.com/wp-content/uploads/2022/04/valid_certificate.pdf",
-                        "valid_certificate.pdf"
-                      )
-                    }
+                    href={`${process.env.PUBLIC_URL}/pdf/valid_certificate.pdf`}
+                    download
                   >
                     <i
                       className="circle check-success pi pi-arrow-down px-3 py-3 click-icon icon-medium"
@@ -212,7 +206,7 @@ const Home = () => {
                       }}
                     ></i>
                     <p className="text-center mt-3 px-2">{t("valid-test")}</p>
-                  </div>
+                  </a>
 
                   <div>
                     <hr
@@ -224,15 +218,11 @@ const Home = () => {
                     ></hr>
                   </div>
 
-                  <div
+                  <a
                     className="px-3 align-items-center d-flex flex-column"
                     style={{ width: "49%" }}
-                    onClick={() =>
-                      handleDownload(
-                        "http://bloock.com/wp-content/uploads/2022/04/tampered_certificate.pdf",
-                        "tampered_certificate.pdf"
-                      )
-                    }
+                    href={`${process.env.PUBLIC_URL}/pdf/valid_certificate.pdf`}
+                    download
                   >
                     <i
                       className="circle check-success pi pi-arrow-down px-3 py-3 click-icon icon-medium"
@@ -244,7 +234,7 @@ const Home = () => {
                     <p className="text-center mt-3 px-2">
                       {t("tampered-test")}
                     </p>
-                  </div>
+                  </a>
                 </div>
               </div>
               <h4 className="bold-text">{t("test-one-title")}</h4>
