@@ -1,7 +1,6 @@
 import { Record } from "@bloock/sdk";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-import fileDownload from "js-file-download";
 import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
@@ -34,6 +33,7 @@ const Home = () => {
   const [validateFromUrl, setValidateFromUrl] = useState<boolean>(false);
   const verificationRef = useRef<HTMLInputElement>(null);
   const [searchParams] = useSearchParams();
+  const yOffset = -10;
 
   const primaryColor = (window as any).env.PRIMARY_COLOR
     ? (window as any).env.PRIMARY_COLOR
@@ -101,19 +101,17 @@ const Home = () => {
 
   useEffect(() => {
     if (element && verificationRef && verificationRef.current) {
-      verificationRef.current.scrollIntoView();
+      const id: string = "scoll-offset";
+      const yOffset: number = -80;
+      const div: HTMLElement | null = document.getElementById(id);
+      const y =
+        (div as HTMLElement).getBoundingClientRect().top +
+        window.pageYOffset +
+        yOffset;
+
+      window.scrollTo({ top: y, behavior: "smooth" });
     }
   }, [verificationRef, element]);
-
-  const handleDownload = (url: string, filename: string) => {
-    axios
-      .get(url, {
-        responseType: "blob",
-      })
-      .then((res) => {
-        fileDownload(res.data, filename);
-      });
-  };
 
   return (
     <Fragment>
@@ -197,25 +195,23 @@ const Home = () => {
                       maxWidth: "100%",
                     }}
                   >
-                    <div className="d-flex">
-                      <div
+                    <div className="d-flex w-100">
+                      <a
                         className="px-3 align-items-center d-flex flex-column"
-                        onClick={() =>
-                          handleDownload(
-                            "https://bloock.com/wp-content/uploads/2022/04/valid_certificate.pdf",
-                            "valid_certificate.pdf"
-                          )
-                        }
+                        style={{ width: "49%" }}
+                        href={`${process.env.PUBLIC_URL}/pdf/valid_certificate.pdf`}
+                        download
                       >
-                        <i
-                          className="circle check-success pi pi-arrow-down px-3 py-3 click-icon icon-medium"
-                          style={{
-                            backgroundColor: primaryColor,
-                            fontSize: "20px",
-                          }}
-                        ></i>
-                        <p className="text-center mt-3">{t("valid-test")}</p>
-                      </div>
+                        <img
+                          src="../../icons/download_file.svg"
+                          alt="Download"
+                          width={"50px"}
+                          className="downloadBtn"
+                        />
+                        <p className="text-center mt-3 px-2">
+                          {t("valid-test")}
+                        </p>
+                      </a>
 
                       <div>
                         <hr
@@ -227,30 +223,26 @@ const Home = () => {
                         ></hr>
                       </div>
 
-                      <div
+                      <a
                         className="px-3 align-items-center d-flex flex-column"
-                        onClick={() =>
-                          handleDownload(
-                            "https://bloock.com/wp-content/uploads/2022/04/tampered_certificate.pdf",
-                            "tampered_certificate.pdf"
-                          )
-                        }
+                        style={{ width: "49%" }}
+                        href={`${process.env.PUBLIC_URL}/pdf/valid_certificate.pdf`}
+                        download
                       >
-                        <i
-                          className="circle check-success pi pi-arrow-down px-3 py-3 click-icon icon-medium"
-                          style={{
-                            backgroundColor: primaryColor,
-                            fontSize: "20px",
-                          }}
-                        ></i>
-                        <p className="text-center mt-3">{t("tampered-test")}</p>
-                      </div>
+                        <img
+                          src="../../icons/download_file.svg"
+                          alt="Download"
+                          width={"50px"}
+                          className="downloadBtn"
+                        />
+                        <p className="text-center mt-3 px-2">
+                          {t("tampered-test")}
+                        </p>
+                      </a>
                     </div>
                   </div>
-                  <h4 className="bold-text w-100 text-md-left text-lg-start">
-                    {t("test-one-title")}
-                  </h4>
-                  <div className="mb-5">{t("test-one-text")}</div>
+                  <h4 className="bold-text">{t("test-one-title")}</h4>
+                  <div className="mb-5 text-center">{t("test-one-text")}</div>
                 </Col>
                 <Col className="text-center text-lg-start text-break d-flex flex-column align-items-center">
                   <div
@@ -264,10 +256,8 @@ const Home = () => {
                   >
                     <img alt="Card" src={demoimage2} />
                   </div>
-                  <h4 className="bold-text w-100 text-md-left">
-                    {t("test-two-title")}
-                  </h4>
-                  <div className="mb-5">{t("test-two-text")}</div>
+                  <h4 className="bold-text">{t("test-two-title")}</h4>
+                  <div className="mb-5 text-center">{t("test-two-text")}</div>
                 </Col>
                 <Col className="text-center text-lg-start text-break d-flex flex-column align-items-center">
                   <div
@@ -281,10 +271,10 @@ const Home = () => {
                   >
                     <img alt="Card" src={demoimage3} />
                   </div>
-                  <h4 className="bold-text w-100 text-md-left">
-                    {t("test-three-title")}
-                  </h4>
-                  <div className="mb-5">{t("test-three-text")} </div>
+                  <h4 className="bold-text">{t("test-three-title")}</h4>
+                  <div className="mb-5 text-center">
+                    {t("test-three-text")}{" "}
+                  </div>
                 </Col>
               </Row>
               <Row className="little-top-margin"></Row>

@@ -21,7 +21,7 @@ body {
 
 h1 {
   font-size: 44px !important;
-  line-height: 3.2rem;
+  line-height: 2.8rem;
 }
 
 h2 {
@@ -255,10 +255,6 @@ textarea {
   box-shadow: none !important;
 }
 
-.p-button:hover {
-  color: #06d7be !important;
-}
-
 .p-card {
   box-shadow: 2px 3px 10px 2px #eeeeee;
 }
@@ -367,11 +363,6 @@ i:hover {
   cursor: pointer;
 }
 
-i:visited {
-  color: inherit !important;
-  background-color: inherit !important;
-}
-
 a {
   text-decoration: none;
   color: inherit;
@@ -450,4 +441,14 @@ a:hover {
 .dropdown-item:active {
   background-color: inherit !important;
   color: #000000;
+}
+
+.downloadBtn {
+  filter: invert(25%) sepia(3%) saturate(14%) hue-rotate(350deg) brightness(93%)
+    contrast(85%);
+}
+.downloadBtn:hover {
+  filter: invert(31%) sepia(0%) saturate(1161%) hue-rotate(224deg)
+    brightness(97%) contrast(91%);
+  cursor: pointer;
 }
