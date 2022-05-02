@@ -42,6 +42,9 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
         case "ethereum_rinkeby":
           name = "Ethereum Rinkeby";
           break;
+        case "gnosis_chain":
+          name = "Gnosis Chain";
+          break;
         case "bloock_chain":
           name = "Bloockchain";
           break;
@@ -94,21 +97,27 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
         case "ethereum_rinkeby":
           name = "Ethereum Rinkeby";
           break;
+        case "gnosis_chain":
+          name = "Gnosis Chain";
+          break;
         case "bloock_chain":
           name = "Bloockchain";
           break;
       }
 
-      let etherscanUrl = `https://etherscan.io/tx/${network.tx_hash}`;
+      let explorerUrl = `https://etherscan.io/tx/${network.tx_hash}`;
       switch (network.name) {
         case "ethereum_mainnet":
-          etherscanUrl = `https://etherscan.io/tx/${network.tx_hash}`;
+          explorerUrl = `https://etherscan.io/tx/${network.tx_hash}`;
           break;
         case "ethereum_rinkeby":
-          etherscanUrl = `https://rinkeby.etherscan.io/tx/${network.tx_hash}`;
+          explorerUrl = `https://rinkeby.etherscan.io/tx/${network.tx_hash}`;
+          break;
+        case "gnosis_chain":
+          explorerUrl = `https://blockscout.com/xdai/mainnet/tx/${network.tx_hash}`;
           break;
         case "bloock_chain":
-          etherscanUrl = "";
+          explorerUrl = "";
           break;
       }
 
@@ -122,7 +131,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
                 <Button
                   style={{ marginLeft: "7px", width: "15%" }}
                   icon="p-button-icon p-c pi pi-external-link"
-                  onClick={() => window.open(etherscanUrl, "_blank")}
+                  onClick={() => window.open(explorerUrl, "_blank")}
                 />
               </div>
             </div>
@@ -162,16 +171,19 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
   );
 
   const rowExpansionTemplate = (network: any) => {
-    let etherscanUrl = `https://etherscan.io/tx/${network.tx_hash}`;
+    let explorerUrl = `https://etherscan.io/tx/${network.tx_hash}`;
     switch (network.name) {
       case "ethereum_mainnet":
-        etherscanUrl = `https://etherscan.io/tx/${network.tx_hash}`;
+        explorerUrl = `https://etherscan.io/tx/${network.tx_hash}`;
         break;
       case "ethereum_rinkeby":
-        etherscanUrl = `https://rinkeby.etherscan.io/tx/${network.tx_hash}`;
+        explorerUrl = `https://rinkeby.etherscan.io/tx/${network.tx_hash}`;
+        break;
+      case "gnosis_chain":
+        explorerUrl = `https://blockscout.com/xdai/mainnet/tx/${network.tx_hash}`;
         break;
       case "bloock_chain":
-        etherscanUrl = "";
+        explorerUrl = "";
         break;
     }
 
@@ -190,7 +202,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
 
           <Button
             icon="p-button-icon p-c pi pi-external-link"
-            onClick={() => window.open(etherscanUrl, "_blank")}
+            onClick={() => window.open(explorerUrl, "_blank")}
           />
         </div>
       </div>
