@@ -1,15 +1,20 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "primeicons/primeicons.css";
-import { Divider } from "primereact/divider";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import React from "react";
+import { getCookie } from "../../utils/cookie";
 
 const Footer = () => {
+  const session = getCookie("hasValidated");
+
   return (
-    <footer className="bg-light">
-      <Divider className="my-0 py-2" />
-      <div className="container-md px-4 py-5 header-text d-flex justify-content-between">
+    <footer
+      className={` position-absolute bottom-0 border-top w-100 py-3 ${
+        !!session === true ? "bg-white" : "bg-light"
+      }`}
+    >
+      <div className="container-md px-4 py-4 header-text d-flex justify-content-between">
         <span>Powered by BLOOCK</span>
       </div>
     </footer>
