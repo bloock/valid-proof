@@ -10,10 +10,8 @@ const Footer = () => {
 
   return (
     <footer
-      className={`${
-        !!session === true
-          ? "bg-white fixed-bottom border-top"
-          : "bg-light fixed-bottom border-top"
+      className={` position-absolute bottom-0 border-top w-100 py-3 ${
+        !!session === true ? "bg-white" : "bg-light"
       }`}
     >
       <div className="container-md px-4 py-4 header-text d-flex justify-content-between">

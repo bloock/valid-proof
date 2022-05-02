@@ -117,7 +117,7 @@ const Home = () => {
 
   return (
     <Fragment>
-      <div className="pb-5">
+      <div>
         <div className="top-margin"></div>
         <div className="container-md pt-6 px-4">
           <Row className="flex-column flex-lg-row align-items-center">
@@ -161,7 +161,7 @@ const Home = () => {
             </Col>
 
             {!element ? (
-              <Col className="mb-10" style={{ marginBottom: "30px" }}>
+              <Col>
                 <FileSection
                   onElementChange={(element) => setElement(element)}
                   element={null}
@@ -183,13 +183,13 @@ const Home = () => {
 
         <div className="top-margin"></div>
         {!!session === false ? (
-          <div className="bg-light pt-3 pb-5">
+          <div className="bg-light pt-3 pb-5 mt-3">
             <div className="container-md px-4 pt-10">
               <h2 className="mb-4 text-center pt-5">{t("test-section")}</h2>
               <Row className="pt-2">
                 <Col className="text-center text-lg-start text-break d-flex flex-column align-items-center">
                   <div
-                    className="shadow-sm p-3 mb-4 d-flex justify-content-center bg-body  rounded align-items-center  "
+                    className="shadow-sm p-3 mb-4 d-flex justify-content-center bg-body rounded align-items-center  "
                     style={{
                       width: "400px",
                       height: "240px",
