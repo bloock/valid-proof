@@ -35,10 +35,6 @@ const Home = () => {
   const [searchParams] = useSearchParams();
   const yOffset = -10;
 
-  const primaryColor = (window as any).env.PRIMARY_COLOR
-    ? (window as any).env.PRIMARY_COLOR
-    : "#07D1B6";
-
   async function fileLoader(urlParam: any) {
     const isJSONValid = useIsJson;
     const fileDetect = useFileType;
@@ -128,7 +124,7 @@ const Home = () => {
                     className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
                     style={{
                       marginRight: "10px",
-                      backgroundColor: primaryColor,
+                      backgroundColor: "env(--primary-bg-color)",
                     }}
                   ></i>
                   <p>{t("feature-one")}</p>
@@ -138,7 +134,7 @@ const Home = () => {
                     className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
                     style={{
                       marginRight: "10px",
-                      backgroundColor: primaryColor,
+                      backgroundColor: "env(--primary-bg-color)",
                     }}
                   ></i>
 
@@ -149,7 +145,7 @@ const Home = () => {
                     className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
                     style={{
                       marginRight: "10px",
-                      backgroundColor: primaryColor,
+                      backgroundColor: "env(--primary-bg-color)",
                     }}
                   ></i>
 

@@ -13,14 +13,10 @@ const Button: React.FC<ButtonProps> = ({
   disabled,
   className,
 }) => {
-  const primaryColor = (window as any).env.PRIMARY_COLOR
-    ? (window as any).env.PRIMARY_COLOR
-    : "#07D1B6";
-
   return (
     <button
       className={`button ${className}`}
-      style={{ backgroundColor: primaryColor }}
+      style={{ backgroundColor: "env(--primary-bg-color)" }}
       onClick={cta}
     >
       {children}

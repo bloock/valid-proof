@@ -1,5 +1,9 @@
-:root {
+/* :root {
   --primary-color: process.env.PRIMARY_COLOR;
+} */
+
+:root {
+  --primary-color: env(--primary-color);
 }
 
 * {
