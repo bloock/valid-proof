@@ -171,7 +171,7 @@ const Home = () => {
           </Row>
 
           {element ? (
-            <div ref={verificationRef}>
+            <div ref={verificationRef} id="scoll-offset">
               <VerificationSection element={element} />
               <FileSection
                 onElementChange={(element) => setElement(element)}
