@@ -1,7 +1,7 @@
-const primaryColor = window.env.PRIMARY_COLOR;
+const { primaryBgColor } = require(window.env.PRIMARY_COLOR);
 
 module.exports = {
   environmentVariables: {
-    "--primary-bg-color": primaryColor ? primaryColor : "#07D1B6",
+    "--primary-bg-color": primaryBgColor ? `${primaryBgColor}` : "#07D1B6",
   },
 };

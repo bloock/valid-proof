@@ -29,7 +29,7 @@ const baseStyle = {
   color: "#bdbdbd",
   transition: "border .24s ease-in-out",
   height: "323px",
-  outline: "2px dashed env(--primary-bg-color)",
+  outline: "2px dashed env(--primary-color)",
   outlineOffset: "-24px",
 };
 

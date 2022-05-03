@@ -1,9 +1,6 @@
-/* :root {
-  --primary-color: process.env.PRIMARY_COLOR;
-} */
-
 :root {
-  --primary-color: env(--primary-color);
+  --primary-color: process.env.PRIMARY_COLOR;
+  --default-bg-color: "#07D1B6";
 }
 
 * {
@@ -70,7 +67,7 @@ p {
 
 .button,
 .button:focus {
-  background-color: #06d7be;
+  background-color: var(--default-bg-color);
   border: none;
   color: white;
   margin: 0 20px 0 20px;
