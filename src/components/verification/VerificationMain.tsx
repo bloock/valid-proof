@@ -8,6 +8,7 @@ import { Col, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { FileElement } from "../../pages/Home";
 import "../../styles.css";
+import { setCookie } from "../../utils/cookie";
 import FilePreview from "../documents/FilePreview";
 import StepperVerification from "../elements/Stepper";
 import VerificationError from "./Error";
@@ -37,6 +38,8 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   const [errorStep, setErrorStep] = useState<number | null>(null);
   const [activeStep, setActiveStep] = useState<number | null>(null);
   const [componentTransition, setComponentTransition] = useState(false);
+  const [hasUserAlreadyValidated, setHasUserAlreadyValidated] =
+    useState<boolean>(false);
 
   function getRandomInterval(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -136,6 +139,13 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
       setTimeout(() => setComponentTransition(true), 500);
     }
   }, [recordTimestamp, errorStep]);
+
+  useEffect(() => {
+    if (recordProof) {
+      setHasUserAlreadyValidated(true);
+      setCookie("hasValidated", hasUserAlreadyValidated);
+    }
+  }, [recordProof, hasUserAlreadyValidated]);
 
   const events = [
     {

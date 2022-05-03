@@ -127,7 +127,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
             <div className="d-flex justify-content-between align-items-center py-1">
               <p className="bold-text text-secondary ">{t("name")}</p>
               <div className="d-flex align-items-center">
-                <p style={{ textAlign: "right" }}>{name}</p>
+                <p style={{ textAlign: "right" }}>{name && name}</p>
                 <Button
                   style={{ marginLeft: "7px", width: "15%" }}
                   icon="p-button-icon p-c pi pi-external-link"
@@ -157,12 +157,12 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
                       }
                 }
                 severity={network.state === "Confirmed" ? "success" : "warning"}
-                value={network.state}
+                value={network?.state}
               ></Tag>
             </div>
             <div className="d-flex justify-content-between py-1">
               <p className="bold-text text-secondary">{t("timestamp")}</p>
-              <p style={{ textAlign: "right" }}>{dates}</p>
+              <p style={{ textAlign: "right" }}>{dates && dates}</p>
             </div>
           </div>
         </div>
@@ -197,7 +197,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
         </p>
         <div className="d-flex justify-content-between align-items-center text-break">
           <div style={{ width: "90%" }}>
-            {network.tx_hash && network.tx_hash}
+            {network?.tx_hash && network?.tx_hash}
           </div>
 
           <Button
@@ -220,7 +220,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
             style={{ fontWeight: 300 }}
           ></i>
           <span className="mx-2 text-secondary text-break">
-            {Truncate(element.name as string, 50, "...")}
+            {Truncate(element.name as string, 30, "...")}
           </span>
         </div>
       ) : null}
