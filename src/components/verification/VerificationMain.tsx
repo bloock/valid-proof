@@ -18,7 +18,7 @@ const apiKey = (window as any).env.API_KEY;
 const client = new BloockClient(apiKey);
 
 const colors = {
-  success: "#06d7be",
+  success: "var(--primary-bg-color)",
   error: "#F55845",
   idle: "#d7d7d7",
 };
