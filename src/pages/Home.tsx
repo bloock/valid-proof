@@ -124,7 +124,7 @@ const Home = () => {
                     className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
                     style={{
                       marginRight: "10px",
-                      backgroundColor: "env(--primary-color))",
+                      backgroundColor: "var(--primary-bg-color)",
                     }}
                   ></i>
                   <p>{t("feature-one")}</p>
@@ -134,7 +134,7 @@ const Home = () => {
                     className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
                     style={{
                       marginRight: "10px",
-                      backgroundColor: "env(--primary-color)",
+                      backgroundColor: "var(--primary-bg-color)",
                     }}
                   ></i>
 
@@ -145,7 +145,7 @@ const Home = () => {
                     className="circle check-success pi pi-check px-1 py-1 click-icon icon-medium"
                     style={{
                       marginRight: "10px",
-                      backgroundColor: "env(--primary-color)",
+                      backgroundColor: "var(--primary-bg-color)",
                     }}
                   ></i>
 

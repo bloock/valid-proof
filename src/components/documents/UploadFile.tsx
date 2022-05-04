@@ -10,7 +10,6 @@ import { FileElement } from "../../pages/Home";
 import "../../styles.css";
 import { useFileType } from "../../utils/use-file-type";
 import Button from "../elements/Button";
-
 type FileSectionProps = {
   onElementChange: (element: any) => any;
   element: FileElement | null;
@@ -29,7 +28,7 @@ const baseStyle = {
   color: "#bdbdbd",
   transition: "border .24s ease-in-out",
   height: "323px",
-  outline: "2px dashed env(--primary-color)",
+  outline: "2px dashed var(--primary-bg-color)",
   outlineOffset: "-24px",
 };
 

@@ -1,6 +1,5 @@
 :root {
-  --primary-color: process.env.PRIMARY_COLOR;
-  --default-bg-color: "#07D1B6";
+  background-color: var(--primary-bg-color);
 }
 
 * {
@@ -67,7 +66,7 @@ p {
 
 .button,
 .button:focus {
-  background-color: var(--default-bg-color);
+  background-color: var(--primary-bg-color);
   border: none;
   color: white;
   margin: 0 20px 0 20px;
@@ -127,7 +126,7 @@ p {
 
 .nav-link.active {
   font-weight: 700;
-  border-bottom: 2px solid #06d7be !important;
+  border-bottom: 2px solid var(--primary-bg-color) !important;
 }
 
 .nav-fill .nav-item .nav-link,

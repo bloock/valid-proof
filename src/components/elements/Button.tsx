@@ -16,7 +16,7 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <button
       className={`button ${className}`}
-      style={{ backgroundColor: "env(--primary-color)" }}
+      style={{ backgroundColor: "var(--primary-bg-color)" }}
       onClick={cta}
     >
       {children}
