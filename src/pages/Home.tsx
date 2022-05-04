@@ -96,16 +96,18 @@ const Home = () => {
   }, [searchParams]);
 
   useEffect(() => {
+    const id: string | null = "scoll-offset";
     if (element && verificationRef && verificationRef.current) {
-      const id: string = "scoll-offset";
-      const yOffset: number = -80;
-      const div: HTMLElement | null = document.getElementById(id);
-      const y =
-        (div as HTMLElement).getBoundingClientRect().top +
-        window.pageYOffset +
-        yOffset;
+      if (document.getElementById(id)) {
+        const yOffset: number = -80;
+        const div: HTMLElement | null = document.getElementById(id);
+        const y =
+          (div as HTMLElement)?.getBoundingClientRect().top +
+          window.pageYOffset +
+          yOffset;
 
-      window.scrollTo({ top: y, behavior: "smooth" });
+        window.scrollTo({ top: y, behavior: "smooth" });
+      }
     }
   }, [verificationRef, element]);
 
@@ -165,7 +167,7 @@ const Home = () => {
           </Row>
 
           {element ? (
-            <div ref={verificationRef}>
+            <div ref={verificationRef} id="scoll-offset">
               <VerificationSection element={element} />
               <FileSection
                 onElementChange={(element) => setElement(element)}

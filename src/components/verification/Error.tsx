@@ -25,7 +25,7 @@ const VerificationError: React.FC<VerificationErrorProps> = ({
             style={{ fontWeight: 300 }}
           ></i>
           <span className="mx-2 text-secondary text-break">
-            {Truncate(element.name as string, 50, "...")}
+            {Truncate(element.name as string, 30, "...")}
           </span>
         </div>
       ) : null}
