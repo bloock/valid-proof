@@ -10,15 +10,11 @@ import { FileElement } from "../../pages/Home";
 import "../../styles.css";
 import { useFileType } from "../../utils/use-file-type";
 import Button from "../elements/Button";
-
 type FileSectionProps = {
   onElementChange: (element: any) => any;
   element: FileElement | null;
 };
 
-const primaryColor = (window as any).env.PRIMARY_COLOR
-  ? (window as any).env.PRIMARY_COLOR
-  : "#07D1B6";
 const baseStyle = {
   flex: 1,
   display: "flex",
@@ -32,7 +28,7 @@ const baseStyle = {
   color: "#bdbdbd",
   transition: "border .24s ease-in-out",
   height: "323px",
-  outline: `2px dashed ${primaryColor}`,
+  outline: "2px dashed var(--primary-bg-color)",
   outlineOffset: "-24px",
 };
 

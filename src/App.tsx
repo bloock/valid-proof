@@ -5,6 +5,15 @@ import Header from "./components/elements/Header";
 import Home from "./pages/Home";
 
 function App() {
+  var r = document.querySelector(":root");
+
+  (r as any).style.setProperty(
+    "--primary-bg-color",
+    (window as any).env.PRIMARY_COLOR
+      ? (window as any).env.PRIMARY_COLOR
+      : "#06d7be"
+  );
+
   return (
     <Fragment>
       <Header />
