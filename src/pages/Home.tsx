@@ -224,7 +224,7 @@ const Home = () => {
                       <a
                         className="px-3 align-items-center d-flex flex-column"
                         style={{ width: "49%" }}
-                        href={`${process.env.PUBLIC_URL}/pdf/valid_certificate.pdf`}
+                        href={`${process.env.PUBLIC_URL}/pdf/tampered_certificate.pdf`}
                         download
                       >
                         <img

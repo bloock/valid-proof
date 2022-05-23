@@ -141,11 +141,11 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   }, [recordTimestamp, errorStep]);
 
   useEffect(() => {
-    if (recordProof) {
+    if (element) {
       setHasUserAlreadyValidated(true);
       setCookie("hasValidated", hasUserAlreadyValidated);
     }
-  }, [recordProof, hasUserAlreadyValidated]);
+  }, [element, hasUserAlreadyValidated]);
 
   const events = [
     {
