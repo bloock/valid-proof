@@ -25,10 +25,12 @@ const colors = {
 
 type VerificationSectionProps = {
   element: FileElement | null;
+  errorFetchDocument?: boolean;
 };
 
 const VerificationSection: React.FC<VerificationSectionProps> = ({
   element,
+  errorFetchDocument,
 }) => {
   const { t } = useTranslation("verification");
 
@@ -53,18 +55,26 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   }, [element]);
 
   useEffect(() => {
+    if (errorFetchDocument) {
+      setErrorStep(0);
+      setActiveStep(0);
+    }
+    setTimeout(() => getRandomInterval(1000, 1500));
+  }, [errorFetchDocument]);
+
+  useEffect(() => {
     const getProof = async () => {
       if (element) {
         try {
           const proof = await client.getProof([element.record as Record]);
           if (proof != null) {
-            setActiveStep(0);
+            setActiveStep(1);
             setRecordProof(proof);
           } else {
-            setErrorStep(0);
+            setErrorStep(1);
           }
         } catch (e) {
-          setErrorStep(0);
+          setErrorStep(1);
         }
       }
     };
@@ -78,14 +88,14 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
         try {
           const record = await client.verifyProof(recordProof);
           if (record) {
-            setActiveStep(1);
+            setActiveStep(2);
 
             setRecordRoot(record);
           } else {
-            setErrorStep(1);
+            setErrorStep(2);
           }
         } catch (e) {
-          setErrorStep(1);
+          setErrorStep(2);
         }
       }
     };
@@ -118,13 +128,13 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
             network
           );
           if (timestamp !== 0 && timestamp !== null) {
-            setActiveStep(2);
+            setActiveStep(3);
             setRecordTimestamp(timestamp);
           } else {
-            setErrorStep(2);
+            setErrorStep(3);
           }
         } catch (e) {
-          setErrorStep(2);
+          setErrorStep(3);
         }
       }
     };
@@ -149,8 +159,8 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
 
   const events = [
     {
-      status: t("first-step"),
-      description: t("first-step-helper"),
+      status: t("file-step"),
+      description: t("file-step-helper"),
       icon:
         errorStep === 0
           ? "pi pi-times px-2 py-2 click-icon"
@@ -161,6 +171,22 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
         errorStep === 0
           ? colors.error
           : !activeStep && activeStep !== 0
+          ? colors.idle
+          : colors.success,
+    },
+    {
+      status: t("first-step"),
+      description: t("first-step-helper"),
+      icon:
+        errorStep === 1
+          ? "pi pi-times px-2 py-2 click-icon"
+          : !activeStep && activeStep !== 1
+          ? "pi pi-check px-2 py-2 click-icon pi pi-spin pi-spinner"
+          : "pi pi-check px-2 py-2 click-icon",
+      color:
+        errorStep === 1
+          ? colors.error
+          : !activeStep && activeStep !== 1
           ? colors.idle
           : colors.success,
     },
@@ -171,13 +197,13 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
       icon:
         errorStep === 1
           ? "pi pi-times px-2 py-2 click-icon"
-          : (activeStep as number) < 1 && errorStep !== 0
+          : (activeStep as number) < 2 && errorStep !== 0 && errorStep !== 1
           ? "pi pi-check px-2 py-2 click-icon pi pi-spin pi-spinner"
           : "pi pi-check px-2 py-2 click-icon",
       color:
         errorStep === 1
           ? colors.error
-          : (activeStep as number) < 1
+          : (activeStep as number) < 2
           ? colors.idle
           : colors.success,
     },
@@ -185,15 +211,18 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
       status: t("third-step"),
       description: t("third-step-helper"),
       icon:
-        errorStep === 2
+        errorStep === 3
           ? "pi pi-times px-2 py-2 click-icon"
-          : activeStep !== 2 && errorStep !== 0 && errorStep !== 1
+          : activeStep !== 3 &&
+            errorStep !== 0 &&
+            errorStep !== 1 &&
+            errorStep !== 2
           ? "pi pi-check px-2 py-2 click-icon pi pi-spin pi-spinner"
           : "pi pi-check px-2 py-2 click-icon",
       color:
-        errorStep === 2
+        errorStep === 3
           ? colors.error
-          : activeStep !== 2
+          : activeStep !== 3
           ? colors.idle
           : colors.success,
     },

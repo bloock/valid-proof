@@ -33,7 +33,7 @@ const Home = () => {
   const [validateFromUrl, setValidateFromUrl] = useState<boolean>(false);
   const verificationRef = useRef<HTMLInputElement>(null);
   const [searchParams] = useSearchParams();
-  const yOffset = -10;
+  const [errorFetchDocument, setErrorFetchDocument] = useState<boolean>(false);
 
   async function fileLoader(urlParam: any) {
     const isJSONValid = useIsJson;
@@ -51,7 +51,7 @@ const Home = () => {
       })
       .catch((e) => {
         error = true;
-        return undefined;
+        setErrorFetchDocument(true);
       });
 
     let array = new Uint8Array(bytes != undefined ? bytes : []);
@@ -77,7 +77,8 @@ const Home = () => {
           record: await Record.fromTypedArray(array),
         });
       } else {
-        setValidateFromUrl(false);
+        debugger;
+        setErrorFetchDocument(false);
       }
     } else {
       setValidateFromUrl(false);
@@ -166,9 +167,12 @@ const Home = () => {
             ) : null}
           </Row>
 
-          {element ? (
+          {element || errorFetchDocument ? (
             <div ref={verificationRef} id="scoll-offset">
-              <VerificationSection element={element} />
+              <VerificationSection
+                element={element}
+                errorFetchDocument={errorFetchDocument}
+              />
               <FileSection
                 onElementChange={(element) => setElement(element)}
                 element={element}
