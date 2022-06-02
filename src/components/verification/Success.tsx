@@ -85,7 +85,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
         case "gnosis_chain":
           explorerUrl = `https://blockscout.com/xdai/mainnet/tx/${network.tx_hash}`;
           break;
-        case "polygon":
+        case "polygon_chain":
           explorerUrl = `https://polygonscan.com/tx/${network.tx_hash}`;
           break;
         case "bloock_chain":
