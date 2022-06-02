@@ -159,7 +159,6 @@ const FileSection: React.FC<FileSectionProps> = ({
     });
   };
 
-  console.log(element);
   return (
     <section>
       <div
