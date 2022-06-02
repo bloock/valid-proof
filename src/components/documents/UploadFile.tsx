@@ -6,16 +6,16 @@ import "primereact/resources/themes/saga-blue/theme.css";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { FileElement } from "../../pages/Home";
 import "../../styles.css";
 import { useFileType } from "../../utils/use-file-type";
 import Button from "../elements/Button";
+
 type FileSectionProps = {
   onElementChange: (element: any) => any;
   element: FileElement | null;
 };
-
-const resetPath = window.env.VALIDPROOF_WEB_HOST;
 
 const baseStyle = {
   flex: 1,
@@ -60,6 +60,8 @@ const FileSection: React.FC<FileSectionProps> = ({
       handleFileChange(acceptedFiles[0]);
     }
   }, []);
+
+  const navigate = useNavigate();
 
   const {
     isDragActive,
@@ -138,7 +140,7 @@ const FileSection: React.FC<FileSectionProps> = ({
     } else {
       setElement(null);
       goToTop();
-      window.history.replaceState({}, "", resetPath);
+      navigate("/");
     }
   };
 
