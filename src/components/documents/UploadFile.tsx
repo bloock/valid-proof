@@ -15,6 +15,8 @@ type FileSectionProps = {
   element: FileElement | null;
 };
 
+const resetPath = window.env.VALIDPROOF_WEB_HOST;
+
 const baseStyle = {
   flex: 1,
   display: "flex",
@@ -124,7 +126,6 @@ const FileSection: React.FC<FileSectionProps> = ({
             value: await fileToJSON(file),
             record: await Record.fromJSON(await fileToJSON(file)),
           });
-
           break;
         default:
           setElement({
@@ -132,12 +133,12 @@ const FileSection: React.FC<FileSectionProps> = ({
             value: await fileToBytes(file),
             record: Record.fromTypedArray(await fileToBytes(file)),
           });
-
           break;
       }
     } else {
       setElement(null);
       goToTop();
+      window.history.replaceState({}, "", resetPath);
     }
   };
 
@@ -157,6 +158,8 @@ const FileSection: React.FC<FileSectionProps> = ({
       behavior: "smooth",
     });
   };
+
+  console.log(element);
   return (
     <section>
       <div
