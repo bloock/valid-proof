@@ -14,5 +14,12 @@
   "root": "Root",
   "root-description": "Huella digital que representa todos los documentos incluidos en el estado de BLOOCK desde su inicio.",
   "networks": "Redes",
-  "details": "Detalles técnicos"
+  "details": "Detalles técnicos",
+  "ethereum_mainnet": "Ethereum Mainnet",
+  "ethereum_rinkeby": "Ethereum Rinkeby",
+  "ethereum_ropsten": "Ethereum Ropsten",
+  "ethereum_ganache": "Ethereum Ganache",
+  "bloock_chain": "Bloockchain Testnet",
+  "gnosis_chain": "Gnosis Chain",
+  "polygon": "Polygon"
 }

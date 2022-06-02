@@ -34,26 +34,11 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
       const dates = moment(network.created_at * 1000).format(
         "DD-MM-YYYY HH:mm:ss"
       );
-      let name = "";
-      switch (network.name) {
-        case "ethereum_mainnet":
-          name = "Ethereum Mainnet";
-          break;
-        case "ethereum_rinkeby":
-          name = "Ethereum Rinkeby";
-          break;
-        case "gnosis_chain":
-          name = "Gnosis Chain";
-          break;
-        case "bloock_chain":
-          name = "Bloockchain";
-          break;
-      }
 
       return {
         created_at: dates,
         name: network.name,
-        label: name,
+        label: t(network.name),
         state: (
           <Tag
             icon={
@@ -89,22 +74,6 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
         "DD-MM-YYYY HH:mm:ss"
       );
 
-      let name = "";
-      switch (network.name) {
-        case "ethereum_mainnet":
-          name = "Ethereum Mainnet";
-          break;
-        case "ethereum_rinkeby":
-          name = "Ethereum Rinkeby";
-          break;
-        case "gnosis_chain":
-          name = "Gnosis Chain";
-          break;
-        case "bloock_chain":
-          name = "Bloockchain";
-          break;
-      }
-
       let explorerUrl = `https://etherscan.io/tx/${network.tx_hash}`;
       switch (network.name) {
         case "ethereum_mainnet":
@@ -115,6 +84,9 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
           break;
         case "gnosis_chain":
           explorerUrl = `https://blockscout.com/xdai/mainnet/tx/${network.tx_hash}`;
+          break;
+        case "polygon":
+          explorerUrl = `https://polygonscan.com/tx/${network.tx_hash}`;
           break;
         case "bloock_chain":
           explorerUrl = "";
@@ -127,7 +99,9 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
             <div className="d-flex justify-content-between align-items-center py-1">
               <p className="bold-text text-secondary ">{t("name")}</p>
               <div className="d-flex align-items-center">
-                <p style={{ textAlign: "right" }}>{name && name}</p>
+                <p style={{ textAlign: "right" }}>
+                  {t(network.name && network.name)}
+                </p>
                 <Button
                   style={{ marginLeft: "7px", width: "15%" }}
                   icon="p-button-icon p-c pi pi-external-link"
@@ -182,6 +156,9 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
       case "gnosis_chain":
         explorerUrl = `https://blockscout.com/xdai/mainnet/tx/${network.tx_hash}`;
         break;
+        case "polygon":
+          explorerUrl = `https://polygonscan.com/tx/${network.tx_hash}`;
+          break;
       case "bloock_chain":
         explorerUrl = "";
         break;
