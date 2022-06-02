@@ -14,5 +14,12 @@
   "root": "Root",
   "root-description": "Digital fingerprint representing all records included in BLOOCK state since inception",
   "networks": "Networks",
-  "details": "Technical details"
+  "details": "Technical details",
+  "ethereum_mainnet": "Ethereum Mainnet",
+  "ethereum_rinkeby": "Ethereum Rinkeby",
+  "ethereum_ropsten": "Ethereum Ropsten",
+  "ethereum_ganache": "Ethereum Ganache",
+  "bloock_chain": "Bloockchain Testnet",
+  "gnosis_chain": "Gnosis Chain",
+  "polygon_chain": "Polygon"
 }
