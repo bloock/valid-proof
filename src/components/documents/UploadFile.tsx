@@ -6,10 +6,12 @@ import "primereact/resources/themes/saga-blue/theme.css";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { FileElement } from "../../pages/Home";
 import "../../styles.css";
 import { useFileType } from "../../utils/use-file-type";
 import Button from "../elements/Button";
+
 type FileSectionProps = {
   onElementChange: (element: any) => any;
   element: FileElement | null;
@@ -58,6 +60,8 @@ const FileSection: React.FC<FileSectionProps> = ({
       handleFileChange(acceptedFiles[0]);
     }
   }, []);
+
+  const navigate = useNavigate();
 
   const {
     isDragActive,
@@ -124,7 +128,6 @@ const FileSection: React.FC<FileSectionProps> = ({
             value: await fileToJSON(file),
             record: await Record.fromJSON(await fileToJSON(file)),
           });
-
           break;
         default:
           setElement({
@@ -132,12 +135,12 @@ const FileSection: React.FC<FileSectionProps> = ({
             value: await fileToBytes(file),
             record: Record.fromTypedArray(await fileToBytes(file)),
           });
-
           break;
       }
     } else {
       setElement(null);
       goToTop();
+      navigate("/");
     }
   };
 
@@ -157,6 +160,7 @@ const FileSection: React.FC<FileSectionProps> = ({
       behavior: "smooth",
     });
   };
+
   return (
     <section>
       <div
