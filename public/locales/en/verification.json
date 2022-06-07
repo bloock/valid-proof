@@ -5,5 +5,7 @@
   "third-step": "Searching seal in blockchain",
   "first-step-helper": "Step 1",
   "second-step-helper": "Step 2",
-  "third-step-helper": "Step 3"
+  "third-step-helper": "Step 3",
+  "file-step": "Downloading file",
+  "file-step-helper": "Retrieving document for verification"
 }

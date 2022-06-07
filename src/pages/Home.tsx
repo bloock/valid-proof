@@ -35,7 +35,10 @@ const Home = () => {
   const [searchParams] = useSearchParams();
   const [errorFetchDocument, setErrorFetchDocument] = useState<boolean>(false);
 
+  console.log(errorFetchDocument);
+
   async function fileLoader(urlParam: any) {
+    debugger;
     const isJSONValid = useIsJson;
     const fileDetect = useFileType;
 
@@ -50,14 +53,13 @@ const Home = () => {
         return Buffer.from(res.data);
       })
       .catch((e) => {
-        error = true;
-        setErrorFetchDocument(true);
+        error = e;
       });
 
     let array = new Uint8Array(bytes != undefined ? bytes : []);
     var string = new TextDecoder().decode(array);
 
-    if (!error) {
+    if (error !== undefined) {
       if (isJSONValid(string)) {
         setElement({
           name: urlParam.href,
@@ -77,10 +79,10 @@ const Home = () => {
           record: await Record.fromTypedArray(array),
         });
       } else {
-        debugger;
-        setErrorFetchDocument(false);
+        setErrorFetchDocument(true);
       }
     } else {
+      setErrorFetchDocument(true);
       setValidateFromUrl(false);
     }
   }
@@ -157,10 +159,12 @@ const Home = () => {
               </ul>
             </Col>
 
-            {!element ? (
+            {!element || errorFetchDocument ? (
               <Col>
                 <FileSection
                   onElementChange={(element) => setElement(element)}
+                  errorFetchDocument={errorFetchDocument}
+                  onErrorFetchDocument={(error) => setErrorFetchDocument(error)}
                   element={null}
                 ></FileSection>
               </Col>
@@ -172,9 +176,12 @@ const Home = () => {
               <VerificationSection
                 element={element}
                 errorFetchDocument={errorFetchDocument}
+                onErrorFetchDocument={(error) => setErrorFetchDocument(error)}
               />
               <FileSection
                 onElementChange={(element) => setElement(element)}
+                onErrorFetchDocument={(error) => setErrorFetchDocument(error)}
+                errorFetchDocument={errorFetchDocument}
                 element={element}
               ></FileSection>
             </div>

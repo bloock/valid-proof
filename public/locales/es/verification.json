@@ -5,5 +5,7 @@
   "third-step": "Buscando el sello en blockchain",
   "first-step-helper": "Paso 1",
   "second-step-helper": "Paso 2",
-  "third-step-helper": "Paso 3"
+  "third-step-helper": "Paso 3",
+  "file-step": "Descargando documento",
+  "file-step-helper": "Obteniendo documento a verificar"
 }

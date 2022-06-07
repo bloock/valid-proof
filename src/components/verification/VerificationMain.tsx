@@ -26,11 +26,13 @@ const colors = {
 type VerificationSectionProps = {
   element: FileElement | null;
   errorFetchDocument?: boolean;
+  onErrorFetchDocument: (error: boolean) => any;
 };
 
 const VerificationSection: React.FC<VerificationSectionProps> = ({
   element,
   errorFetchDocument,
+  onErrorFetchDocument,
 }) => {
   const { t } = useTranslation("verification");
 
@@ -56,11 +58,16 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
 
   useEffect(() => {
     if (errorFetchDocument) {
+      setTimeout(
+        () => (setErrorStep(0), setActiveStep(0)),
+        getRandomInterval(500, 1000)
+      );
+      onErrorFetchDocument(true);
       setErrorStep(0);
+    } else {
       setActiveStep(0);
     }
-    setTimeout(() => getRandomInterval(1000, 1500));
-  }, [errorFetchDocument]);
+  }, [errorFetchDocument, element]);
 
   useEffect(() => {
     const getProof = async () => {
@@ -79,7 +86,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
       }
     };
 
-    setTimeout(() => getProof(), getRandomInterval(1000, 1500));
+    setTimeout(() => getProof(), getRandomInterval(500, 1000));
   }, [element]);
 
   useEffect(() => {
@@ -180,7 +187,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
       icon:
         errorStep === 1
           ? "pi pi-times px-2 py-2 click-icon"
-          : !activeStep && activeStep !== 1
+          : (activeStep as number) < 1 && errorStep !== 0
           ? "pi pi-check px-2 py-2 click-icon pi pi-spin pi-spinner"
           : "pi pi-check px-2 py-2 click-icon",
       color:
@@ -195,13 +202,13 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
       description: t("second-step-helper"),
 
       icon:
-        errorStep === 1
+        errorStep === 2
           ? "pi pi-times px-2 py-2 click-icon"
           : (activeStep as number) < 2 && errorStep !== 0 && errorStep !== 1
           ? "pi pi-check px-2 py-2 click-icon pi pi-spin pi-spinner"
           : "pi pi-check px-2 py-2 click-icon",
       color:
-        errorStep === 1
+        errorStep === 2
           ? colors.error
           : (activeStep as number) < 2
           ? colors.idle

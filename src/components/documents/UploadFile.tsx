@@ -13,6 +13,8 @@ import Button from "../elements/Button";
 type FileSectionProps = {
   onElementChange: (element: any) => any;
   element: FileElement | null;
+  errorFetchDocument: boolean;
+  onErrorFetchDocument: (error: any) => any;
 };
 
 const baseStyle = {
@@ -41,12 +43,14 @@ const acceptStyle = {
 };
 
 const rejectStyle = {
-  borderColor: "#ff1744",
+  borderColor: "red",
 };
 
 const FileSection: React.FC<FileSectionProps> = ({
   onElementChange,
   element: elementType,
+  errorFetchDocument,
+  onErrorFetchDocument,
 }) => {
   const { t } = useTranslation("upload-file");
 
@@ -59,6 +63,12 @@ const FileSection: React.FC<FileSectionProps> = ({
     }
   }, []);
 
+  const goToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
   const {
     isDragActive,
     isDragAccept,
@@ -68,6 +78,7 @@ const FileSection: React.FC<FileSectionProps> = ({
   } = useDropzone({ onDrop });
 
   useEffect(() => {
+    debugger;
     onElementChange(element);
   }, [element]);
 
@@ -108,37 +119,42 @@ const FileSection: React.FC<FileSectionProps> = ({
   }
 
   const handleFileChange = async (file: File | null) => {
-    if (file != null) {
-      let fileType = fileTypeDetect(file.type);
-      switch (fileType) {
-        case "application/pdf":
-          setElement({
-            name: file?.name,
-            value: await fileToBytes(file),
-            record: await Record.fromPDF(await fileToBytes(file)),
-          });
-          break;
-        case "application/json":
-          setElement({
-            name: file?.name,
-            value: await fileToJSON(file),
-            record: await Record.fromJSON(await fileToJSON(file)),
-          });
+    onErrorFetchDocument(false);
+    try {
+      if (file != null) {
+        let fileType = fileTypeDetect(file.type);
+        switch (fileType) {
+          case "application/pdf":
+            setElement({
+              name: file?.name,
+              value: await fileToBytes(file),
+              record: await Record.fromPDF(await fileToBytes(file)),
+            });
+            break;
+          case "application/json":
+            setElement({
+              name: file?.name,
+              value: await fileToJSON(file),
+              record: await Record.fromJSON(await fileToJSON(file)),
+            });
 
-          break;
-        default:
-          setElement({
-            name: file?.name,
-            value: await fileToBytes(file),
-            record: Record.fromTypedArray(await fileToBytes(file)),
-          });
+            break;
+          default:
+            setElement({
+              name: file?.name,
+              value: await fileToBytes(file),
+              record: Record.fromTypedArray(await fileToBytes(file)),
+            });
 
-          break;
+            break;
+        }
+      } else {
+        onErrorFetchDocument(false);
+
+        setElement(null);
+        goToTop();
       }
-    } else {
-      setElement(null);
-      goToTop();
-    }
+    } catch {}
   };
 
   const style = useMemo(
@@ -151,12 +167,6 @@ const FileSection: React.FC<FileSectionProps> = ({
     [isDragActive, isDragReject, isDragAccept]
   );
 
-  const goToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
   return (
     <section>
       <div
@@ -165,9 +175,9 @@ const FileSection: React.FC<FileSectionProps> = ({
       >
         <div className="vertical-center horizontal-center">
           <div>
-            {element ? (
+            {element || errorFetchDocument ? (
               <div>
-                {element && element !== undefined ? (
+                {element || errorFetchDocument ? (
                   <Button className="button" cta={() => handleFileChange(null)}>
                     {t("verify-another")}
                   </Button>
