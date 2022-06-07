@@ -56,7 +56,7 @@ const Home = () => {
     let array = new Uint8Array(bytes != undefined ? bytes : []);
     var string = new TextDecoder().decode(array);
 
-    if (error !== undefined) {
+    if (error === undefined) {
       if (isJSONValid(string)) {
         setElement({
           name: urlParam.href,
@@ -76,6 +76,7 @@ const Home = () => {
           record: await Record.fromTypedArray(array),
         });
       } else {
+        setElement(null);
         setErrorFetchDocument(true);
       }
     } else {
@@ -97,7 +98,10 @@ const Home = () => {
 
   useEffect(() => {
     const id: string | null = "scoll-offset";
-    if (element && verificationRef && verificationRef.current) {
+    if (
+      (element && verificationRef && verificationRef.current) ||
+      errorFetchDocument
+    ) {
       if (document.getElementById(id)) {
         const yOffset: number = -80;
         const div: HTMLElement | null = document.getElementById(id);
@@ -109,7 +113,7 @@ const Home = () => {
         window.scrollTo({ top: y, behavior: "smooth" });
       }
     }
-  }, [verificationRef, element]);
+  }, [verificationRef, element, errorFetchDocument]);
 
   return (
     <Fragment>
@@ -156,7 +160,7 @@ const Home = () => {
               </ul>
             </Col>
 
-            {!element || errorFetchDocument ? (
+            {!element ? (
               <Col>
                 <FileSection
                   onElementChange={(element) => setElement(element)}
