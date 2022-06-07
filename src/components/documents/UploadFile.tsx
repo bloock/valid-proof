@@ -82,7 +82,6 @@ const FileSection: React.FC<FileSectionProps> = ({
   } = useDropzone({ onDrop });
 
   useEffect(() => {
-    debugger;
     onElementChange(element);
   }, [element]);
 

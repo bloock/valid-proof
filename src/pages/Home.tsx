@@ -35,10 +35,7 @@ const Home = () => {
   const [searchParams] = useSearchParams();
   const [errorFetchDocument, setErrorFetchDocument] = useState<boolean>(false);
 
-  console.log(errorFetchDocument);
-
   async function fileLoader(urlParam: any) {
-    debugger;
     const isJSONValid = useIsJson;
     const fileDetect = useFileType;
 
