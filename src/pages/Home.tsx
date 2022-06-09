@@ -33,7 +33,7 @@ const Home = () => {
   const [validateFromUrl, setValidateFromUrl] = useState<boolean>(false);
   const verificationRef = useRef<HTMLInputElement>(null);
   const [searchParams] = useSearchParams();
-  const yOffset = -10;
+  const [errorFetchDocument, setErrorFetchDocument] = useState<boolean>(false);
 
   async function fileLoader(urlParam: any) {
     const isJSONValid = useIsJson;
@@ -50,14 +50,13 @@ const Home = () => {
         return Buffer.from(res.data);
       })
       .catch((e) => {
-        error = true;
-        return undefined;
+        error = e;
       });
 
     let array = new Uint8Array(bytes != undefined ? bytes : []);
     var string = new TextDecoder().decode(array);
 
-    if (!error) {
+    if (error === undefined) {
       if (isJSONValid(string)) {
         setElement({
           name: urlParam.href,
@@ -77,9 +76,11 @@ const Home = () => {
           record: await Record.fromTypedArray(array),
         });
       } else {
-        setValidateFromUrl(false);
+        setElement(null);
+        setErrorFetchDocument(true);
       }
     } else {
+      setErrorFetchDocument(true);
       setValidateFromUrl(false);
     }
   }
@@ -97,7 +98,10 @@ const Home = () => {
 
   useEffect(() => {
     const id: string | null = "scoll-offset";
-    if (element && verificationRef && verificationRef.current) {
+    if (
+      (element && verificationRef && verificationRef.current) ||
+      errorFetchDocument
+    ) {
       if (document.getElementById(id)) {
         const yOffset: number = -80;
         const div: HTMLElement | null = document.getElementById(id);
@@ -109,7 +113,7 @@ const Home = () => {
         window.scrollTo({ top: y, behavior: "smooth" });
       }
     }
-  }, [verificationRef, element]);
+  }, [verificationRef, element, errorFetchDocument]);
 
   return (
     <Fragment>
@@ -160,17 +164,25 @@ const Home = () => {
               <Col>
                 <FileSection
                   onElementChange={(element) => setElement(element)}
+                  errorFetchDocument={errorFetchDocument}
+                  onErrorFetchDocument={(error) => setErrorFetchDocument(error)}
                   element={null}
                 ></FileSection>
               </Col>
             ) : null}
           </Row>
 
-          {element ? (
+          {element || errorFetchDocument ? (
             <div ref={verificationRef} id="scoll-offset">
-              <VerificationSection element={element} />
+              <VerificationSection
+                element={element}
+                errorFetchDocument={errorFetchDocument}
+                onErrorFetchDocument={(error) => setErrorFetchDocument(error)}
+              />
               <FileSection
                 onElementChange={(element) => setElement(element)}
+                onErrorFetchDocument={(error) => setErrorFetchDocument(error)}
+                errorFetchDocument={errorFetchDocument}
                 element={element}
               ></FileSection>
             </div>
