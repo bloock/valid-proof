@@ -8,7 +8,6 @@ import { Col, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { FileElement } from "../../pages/Home";
 import "../../styles.css";
-import { setCookie } from "../../utils/cookie";
 import FilePreview from "../documents/FilePreview";
 import StepperVerification from "../elements/Stepper";
 import VerificationError from "./Error";
@@ -158,7 +157,6 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   useEffect(() => {
     if (element) {
       setHasUserAlreadyValidated(true);
-      setCookie("hasValidated", hasUserAlreadyValidated);
     }
   }, [element, hasUserAlreadyValidated]);
 
