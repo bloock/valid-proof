@@ -59,11 +59,9 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   useEffect(() => {
     if (errorFetchDocument) {
       setTimeout(
-        () => (setErrorStep(0), setActiveStep(0)),
-        getRandomInterval(500, 1000)
+        () => (onErrorFetchDocument(true), setErrorStep(0), setActiveStep(0)),
+        getRandomInterval(1500, 2000)
       );
-      onErrorFetchDocument(true);
-      setErrorStep(0);
     } else {
       setActiveStep(0);
     }
