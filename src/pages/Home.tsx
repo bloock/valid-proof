@@ -56,6 +56,8 @@ const Home = () => {
     let array = new Uint8Array(bytes != undefined ? bytes : []);
     var string = new TextDecoder().decode(array);
 
+    const dataQuery = searchParams.get("data");
+    console.log(dataQuery);
     if (error === undefined) {
       if (isJSONValid(string)) {
         setElement({
@@ -75,6 +77,12 @@ const Home = () => {
           value: array,
           record: await Record.fromTypedArray(array),
         });
+      } else if (dataQuery) {
+        setElement({
+          name: "",
+          value: dataQuery,
+          record: await Record.fromString(dataQuery),
+        });
       } else {
         setElement(null);
         setErrorFetchDocument(true);
@@ -87,9 +95,13 @@ const Home = () => {
 
   useEffect(() => {
     const recordQuery = searchParams.get("record");
+    const dataQuery = searchParams.get("data");
+
     const isURL = useIsUrl;
     if (isURL(recordQuery)) {
       fileLoader(recordQuery);
+      setValidateFromUrl(true);
+    } else if (isURL(dataQuery)) {
       setValidateFromUrl(true);
     } else {
       setValidateFromUrl(false);
