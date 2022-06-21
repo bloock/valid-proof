@@ -35,6 +35,35 @@ const Home = () => {
   const [searchParams] = useSearchParams();
   const [errorFetchDocument, setErrorFetchDocument] = useState<boolean>(false);
 
+  async function base64Loader(urlParam: any) {
+    urlParam = new URL(urlParam);
+    let error;
+
+    const dataQuery = searchParams.get("data");
+
+    console.log(dataQuery, "queryy");
+
+    /*     let decodedString = atob(
+      "JVBERi0xLjcKCjEgMCBvYmogICUgZW50cnkgcG9pbnQKPDwKICAvVHlwZSAvQ2F0YWxvZwogIC9QYWdlcyAyIDAgUgo+PgplbmRvYmoKCjIgMCBvYmoKPDwKICAvVHlwZSAvUGFnZXMKICAvTWVkaWFCb3ggWyAwIDAgMjAwIDIwMCBdCiAgL0NvdW50IDEKICAvS2lkcyBbIDMgMCBSIF0KPj4KZW5kb2JqCgozIDAgb2JqCjw8CiAgL1R5cGUgL1BhZ2UKICAvUGFyZW50IDIgMCBSCiAgL1Jlc291cmNlcyA8PAogICAgL0ZvbnQgPDwKICAgICAgL0YxIDQgMCBSIAogICAgPj4KICA+PgogIC9Db250ZW50cyA1IDAgUgo+PgplbmRvYmoKCjQgMCBvYmoKPDwKICAvVHlwZSAvRm9udAogIC9TdWJ0eXBlIC9UeXBlMQogIC9CYXNlRm9udCAvVGltZXMtUm9tYW4KPj4KZW5kb2JqCgo1IDAgb2JqICAlIHBhZ2UgY29udGVudAo8PAogIC9MZW5ndGggNDQKPj4Kc3RyZWFtCkJUCjcwIDUwIFRECi9GMSAxMiBUZgooSGVsbG8sIHdvcmxkISkgVGoKRVQKZW5kc3RyZWFtCmVuZG9iagoKeHJlZgowIDYKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDEwIDAwMDAwIG4gCjAwMDAwMDAwNzkgMDAwMDAgbiAKMDAwMDAwMDE3MyAwMDAwMCBuIAowMDAwMDAwMzAxIDAwMDAwIG4gCjAwMDAwMDAzODAgMDAwMDAgbiAKdHJhaWxlcgo8PAogIC9TaXplIDYKICAvUm9vdCAxIDAgUgo+PgpzdGFydHhyZWYKNDkyCiUlRU9G"
+    ); */
+
+    let decodedString = atob(dataQuery as any);
+    console.log(decodedString);
+
+    if (error === undefined) {
+      if (decodedString) {
+        setElement({
+          name: urlParam.href,
+          value: decodedString,
+          record: await Record.fromString(decodedString),
+        });
+      }
+    } else {
+      setErrorFetchDocument(true);
+      setValidateFromUrl(false);
+    }
+  }
+
   async function fileLoader(urlParam: any) {
     const isJSONValid = useIsJson;
     const fileDetect = useFileType;
@@ -57,7 +86,8 @@ const Home = () => {
     var string = new TextDecoder().decode(array);
 
     const dataQuery = searchParams.get("data");
-    console.log(dataQuery);
+
+    console.log(dataQuery, "queryy");
     if (error === undefined) {
       if (isJSONValid(string)) {
         setElement({
@@ -78,6 +108,7 @@ const Home = () => {
           record: await Record.fromTypedArray(array),
         });
       } else if (dataQuery) {
+        console.log("heyy");
         setElement({
           name: "",
           value: dataQuery,
@@ -98,10 +129,14 @@ const Home = () => {
     const dataQuery = searchParams.get("data");
 
     const isURL = useIsUrl;
+
     if (isURL(recordQuery)) {
+      console.log("record query ");
       fileLoader(recordQuery);
       setValidateFromUrl(true);
     } else if (isURL(dataQuery)) {
+      console.log("data query");
+      base64Loader(dataQuery);
       setValidateFromUrl(true);
     } else {
       setValidateFromUrl(false);
