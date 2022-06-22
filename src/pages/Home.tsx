@@ -14,6 +14,7 @@ import demoimage3 from "../images/get_results.jpg";
 import demoimage2 from "../images/verify_documents.jpg";
 import "../styles.css";
 import { getCookie } from "../utils/cookie";
+import { Truncate } from "../utils/truncate";
 import { useFileType } from "../utils/use-file-type";
 import { useIsJson } from "../utils/use-is-json";
 import { useIsUrl } from "../utils/use-is-url";
@@ -37,10 +38,10 @@ const Home = () => {
   const [errorFetchDocument, setErrorFetchDocument] = useState<boolean>(false);
   const [decodedData, setDecodedData] = useState<string | null>(null);
 
-  async function decodedDataLoader(query: string) {
+  async function decodedDataLoader() {
     if (decodedData) {
       setElement({
-        name: query && query.slice(0, 15) + "...",
+        name: Truncate(decodedData as string, 30, "..."),
         value: decodedData,
         record: await Record.fromString(decodedData),
       });
@@ -60,7 +61,7 @@ const Home = () => {
       setErrorFetchDocument(true);
     }
     if (decodedData && dataQuery) {
-      decodedDataLoader(dataQuery as any);
+      decodedDataLoader();
     }
   }, [searchParams, decodedData]);
 
