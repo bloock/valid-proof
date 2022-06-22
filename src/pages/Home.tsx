@@ -37,7 +37,7 @@ const Home = () => {
   const [errorFetchDocument, setErrorFetchDocument] = useState<boolean>(false);
   const [decodedData, setDecodedData] = useState<string | null>(null);
 
-  async function base64Loader(query: string) {
+  async function decodedDataLoader(query: string) {
     if (decodedData) {
       setElement({
         name: query && query.slice(0, 15) + "...",
@@ -60,7 +60,7 @@ const Home = () => {
       setErrorFetchDocument(true);
     }
     if (decodedData && dataQuery) {
-      base64Loader(dataQuery as any);
+      decodedDataLoader(dataQuery as any);
     }
   }, [searchParams, decodedData]);
 
@@ -119,7 +119,6 @@ const Home = () => {
     const isURL = useIsUrl;
 
     if (isURL(recordQuery)) {
-      console.log("record query ");
       fileLoader(recordQuery);
       setValidateFromUrl(true);
     } else {
