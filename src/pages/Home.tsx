@@ -7,13 +7,14 @@ import "primereact/resources/themes/saga-blue/theme.css";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import FileSection from "../components/documents/UploadFile";
 import VerificationSection from "../components/verification/VerificationMain";
 import demoimage3 from "../images/get_results.jpg";
 import demoimage2 from "../images/verify_documents.jpg";
 import "../styles.css";
 import { getCookie } from "../utils/cookie";
+import { Truncate } from "../utils/truncate";
 import { useFileType } from "../utils/use-file-type";
 import { useIsJson } from "../utils/use-is-json";
 import { useIsUrl } from "../utils/use-is-url";
@@ -28,12 +29,41 @@ const Home = () => {
   const { t } = useTranslation("home");
 
   const session = getCookie("hasValidated");
+  const navigate = useNavigate();
 
   const [element, setElement] = useState<FileElement | null>(null);
   const [validateFromUrl, setValidateFromUrl] = useState<boolean>(false);
   const verificationRef = useRef<HTMLInputElement>(null);
   const [searchParams] = useSearchParams();
   const [errorFetchDocument, setErrorFetchDocument] = useState<boolean>(false);
+  const [decodedData, setDecodedData] = useState<string | null>(null);
+
+  async function decodedDataLoader() {
+    if (decodedData) {
+      setElement({
+        name: Truncate(decodedData as string, 30, "..."),
+        value: decodedData,
+        record: await Record.fromString(decodedData),
+      });
+    } else {
+      setElement(null);
+    }
+  }
+
+  useEffect(() => {
+    const base64regex =
+      /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
+    const dataQuery = searchParams.get("data");
+
+    if (base64regex.test(dataQuery as any)) {
+      setDecodedData(window.atob(dataQuery as any));
+    } else {
+      setErrorFetchDocument(true);
+    }
+    if (decodedData && dataQuery) {
+      decodedDataLoader();
+    }
+  }, [searchParams, decodedData]);
 
   async function fileLoader(urlParam: any) {
     const isJSONValid = useIsJson;
@@ -88,6 +118,7 @@ const Home = () => {
   useEffect(() => {
     const recordQuery = searchParams.get("record");
     const isURL = useIsUrl;
+
     if (isURL(recordQuery)) {
       fileLoader(recordQuery);
       setValidateFromUrl(true);
