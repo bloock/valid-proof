@@ -119,6 +119,9 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
             case "ethereum_mainnet":
               network = Network.ETHEREUM_MAINNET;
               break;
+            case "gnosis_chain":
+              network = Network.GNOSIS_CHAIN;
+              break;
             case "ethereum_rinkeby":
               network = Network.ETHEREUM_RINKEBY;
               break;
