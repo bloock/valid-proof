@@ -253,10 +253,18 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
               className="mt-2 border-0 bg-light verification-container"
               style={{ textAlign: "left" }}
             >
-              <Row className="justify-content-between d-flex flex-column-reverse flex-lg-row p-3 ">
-                <Col lg={5} className="my-4 ">
-                  <FilePreview element={element} />
-                </Col>
+              <Row
+                className={` ${
+                  element?.name === ""
+                    ? "justify-content-center"
+                    : "justify-content-between"
+                } d-flex flex-column-reverse flex-lg-row p-3 `}
+              >
+                {element?.name !== "" ? (
+                  <Col lg={5} className="my-4 ">
+                    <FilePreview element={element} />
+                  </Col>
+                ) : null}
                 <Col lg={6} className="mb-4 mt-2">
                   {recordTimestamp && errorStep === null ? (
                     <VerificationSuccess
