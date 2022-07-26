@@ -52,7 +52,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    const recordQuery = searchParams.get("record");
+    const recordQuery = searchParams.get("hash");
     if (recordQuery) {
       setRecordUrl(recordQuery);
     }
