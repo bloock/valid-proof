@@ -139,7 +139,7 @@ const Home = () => {
   }
 
   useEffect(() => {
-    const recordQuery = searchParams.get("data");
+    const recordQuery = searchParams.get("record");
     const isURL = useIsUrl;
 
     if (isURL(recordQuery)) {
