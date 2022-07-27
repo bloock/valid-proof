@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -37,6 +37,30 @@ const Home = () => {
   const [searchParams] = useSearchParams();
   const [errorFetchDocument, setErrorFetchDocument] = useState<boolean>(false);
   const [decodedData, setDecodedData] = useState<string | null>(null);
+  const [recordUrl, setRecordUrl] = useState<string | null>(null);
+
+  const getRecordFromUrl = async () => {
+    if (recordUrl) {
+      setElement({
+        name: "",
+        value: "",
+        record: await Record.fromHash(recordUrl),
+      });
+    } else {
+      setElement(null);
+    }
+  };
+
+  useEffect(() => {
+    const recordQuery = searchParams.get("hash");
+    if (recordQuery) {
+      setRecordUrl(recordQuery);
+    }
+
+    if (recordUrl) {
+      getRecordFromUrl();
+    }
+  }, [searchParams, recordUrl]);
 
   async function decodedDataLoader() {
     if (decodedData) {
@@ -49,7 +73,6 @@ const Home = () => {
       setElement(null);
     }
   }
-
   useEffect(() => {
     const base64regex =
       /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;

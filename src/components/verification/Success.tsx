@@ -156,9 +156,9 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
       case "gnosis_chain":
         explorerUrl = `https://blockscout.com/xdai/mainnet/tx/${network.tx_hash}`;
         break;
-        case "polygon_chain":
-          explorerUrl = `https://polygonscan.com/tx/${network.tx_hash}`;
-          break;
+      case "polygon_chain":
+        explorerUrl = `https://polygonscan.com/tx/${network.tx_hash}`;
+        break;
       case "bloock_chain":
         explorerUrl = "";
         break;
@@ -188,16 +188,16 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
 
   return (
     <>
-      {element?.name !== undefined ? (
-        <div className={element.name ? "mb-3 mt-2" : "mb-0"}>
+      {element?.name !== undefined || element?.name !== "" ? (
+        <div className={element?.name ? "mb-3 mt-2" : "mb-0"}>
           <i
             className={`pi pi-file px-1 py-1 click-icon text-secondary ${
-              element.name ? "d-inline" : "d-none"
+              element?.name ? "d-inline" : "d-none"
             }`}
             style={{ fontWeight: 300 }}
           ></i>
           <span className="mx-2 text-secondary text-break">
-            {Truncate(element.name as string, 30, "...")}
+            {Truncate(element?.name as string, 30, "...")}
           </span>
         </div>
       ) : null}
