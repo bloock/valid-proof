@@ -53,8 +53,13 @@ const Home = () => {
 
   useEffect(() => {
     const recordQuery = searchParams.get("hash");
-    if (recordQuery) {
+    const hashFormatRegex = /^[a-f0-9]{64}$/gi;
+
+    if (hashFormatRegex.test(recordQuery as any)) {
       setRecordUrl(recordQuery);
+    } else {
+      setErrorFetchDocument(true);
+      setValidateFromUrl(false);
     }
 
     if (recordUrl) {
