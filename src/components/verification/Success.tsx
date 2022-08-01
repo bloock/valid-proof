@@ -177,10 +177,12 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
             {network?.tx_hash && network?.tx_hash}
           </div>
 
-          <Button
-            icon="p-button-icon p-c pi pi-external-link"
-            onClick={() => window.open(explorerUrl, "_blank")}
-          />
+          {network.name !== "bloock_chain" && (
+            <Button
+              icon="p-button-icon p-c pi pi-external-link"
+              onClick={() => window.open(explorerUrl, "_blank")}
+            />
+          )}
         </div>
       </div>
     );
