@@ -55,7 +55,10 @@ const Home = () => {
     const recordQuery = searchParams.get("hash");
     const hashFormatRegex = /^[a-f0-9]{64}$/gi;
 
-    if (hashFormatRegex.test(recordQuery as any)) {
+    if (
+      hashFormatRegex.test(recordQuery as any) &&
+      recordQuery?.length === 64
+    ) {
       setRecordUrl(recordQuery);
     } else {
       setErrorFetchDocument(true);
