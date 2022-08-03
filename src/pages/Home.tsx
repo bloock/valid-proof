@@ -52,14 +52,15 @@ const Home = () => {
   };
 
   useEffect(() => {
-    const recordQuery = searchParams.get("hash");
+    const hashQuery = searchParams.get("hash");
     const hashFormatRegex = /^[a-f0-9]{64}$/gi;
 
-    if (hashFormatRegex.test(recordQuery as any)) {
-      setRecordUrl(recordQuery);
-    } else {
-      setErrorFetchDocument(true);
-      setValidateFromUrl(false);
+    if (hashQuery) {
+      if (hashFormatRegex.test(hashQuery as any)) {
+        setRecordUrl(hashQuery);
+      } else {
+        setErrorFetchDocument(true);
+      }
     }
 
     if (recordUrl) {
@@ -83,11 +84,14 @@ const Home = () => {
       /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
     const dataQuery = searchParams.get("data");
 
-    if (base64regex.test(dataQuery as any)) {
-      setDecodedData(window.atob(dataQuery as any));
-    } else {
-      setErrorFetchDocument(true);
+    if (base64regex) {
+      if (base64regex.test(dataQuery as any)) {
+        setDecodedData(window.atob(dataQuery as any));
+      } else {
+        setErrorFetchDocument(true);
+      }
     }
+
     if (decodedData && dataQuery) {
       decodedDataLoader();
     }
