@@ -169,13 +169,10 @@ const FileSection: React.FC<FileSectionProps> = ({
 
   return (
     <section>
-      <div
-        className="container mt-3"
-        {...getRootProps({ style: style as any })}
-      >
-        <div className="vertical-center horizontal-center">
-          <div>
-            {element || errorFetchDocument ? (
+      {element || errorFetchDocument ? (
+        <div className="container mt-3 w-full p-0" style={{ height: "250px" }}>
+          <div className="d-flex align-items-center justify-content-center h-100 bg-light p-0">
+            <div>
               <div>
                 {element || errorFetchDocument ? (
                   <Button className="button" cta={() => handleFileChange(null)}>
@@ -183,7 +180,16 @@ const FileSection: React.FC<FileSectionProps> = ({
                   </Button>
                 ) : null}
               </div>
-            ) : (
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div
+          className="container mt-3"
+          {...getRootProps({ style: style as any })}
+        >
+          <div className="vertical-center horizontal-center">
+            <div>
               <div id="select-file">
                 <p>{t("drag&drop")}</p>
                 <p>{t("or")}</p>
@@ -193,10 +199,10 @@ const FileSection: React.FC<FileSectionProps> = ({
                   {t("select")}
                 </Button>
               </div>
-            )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </section>
   );
 };
