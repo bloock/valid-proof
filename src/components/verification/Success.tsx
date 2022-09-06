@@ -198,7 +198,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
             }`}
             style={{ fontWeight: 300 }}
           ></i>
-          <span className="mx-2 text-secondary text-break">
+          <span className="mx-1 text-secondary text-break">
             {Truncate(element?.name as string, 30, "...")}
           </span>
         </div>
@@ -206,8 +206,8 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
       <div>
         <div className="mb-4 alert alert-success">
           <i
-            className="pi pi-check-circle px-1"
-            style={{ fontSize: "1.1rem" }}
+            className="pi pi-check-circle px-2"
+            style={{ fontSize: "1rem" }}
           ></i>
           {t("verified")}
         </div>
@@ -241,9 +241,9 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
                   title={t("document-hash")}
                   description={t("document-hash-description")}
                 >
-                  <p>
+                  <p className="d-flex align-items-center">
                     {t("document-hash")}
-                    <i className="pi pi-question-circle px-1 py-1 text-secondary"></i>
+                    <i className="pi pi-question-circle px-2 py-1 text-secondary"></i>
                   </p>
                 </TooltipComponent>
               </div>
@@ -263,9 +263,9 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
                   className="text-secondary text-uppercase bold-text"
                   style={{ fontSize: "0.8rem" }}
                 >
-                  <p>
+                  <p className="d-flex align-items-center">
                     {t("anchor")}
-                    <i className="pi pi-question-circle px-1 py-1 text-secondary "></i>
+                    <i className="pi pi-question-circle px-2 py-1 text-secondary "></i>
                   </p>
                 </div>
               </TooltipComponent>
@@ -284,9 +284,9 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
                   className="text-secondary text-uppercase bold-text"
                   style={{ fontSize: "0.8rem" }}
                 >
-                  <p>
+                  <p className="d-flex align-items-center">
                     {t("root")}
-                    <i className="pi pi-question-circle px-1 py-1 text-secondary"></i>
+                    <i className="pi pi-question-circle px-2 py-1 text-secondary"></i>
                   </p>
                 </div>
               </TooltipComponent>
