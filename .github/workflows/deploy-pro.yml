@@ -1,0 +1,21 @@
+name: deploy-pro
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Image Tag"
+        required: true
+
+jobs:
+  deploy:
+    name: Deploy to production
+    uses: bloock/actions/.github/workflows/deployer.yml@master
+    with:
+      environment: ${{ inputs.environment }}
+      service: valid-proof
+      container: valid-proof
+      image: enchainte/valid-proof:${{ inputs.tag }}
+    secrets:
+      DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+      KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_PRO }}
