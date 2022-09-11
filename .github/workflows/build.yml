@@ -16,3 +16,7 @@ jobs:
     uses: bloock/actions/.github/workflows/build.yml@master
     with:
       image: enchainteregistry.azurecr.io/enchainte/valid-proof
+    secrets:
+      DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
