@@ -25,7 +25,6 @@ jobs:
     uses: bloock/actions/.github/workflows/deployer.yml@master
     if: github.ref == 'refs/heads/master'
     with:
-      environment: ${{ inputs.environment }}
       service: valid-proof
       container: valid-proof
       image: enchainte/valid-proof:${{ inputs.tag }}
@@ -37,7 +36,6 @@ jobs:
     uses: bloock/actions/.github/workflows/deployer.yml@master
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
     with:
-      environment: ${{ inputs.environment }}
       service: valid-proof
       container: valid-proof
       image: enchainte/valid-proof:${{ inputs.tag }}
