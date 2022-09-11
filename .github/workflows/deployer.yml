@@ -13,16 +13,6 @@ on:
       tag:
         description: "Image Tag"
         required: true
-  workflow_call:
-    inputs:
-      environment:
-        description: 'Environment'
-        type: string
-        required: true
-      tag:
-        description: "Image Tag"
-        type: string
-        required: true
 
 jobs:
   deploy-dev:
