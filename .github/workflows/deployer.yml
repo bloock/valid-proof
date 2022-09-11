@@ -1,0 +1,38 @@
+name: deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment'
+        type: environment
+        required: true
+      image_tag:
+        description: "Image Tag"
+        required: true
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: azure/setup-kubectl@v2.0
+
+      - uses: Azure/k8s-set-context@v2
+        with:
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+
+      -
+        name: Set image
+        run: |
+          DEPLOYMENT=`kubectl get deployments -l service=valid-proof --output 'jsonpath={.items[0].metadata.name}'`
+          kubectl set image --record deployment/$DEPLOYMENT valid-proof=enchainteregistry.azurecr.io/${{ inputs.image_tag }}
+          kubectl rollout status deployment/$DEPLOYMENT
+
+      -
+        name: Set image test
+        run: |
+          DEPLOYMENT=`kubectl get deployments -l service=valid-proof-test --output 'jsonpath={.items[0].metadata.name}'`
+          kubectl set image --record deployment/$DEPLOYMENT valid-proof-test=enchainteregistry.azurecr.io/${{ inputs.image_tag }}
+          kubectl rollout status deployment/$DEPLOYMENT
