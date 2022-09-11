@@ -4,12 +4,14 @@ on:
   push:
     branches:
       - 'master'
-      - 'feature/*'
     tags:
       - 'v*'
+  pull_request:
+    branches:
+      - 'master'
 
 jobs:
-  docker:
+  build:
     runs-on: ubuntu-latest
     steps:
       -
@@ -23,9 +25,15 @@ jobs:
         uses: actions/cache@v3
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          key: ${{ runner.os }}-buildx-${{ hashFiles('yarn-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-buildx-
+            ${{ runner.os }}-buildx-${{ hashFiles('yarn-lock.json') }}
+      -
+        name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: enchainteregistry.azurecr.io/enchainte/valid-proof
       -
         name: Login to Container Registry
         uses: docker/login-action@v2
@@ -39,13 +47,11 @@ jobs:
         with:
           context: .
           push: true
-          tags: enchainteregistry.azurecr.io/enchainte/valid-proof:latest
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
       -
-        # Temp fix
-        # https://github.com/docker/build-push-action/issues/252
-        # https://github.com/moby/buildkit/issues/1896
         name: Move cache
         run: |
           rm -rf /tmp/.buildx-cache
