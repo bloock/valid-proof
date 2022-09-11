@@ -12,6 +12,7 @@ on:
 
 jobs:
   build:
+    name: Build
     uses: bloock/actions/.github/workflows/build.yml@master
     with:
       image: enchainteregistry.azurecr.io/enchainte/valid-proof
