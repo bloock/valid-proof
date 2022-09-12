@@ -265,7 +265,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
                     <FilePreview element={element} />
                   </Col>
                 ) : null}
-                <Col lg={7} className="mb-4 px-4 ml-4">
+                <Col lg={7} className="mb-4 mt-2 px-4">
                   {recordTimestamp && errorStep === null ? (
                     <VerificationSuccess
                       element={element}
