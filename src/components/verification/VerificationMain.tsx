@@ -261,11 +261,11 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
                 } d-flex flex-column-reverse flex-lg-row p-3 `}
               >
                 {element?.name !== "" ? (
-                  <Col lg={5} className="my-4 ">
+                  <Col lg={5} className="my-4 px-4">
                     <FilePreview element={element} />
                   </Col>
                 ) : null}
-                <Col lg={7} className="mb-4 mt-2">
+                <Col lg={7} className="mb-4 mt-2 px-4">
                   {recordTimestamp && errorStep === null ? (
                     <VerificationSuccess
                       element={element}
