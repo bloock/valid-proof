@@ -17,23 +17,27 @@ const VerificationError: React.FC<VerificationErrorProps> = ({
   return (
     <>
       {element?.name ? (
-        <div className={element.name ? "mb-4 mt-2" : "mb-0"}>
+        <div
+          className={
+            element.name ? "mb-4 mt-2 d-flex align-items-center" : "mb-0"
+          }
+        >
           <i
             className={`pi pi-file px-1 py-1 click-icon text-secondary ${
               element.name ? "d-inline" : "d-none"
             }`}
             style={{ fontWeight: 300 }}
           ></i>
-          <span className="mx-2 text-secondary text-break">
+          <span className="mx-1 text-secondary text-break">
             {Truncate(element.name as string, 30, "...")}
           </span>
         </div>
       ) : null}
       <div className="mb-4 alert alert-danger">
-        <p className="font-bold">
+        <p className="font-bold d-flex align-items-center ">
           <i
-            className="pi pi-times-circle px-1 py-1 "
-            style={{ fontSize: "1.1rem" }}
+            className="pi pi-times-circle px-2 py-1 "
+            style={{ fontSize: "1rem" }}
           ></i>
           {t("recordError")}
         </p>
