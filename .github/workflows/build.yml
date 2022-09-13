@@ -33,6 +33,19 @@ jobs:
     secrets:
       DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
       KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_DEV }}
+  deploy-dev-test:
+    name: Deploy test to development
+    uses: bloock/actions/.github/workflows/deployer.yml@master
+    if: github.ref == 'refs/heads/master'
+    needs: [build]
+    with:
+      service: valid-proof-test
+      container: valid-proof-test
+      image: enchainte/valid-proof
+      tag: ${{ needs.build.outputs.tag }}
+    secrets:
+      DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+      KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_DEV }}
   deploy-pro: 
     name: Deploy to production
     uses: bloock/actions/.github/workflows/deployer.yml@master
@@ -41,6 +54,19 @@ jobs:
     with:
       service: valid-proof
       container: valid-proof
+      image: enchainte/valid-proof
+      tag: ${{ needs.build.outputs.tag }}
+    secrets:
+      DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+      KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_PRO }}
+  deploy-pro-test: 
+    name: Deploy to production
+    uses: bloock/actions/.github/workflows/deployer.yml@master
+    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+    needs: [build]
+    with:
+      service: valid-proof-test
+      container: valid-proof-test
       image: enchainte/valid-proof
       tag: ${{ needs.build.outputs.tag }}
     secrets:
