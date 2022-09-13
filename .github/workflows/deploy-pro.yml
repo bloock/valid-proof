@@ -19,3 +19,14 @@ jobs:
     secrets:
       DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
       KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_PRO }}
+  deploy-test:
+    name: Deploy test to production
+    uses: bloock/actions/.github/workflows/deployer.yml@master
+    with:
+      service: valid-proof-test
+      container: valid-proof-test
+      image: enchainte/valid-proof
+      tag: ${{ inputs.tag }}
+    secrets:
+      DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+      KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_PRO }}
