@@ -14,7 +14,7 @@ jobs:
   build:
     name: Build
     uses: bloock/actions/.github/workflows/build.yml@master
-    with:
+    with: 
       image: enchainte/valid-proof
     secrets:
       DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
