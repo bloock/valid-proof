@@ -14,8 +14,8 @@ jobs:
   build:
     name: Build
     uses: bloock/actions/.github/workflows/build.yml@master
-    with:
-      image: enchainteregistry.azurecr.io/enchainte/valid-proof
+    with: 
+      image: enchainte/valid-proof
     secrets:
       DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -28,11 +28,25 @@ jobs:
     with:
       service: valid-proof
       container: valid-proof
-      image: enchainte/valid-proof:${{ inputs.tag }}
+      image: enchainte/valid-proof
+      tag: ${{ needs.build.outputs.tag }}
     secrets:
       DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
       KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_DEV }}
-  deploy-pro:
+  deploy-dev-test:
+    name: Deploy test to development
+    uses: bloock/actions/.github/workflows/deployer.yml@master
+    if: github.ref == 'refs/heads/master'
+    needs: [build]
+    with:
+      service: valid-proof-test
+      container: valid-proof-test
+      image: enchainte/valid-proof
+      tag: ${{ needs.build.outputs.tag }}
+    secrets:
+      DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+      KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_DEV }}
+  deploy-pro: 
     name: Deploy to production
     uses: bloock/actions/.github/workflows/deployer.yml@master
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
@@ -40,7 +54,21 @@ jobs:
     with:
       service: valid-proof
       container: valid-proof
-      image: enchainte/valid-proof:${{ inputs.tag }}
+      image: enchainte/valid-proof
+      tag: ${{ needs.build.outputs.tag }}
+    secrets:
+      DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+      KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_PRO }}
+  deploy-pro-test: 
+    name: Deploy to production
+    uses: bloock/actions/.github/workflows/deployer.yml@master
+    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+    needs: [build]
+    with:
+      service: valid-proof-test
+      container: valid-proof-test
+      image: enchainte/valid-proof
+      tag: ${{ needs.build.outputs.tag }}
     secrets:
       DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
       KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_PRO }}
