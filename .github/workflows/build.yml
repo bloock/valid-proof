@@ -16,6 +16,7 @@ jobs:
     uses: bloock/actions/.github/workflows/version.yml@master
   build:
     name: Build
+    needs: [version]
     uses: bloock/actions/.github/workflows/build.yml@master
     with: 
       image: enchainte/valid-proof
@@ -29,7 +30,7 @@ jobs:
     name: Deploy to development
     uses: bloock/actions/.github/workflows/deployer.yml@master
     if: github.ref == 'refs/heads/master'
-    needs: [build]
+    needs: [version, build]
     with:
       service: valid-proof
       container: valid-proof
@@ -42,7 +43,7 @@ jobs:
     name: Deploy test to development
     uses: bloock/actions/.github/workflows/deployer.yml@master
     if: github.ref == 'refs/heads/master'
-    needs: [build]
+    needs: [version, build]
     with:
       service: valid-proof-test
       container: valid-proof-test
@@ -55,7 +56,7 @@ jobs:
     name: Deploy to production
     uses: bloock/actions/.github/workflows/deployer.yml@master
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
-    needs: [build]
+    needs: [version, build]
     with:
       service: valid-proof
       container: valid-proof
@@ -68,7 +69,7 @@ jobs:
     name: Deploy to production
     uses: bloock/actions/.github/workflows/deployer.yml@master
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
-    needs: [build]
+    needs: [version, build]
     with:
       service: valid-proof-test
       container: valid-proof-test
