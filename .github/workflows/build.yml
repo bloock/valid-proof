@@ -11,12 +11,17 @@ on:
       - 'master'
 
 jobs:
+  version: 
+    name: Version
+    uses: bloock/actions/.github/workflows/version.yml@master
   build:
     name: Build
     uses: bloock/actions/.github/workflows/build.yml@master
     with: 
       image: enchainte/valid-proof
+      tag: ${{ needs.version.outputs.tag }}
     secrets:
+      GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
       DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -29,7 +34,7 @@ jobs:
       service: valid-proof
       container: valid-proof
       image: enchainte/valid-proof
-      tag: ${{ needs.build.outputs.tag }}
+      tag: ${{ needs.version.outputs.tag }}
     secrets:
       DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
       KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_DEV }}
@@ -42,7 +47,7 @@ jobs:
       service: valid-proof-test
       container: valid-proof-test
       image: enchainte/valid-proof
-      tag: ${{ needs.build.outputs.tag }}
+      tag: ${{ needs.version.outputs.tag }}
     secrets:
       DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
       KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_DEV }}
@@ -55,7 +60,7 @@ jobs:
       service: valid-proof
       container: valid-proof
       image: enchainte/valid-proof
-      tag: ${{ needs.build.outputs.tag }}
+      tag: ${{ needs.version.outputs.tag }}
     secrets:
       DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
       KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_PRO }}
@@ -68,7 +73,7 @@ jobs:
       service: valid-proof-test
       container: valid-proof-test
       image: enchainte/valid-proof
-      tag: ${{ needs.build.outputs.tag }}
+      tag: ${{ needs.version.outputs.tag }}
     secrets:
       DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
       KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_PRO }}
