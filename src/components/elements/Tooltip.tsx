@@ -18,7 +18,6 @@ const TooltipComponent: React.FC<TooltipProps> = ({
       <Popover.Body>{description}</Popover.Body>
     </Popover>
   );
-
   return (
     <OverlayTrigger overlay={popover} placement="top" trigger="hover">
       {children}

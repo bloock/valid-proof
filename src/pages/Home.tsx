@@ -7,7 +7,7 @@ import "primereact/resources/themes/saga-blue/theme.css";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import FileSection from "../components/documents/UploadFile";
 import VerificationSection from "../components/verification/VerificationMain";
 import demoimage3 from "../images/get_results.jpg";
@@ -29,7 +29,6 @@ const Home = () => {
   const { t } = useTranslation("home");
 
   const session = getCookie("hasValidated");
-  const navigate = useNavigate();
 
   const [element, setElement] = useState<FileElement | null>(null);
   const [validateFromUrl, setValidateFromUrl] = useState<boolean>(false);
@@ -272,7 +271,7 @@ const Home = () => {
                       <a
                         className="px-3 align-items-center d-flex flex-column"
                         style={{ width: "49%" }}
-                        href={`${process.env.PUBLIC_URL}/pdf/valid_certificate.pdf`}
+                        href={`${process.env.PUBLIC_URL}/pdf/valid_certificate_file.pdf`}
                         download
                       >
                         <img
