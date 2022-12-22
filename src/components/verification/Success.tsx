@@ -248,7 +248,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
                 </TooltipComponent>
               </div>
               <div style={{ overflowWrap: "break-word" }}>
-                {element?.record && element.record.getHash()}
+                {element?.record && element.record}
               </div>
 
               <Divider

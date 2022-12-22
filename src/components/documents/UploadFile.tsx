@@ -1,4 +1,4 @@
-import { Record } from "@bloock/sdk";
+import { RecordBuilder } from "@bloock/sdk";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
@@ -124,30 +124,55 @@ const FileSection: React.FC<FileSectionProps> = ({
   const handleFileChange = async (file: File | null) => {
     if (file != null) {
       let fileType = fileTypeDetect(file.type);
-      switch (fileType) {
-        case "application/pdf":
-          setElement({
-            name: file?.name,
-            value: await fileToBytes(file),
-            record: await Record.fromPDF(await fileToBytes(file)),
-          });
-          break;
-        case "application/json":
-          setElement({
-            name: file?.name,
-            value: await fileToJSON(file),
-            record: await Record.fromJSON(await fileToJSON(file)),
-          });
+      let record;
+      let records = [];
+      try {
+        switch (fileType) {
+          case "application/pdf":
+            record = await RecordBuilder.fromFile(
+              await fileToBytes(file)
+            ).build();
 
-          break;
-        default:
-          setElement({
-            name: file?.name,
-            value: await fileToBytes(file),
-            record: Record.fromTypedArray(await fileToBytes(file)),
-          });
+            let pdfFileHash = await record.getHash();
+            records.push(pdfFileHash);
+            console.log(records);
+            setElement({
+              name: file?.name,
+              value: await fileToBytes(file),
+              record: records,
+            });
+            break;
+          case "application/json":
+            record = await RecordBuilder.fromJson(
+              await fileToJSON(file)
+            ).build();
+            let jsonFileHash = await record.getHash();
+            records.push(jsonFileHash);
 
-          break;
+            setElement({
+              name: file?.name,
+              value: await fileToJSON(file),
+              record: records,
+            });
+
+            break;
+          default:
+            record = await RecordBuilder.fromFile(
+              await fileToBytes(file)
+            ).build();
+            let hash = await record.getHash();
+            records.push(hash);
+
+            setElement({
+              name: file?.name,
+              value: await fileToBytes(file),
+              record: records,
+            });
+
+            break;
+        }
+      } catch (e) {
+        console.log(e);
       }
     } else {
       onErrorFetchDocument(false);

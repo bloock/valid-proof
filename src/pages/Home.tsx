@@ -1,4 +1,4 @@
-import { Record, RecordBuilder } from "@bloock/sdk";
+import { RecordBuilder } from "@bloock/sdk";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "primeicons/primeicons.css";
@@ -22,7 +22,7 @@ import { useIsUrl } from "../utils/use-is-url";
 export type FileElement = {
   name?: string | null;
   value?: any | null;
-  record?: Record | null;
+  record?: any | null;
 };
 
 const Home = () => {
@@ -39,10 +39,14 @@ const Home = () => {
 
   async function decodedDataLoader() {
     if (decodedData) {
+      let record = await RecordBuilder.fromString(decodedData).build();
+      const records = [];
+      const hash = await record.getHash();
+      records.push(hash);
       setElement({
         name: Truncate(decodedData as string, 30, "..."),
         value: decodedData,
-        record: await RecordBuilder.fromString(decodedData).build(),
+        record: records,
       });
     } else {
       setElement(null);
@@ -89,16 +93,24 @@ const Home = () => {
 
     if (error === undefined) {
       if (isJSONValid(string)) {
+        let record = await RecordBuilder.fromJson(JSON.parse(string)).build();
+        const records = [];
+        const hash = await record.getHash();
+        records.push(hash);
         setElement({
           name: urlParam.href,
           value: JSON.parse(string),
-          record: await RecordBuilder.fromJson(JSON.parse(string)).build(),
+          record: records,
         });
       } else if (fileDetect(urlParam.href)) {
+        let record = await RecordBuilder.fromFile(array).build();
+        const records = [];
+        const hash = await record.getHash();
+        records.push(hash);
         setElement({
           name: urlParam.href,
           value: array,
-          record: await RecordBuilder.fromFile(array).build(),
+          record: records,
         });
       } else {
         setElement(null);

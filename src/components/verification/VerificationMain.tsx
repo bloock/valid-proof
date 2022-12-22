@@ -1,4 +1,4 @@
-import { BloockClient, Network, Proof, Record } from "@bloock/sdk";
+import { Bloock, BloockClient, Network, Proof } from "@bloock/sdk";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
@@ -13,8 +13,8 @@ import StepperVerification from "../elements/Stepper";
 import VerificationError from "./Error";
 import VerificationSuccess from "./Success";
 
-const apiKey = (window as any).env.API_KEY;
-const client = new BloockClient(apiKey);
+Bloock.setApiKey((window as any).env.API_KEY);
+const client = new BloockClient();
 
 const colors = {
   success: "var(--primary-bg-color)",
@@ -36,7 +36,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   const { t } = useTranslation("verification");
 
   const [recordProof, setRecordProof] = useState<Proof | null>(null);
-  const [recordRoot, setRecordRoot] = useState<Record | null>(null);
+  const [recordRoot, setRecordRoot] = useState<string | null>(null);
   const [recordTimestamp, setRecordTimestamp] = useState<number | null>(null);
   const [errorStep, setErrorStep] = useState<number | null>(null);
   const [activeStep, setActiveStep] = useState<number | null>(null);
@@ -48,6 +48,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
+  console.log(element);
   useEffect(() => {
     setErrorStep(null);
     setRecordProof(null);
@@ -70,7 +71,8 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     const getProof = async () => {
       if (element) {
         try {
-          const proof = await client.getProof([element.record as Record]);
+          const proof = await client.getProof([element.record as any]);
+          console.log(proof);
           if (proof != null) {
             setActiveStep(1);
             setRecordProof(proof);
@@ -90,11 +92,12 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     const verifyProof = async () => {
       if (recordProof != null) {
         try {
-          const record = await client.verifyProof(recordProof);
-          if (record) {
+          const root = await client.verifyProof(recordProof);
+          console.log(root);
+          if (root) {
             setActiveStep(2);
 
-            setRecordRoot(record);
+            setRecordRoot(root);
           } else {
             setErrorStep(2);
           }
@@ -122,18 +125,12 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
             case "gnosis_chain":
               network = Network.GNOSIS_CHAIN;
               break;
-            case "ethereum_rinkeby":
-              network = Network.ETHEREUM_RINKEBY;
-              break;
             case "bloock_chain":
               network = Network.BLOOCK_CHAIN;
               break;
           }
 
-          const timestamp = await client.validateRoot(
-            recordRoot as Record,
-            network
-          );
+          const timestamp = await client.validateRoot(recordRoot, network);
           if (timestamp !== 0 && timestamp !== null) {
             setActiveStep(3);
             setRecordTimestamp(timestamp);
