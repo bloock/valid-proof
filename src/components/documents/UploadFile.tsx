@@ -129,44 +129,31 @@ const FileSection: React.FC<FileSectionProps> = ({
       try {
         switch (fileType) {
           case "application/pdf":
-            record = await RecordBuilder.fromFile(
-              await fileToBytes(file)
-            ).build();
-
-            let pdfFileHash = await record.getHash();
-            records.push(pdfFileHash);
-            console.log(records);
             setElement({
               name: file?.name,
               value: await fileToBytes(file),
-              record: records,
+              record: await RecordBuilder.fromFile(
+                await fileToBytes(file)
+              ).build(),
             });
             break;
           case "application/json":
-            record = await RecordBuilder.fromJson(
-              await fileToJSON(file)
-            ).build();
-            let jsonFileHash = await record.getHash();
-            records.push(jsonFileHash);
-
             setElement({
               name: file?.name,
               value: await fileToJSON(file),
-              record: records,
+              record: await RecordBuilder.fromJson(
+                await fileToJSON(file)
+              ).build(),
             });
 
             break;
           default:
-            record = await RecordBuilder.fromFile(
-              await fileToBytes(file)
-            ).build();
-            let hash = await record.getHash();
-            records.push(hash);
-
             setElement({
               name: file?.name,
               value: await fileToBytes(file),
-              record: records,
+              record: await RecordBuilder.fromFile(
+                await fileToBytes(file)
+              ).build(),
             });
 
             break;

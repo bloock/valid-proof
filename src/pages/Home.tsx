@@ -1,6 +1,7 @@
-import { RecordBuilder } from "@bloock/sdk";
+import { Record, RecordBuilder } from "@bloock/sdk";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Buffer } from "buffer";
 import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
@@ -20,9 +21,9 @@ import { useIsJson } from "../utils/use-is-json";
 import { useIsUrl } from "../utils/use-is-url";
 
 export type FileElement = {
-  name?: string | null;
-  value?: any | null;
-  record?: any | null;
+  name?: string;
+  value?: any;
+  record?: Record;
 };
 
 const Home = () => {
@@ -39,14 +40,10 @@ const Home = () => {
 
   async function decodedDataLoader() {
     if (decodedData) {
-      let record = await RecordBuilder.fromString(decodedData).build();
-      const records = [];
-      const hash = await record.getHash();
-      records.push(hash);
       setElement({
         name: Truncate(decodedData as string, 30, "..."),
         value: decodedData,
-        record: records,
+        record: await RecordBuilder.fromString(decodedData).build(),
       });
     } else {
       setElement(null);
@@ -93,24 +90,16 @@ const Home = () => {
 
     if (error === undefined) {
       if (isJSONValid(string)) {
-        let record = await RecordBuilder.fromJson(JSON.parse(string)).build();
-        const records = [];
-        const hash = await record.getHash();
-        records.push(hash);
         setElement({
           name: urlParam.href,
           value: JSON.parse(string),
-          record: records,
+          record: await RecordBuilder.fromJson(JSON.parse(string)).build(),
         });
       } else if (fileDetect(urlParam.href)) {
-        let record = await RecordBuilder.fromFile(array).build();
-        const records = [];
-        const hash = await record.getHash();
-        records.push(hash);
         setElement({
           name: urlParam.href,
           value: array,
-          record: records,
+          record: await RecordBuilder.fromFile(array).build(),
         });
       } else {
         setElement(null);

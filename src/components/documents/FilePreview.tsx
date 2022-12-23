@@ -1,4 +1,5 @@
 import loadable from "@loadable/component";
+import { Buffer } from "buffer";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Document, Page, pdfjs } from "react-pdf";

@@ -28,6 +28,13 @@ type VerificationSectionProps = {
   onErrorFetchDocument: (error: boolean) => any;
 };
 
+export type RecordNetwork = {
+  name: string;
+  state: string;
+  txHash: string;
+  timestamp: number;
+};
+
 const VerificationSection: React.FC<VerificationSectionProps> = ({
   element,
   errorFetchDocument,
@@ -37,7 +44,9 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
 
   const [recordProof, setRecordProof] = useState<Proof | null>(null);
   const [recordRoot, setRecordRoot] = useState<string | null>(null);
-  const [recordTimestamp, setRecordTimestamp] = useState<number | null>(null);
+  const [recordNetworks, setRecordNetworks] = useState<RecordNetwork[] | null>(
+    null
+  );
   const [errorStep, setErrorStep] = useState<number | null>(null);
   const [activeStep, setActiveStep] = useState<number | null>(null);
   const [componentTransition, setComponentTransition] = useState(false);
@@ -48,12 +57,11 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
-  console.log(element);
   useEffect(() => {
     setErrorStep(null);
     setRecordProof(null);
     setRecordRoot(null);
-    setRecordTimestamp(null);
+    setRecordNetworks(null);
   }, [element]);
 
   useEffect(() => {
@@ -69,9 +77,9 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
 
   useEffect(() => {
     const getProof = async () => {
-      if (element) {
+      if (element && element.record) {
         try {
-          const proof = await client.getProof([element.record as any]);
+          const proof = await client.getProof([element.record]);
           console.log(proof);
           if (proof != null) {
             setActiveStep(1);
@@ -80,6 +88,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
             setErrorStep(1);
           }
         } catch (e) {
+          console.log(e);
           setErrorStep(1);
         }
       }
@@ -114,29 +123,39 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
 
   useEffect(() => {
     const getRecordTimestamp = async () => {
-      if (recordRoot != null) {
+      if (recordRoot != null && recordProof) {
         try {
-          let recordNetwork = (recordProof as any).anchor.networks[0];
-          let network = Network.ETHEREUM_MAINNET;
-          switch (recordNetwork.name) {
-            case "ethereum_mainnet":
-              network = Network.ETHEREUM_MAINNET;
-              break;
-            case "gnosis_chain":
-              network = Network.GNOSIS_CHAIN;
-              break;
-            case "bloock_chain":
-              network = Network.BLOOCK_CHAIN;
-              break;
+          let networks = [];
+          for (let recordNetwork of recordProof.anchor.networks) {
+            let network = Network.ETHEREUM_MAINNET;
+            switch (recordNetwork.name) {
+              case "ethereum_mainnet":
+                network = Network.ETHEREUM_MAINNET;
+                break;
+              case "gnosis_chain":
+                network = Network.GNOSIS_CHAIN;
+                break;
+              case "bloock_chain":
+                network = Network.BLOOCK_CHAIN;
+                break;
+            }
+
+            const timestamp = await client.validateRoot(recordRoot, network);
+
+            if (timestamp !== 0 && timestamp !== null) {
+              networks.push({
+                name: recordNetwork.name,
+                txHash: recordNetwork.txHash,
+                state: recordNetwork.state,
+                timestamp: timestamp,
+              });
+            } else {
+              setErrorStep(3);
+            }
           }
 
-          const timestamp = await client.validateRoot(recordRoot, network);
-          if (timestamp !== 0 && timestamp !== null) {
-            setActiveStep(3);
-            setRecordTimestamp(timestamp);
-          } else {
-            setErrorStep(3);
-          }
+          setRecordNetworks(networks);
+          setActiveStep(3);
         } catch (e) {
           setErrorStep(3);
         }
@@ -149,10 +168,10 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   }, [recordRoot]);
 
   useEffect(() => {
-    if (recordTimestamp || errorStep !== null) {
+    if (recordNetworks || errorStep !== null) {
       setTimeout(() => setComponentTransition(true), 500);
     }
-  }, [recordTimestamp, errorStep]);
+  }, [recordNetworks, errorStep]);
 
   useEffect(() => {
     if (element) {
@@ -263,10 +282,16 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
                   </Col>
                 ) : null}
                 <Col lg={7} className="mb-4 mt-2 px-4">
-                  {recordTimestamp && errorStep === null ? (
+                  {element &&
+                  recordRoot &&
+                  recordProof &&
+                  recordNetworks &&
+                  errorStep === null ? (
                     <VerificationSuccess
                       element={element}
+                      recordRoot={recordRoot}
                       recordProof={recordProof}
+                      recordNetworks={recordNetworks}
                     />
                   ) : (
                     <VerificationError
