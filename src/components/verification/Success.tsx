@@ -6,143 +6,180 @@ import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Divider } from "primereact/divider";
 import { Tag } from "primereact/tag";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FileElement } from "../../pages/Home";
 import { Truncate } from "../../utils/truncate";
 import TooltipComponent from "../elements/Tooltip";
+import { RecordNetwork } from "./VerificationMain";
 
 type VerificationSuccessProps = {
-  element: FileElement | null;
-  recordProof: Proof | null;
+  element: FileElement;
+  recordRoot: string;
+  recordProof: Proof;
+  recordNetworks: RecordNetwork[];
 };
 
 const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
   element,
   recordProof,
+  recordRoot,
+  recordNetworks,
 }) => {
   const { t } = useTranslation("success");
 
   const [expandedRows, setExpandedRows] = useState<any>(null);
+  const [recordHash, setRecordHash] = useState<string>("");
+  const [timestamp, setTimestamp] = useState<string>("");
 
-  const timestamp = moment(
-    (recordProof as any)?.anchor.networks[0].created_at * 1000
-  ).format("DD-MM-YYYY HH:mm:ss");
+  useEffect(() => {
+    let t = recordNetworks.map((network) => network.timestamp).sort()[
+      recordNetworks.length - 1
+    ];
 
-  const tableNetworksData = (recordProof as any)?.anchor.networks.map(
-    (network: any) => {
-      const dates = moment(network.created_at * 1000).format(
-        "DD-MM-YYYY HH:mm:ss"
-      );
+    setTimestamp(moment(t * 1000).format("DD-MM-YYYY HH:mm:ss"));
+  }, [recordNetworks]);
 
-      return {
-        created_at: dates,
-        name: network.name,
-        label: t(network.name),
-        state: (
-          <Tag
-            icon={
-              network.state === "Confirmed"
-                ? "pi pi-check-circle"
-                : "pi pi-exclamation-triangle"
-            }
-            style={
-              network.state === "Confirmed"
-                ? {
-                    fontWeight: "100",
-                    backgroundColor: "#DEF5F3",
-                    color: "#719d8c",
-                  }
-                : {
-                    fontWeight: "100",
-                    backgroundColor: "#fee9d8",
-                    color: "#9f978b",
-                  }
-            }
-            severity={network.state === "Confirmed" ? "success" : "warning"}
-            value={network.state}
-          ></Tag>
-        ),
-        tx_hash: network.tx_hash,
-      };
-    }
-  );
-
-  const networksCardData = (recordProof as any)?.anchor.networks.map(
-    (network: any) => {
-      const dates = moment(network.created_at * 1000).format(
-        "DD-MM-YYYY HH:mm:ss"
-      );
-
-      let explorerUrl = `https://etherscan.io/tx/${network.tx_hash}`;
-      switch (network.name) {
-        case "ethereum_mainnet":
-          explorerUrl = `https://etherscan.io/tx/${network.tx_hash}`;
-          break;
-        case "ethereum_rinkeby":
-          explorerUrl = `https://rinkeby.etherscan.io/tx/${network.tx_hash}`;
-          break;
-        case "gnosis_chain":
-          explorerUrl = `https://blockscout.com/xdai/mainnet/tx/${network.tx_hash}`;
-          break;
-        case "polygon_chain":
-          explorerUrl = `https://polygonscan.com/tx/${network.tx_hash}`;
-          break;
-        case "bloock_chain":
-          explorerUrl = "";
-          break;
+  useEffect(() => {
+    const getRoot = async () => {
+      if (element.record) {
+        try {
+          const hash = await element.record?.getHash();
+          setRecordHash(hash);
+        } catch (e) {
+          console.log(e);
+        }
       }
+    };
 
-      return (
-        <div className="card">
-          <div className="card-body" style={{ fontSize: "0.9rem" }}>
-            <div className="d-flex justify-content-between align-items-center py-1">
-              <p className="bold-text text-secondary ">{t("name")}</p>
-              <div className="d-flex align-items-center">
-                <p style={{ textAlign: "right" }}>
-                  {t(network.name && network.name)}
-                </p>
-                <Button
-                  style={{ marginLeft: "7px", width: "15%" }}
-                  icon="p-button-icon p-c pi pi-external-link"
-                  onClick={() => window.open(explorerUrl, "_blank")}
-                />
-              </div>
-            </div>
-            <div className="d-flex justify-content-between py-1">
-              <p className="bold-text text-secondary">{t("state")}</p>
-              <Tag
-                icon={
-                  network.state === "Confirmed"
-                    ? "pi pi-check-circle"
-                    : "pi pi-exclamation-triangle"
+    getRoot();
+  }, [element]);
+
+  useEffect(() => {
+    const getHash = async () => {
+      if (element.record) {
+        try {
+          const hash = await element.record?.getHash();
+          setRecordHash(hash);
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    };
+
+    getHash();
+  }, [element]);
+
+  const tableNetworksData = recordNetworks.map((network) => {
+    const dates = moment(network.timestamp * 1000).format(
+      "DD-MM-YYYY HH:mm:ss"
+    );
+
+    return {
+      created_at: dates,
+      name: network.name,
+      label: t(network.name),
+      state: (
+        <Tag
+          icon={
+            network.state === "Confirmed"
+              ? "pi pi-check-circle"
+              : "pi pi-exclamation-triangle"
+          }
+          style={
+            network.state === "Confirmed"
+              ? {
+                  fontWeight: "100",
+                  backgroundColor: "#DEF5F3",
+                  color: "#719d8c",
                 }
-                style={
-                  network.state === "Confirmed"
-                    ? {
-                        fontWeight: "100",
-                        backgroundColor: "#DEF5F3",
-                        color: "#9CB3B1",
-                      }
-                    : {
-                        fontWeight: "100",
-                        backgroundColor: "#DEF5F3",
-                        color: "#B3AA9C",
-                      }
+              : {
+                  fontWeight: "100",
+                  backgroundColor: "#fee9d8",
+                  color: "#9f978b",
                 }
-                severity={network.state === "Confirmed" ? "success" : "warning"}
-                value={network?.state}
-              ></Tag>
-            </div>
-            <div className="d-flex justify-content-between py-1">
-              <p className="bold-text text-secondary">{t("timestamp")}</p>
-              <p style={{ textAlign: "right" }}>{dates && dates}</p>
+          }
+          severity={network.state === "Confirmed" ? "success" : "warning"}
+          value={network.state}
+        ></Tag>
+      ),
+      tx_hash: network.txHash,
+    };
+  });
+
+  const networksCardData = recordNetworks.map((network) => {
+    const dates = moment(network.timestamp * 1000).format(
+      "DD-MM-YYYY HH:mm:ss"
+    );
+
+    let explorerUrl = `https://etherscan.io/tx/${network.txHash}`;
+    switch (network.name) {
+      case "ethereum_mainnet":
+        explorerUrl = `https://etherscan.io/tx/${network.txHash}`;
+        break;
+      case "ethereum_rinkeby":
+        explorerUrl = `https://rinkeby.etherscan.io/tx/${network.txHash}`;
+        break;
+      case "gnosis_chain":
+        explorerUrl = `https://blockscout.com/xdai/mainnet/tx/${network.txHash}`;
+        break;
+      case "polygon_chain":
+        explorerUrl = `https://polygonscan.com/tx/${network.txHash}`;
+        break;
+      case "bloock_chain":
+        explorerUrl = "";
+        break;
+    }
+
+    return (
+      <div className="card">
+        <div className="card-body" style={{ fontSize: "0.9rem" }}>
+          <div className="d-flex justify-content-between align-items-center py-1">
+            <p className="bold-text text-secondary ">{t("name")}</p>
+            <div className="d-flex align-items-center">
+              <p style={{ textAlign: "right" }}>
+                {t(network.name && network.name)}
+              </p>
+              <Button
+                style={{ marginLeft: "7px", width: "15%" }}
+                icon="p-button-icon p-c pi pi-external-link"
+                onClick={() => window.open(explorerUrl, "_blank")}
+              />
             </div>
           </div>
+          <div className="d-flex justify-content-between py-1">
+            <p className="bold-text text-secondary">{t("state")}</p>
+            <Tag
+              icon={
+                network.state === "Confirmed"
+                  ? "pi pi-check-circle"
+                  : "pi pi-exclamation-triangle"
+              }
+              style={
+                network.state === "Confirmed"
+                  ? {
+                      fontWeight: "100",
+                      backgroundColor: "#DEF5F3",
+                      color: "#9CB3B1",
+                    }
+                  : {
+                      fontWeight: "100",
+                      backgroundColor: "#DEF5F3",
+                      color: "#B3AA9C",
+                    }
+              }
+              severity={network.state === "Confirmed" ? "success" : "warning"}
+              value={network?.state}
+            ></Tag>
+          </div>
+          <div className="d-flex justify-content-between py-1">
+            <p className="bold-text text-secondary">{t("timestamp")}</p>
+            <p style={{ textAlign: "right" }}>{dates && dates}</p>
+          </div>
         </div>
-      );
-    }
-  );
+      </div>
+    );
+  });
 
   const rowExpansionTemplate = (network: any) => {
     let explorerUrl = `https://etherscan.io/tx/${network.tx_hash}`;
@@ -247,9 +284,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
                   </p>
                 </TooltipComponent>
               </div>
-              <div style={{ overflowWrap: "break-word" }}>
-                {element?.record && element.record.getHash()}
-              </div>
+              <div style={{ overflowWrap: "break-word" }}>{recordHash}</div>
 
               <Divider
                 className="my-3"
@@ -270,7 +305,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
                 </div>
               </TooltipComponent>
 
-              <div>{(recordProof as any).anchor.anchor_id}</div>
+              <div>{recordProof.anchor.anchorID}</div>
 
               <Divider
                 className="my-3"
@@ -292,7 +327,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
               </TooltipComponent>
 
               <div style={{ overflowWrap: "break-word" }}>
-                <div>{(recordProof as any).root}</div>
+                <div>{recordRoot}</div>
               </div>
               <Divider
                 className="my-3"

@@ -1,6 +1,7 @@
-import { Record } from "@bloock/sdk";
+import { Record, RecordBuilder } from "@bloock/sdk";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Buffer } from "buffer";
 import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
@@ -20,9 +21,9 @@ import { useIsJson } from "../utils/use-is-json";
 import { useIsUrl } from "../utils/use-is-url";
 
 export type FileElement = {
-  name?: string | null;
-  value?: any | null;
-  record?: Record | null;
+  name?: string;
+  value?: any;
+  record?: Record;
 };
 
 const Home = () => {
@@ -36,43 +37,13 @@ const Home = () => {
   const [searchParams] = useSearchParams();
   const [errorFetchDocument, setErrorFetchDocument] = useState<boolean>(false);
   const [decodedData, setDecodedData] = useState<string | null>(null);
-  const [recordUrl, setRecordUrl] = useState<string | null>(null);
-
-  const getRecordFromUrl = async () => {
-    if (recordUrl) {
-      setElement({
-        name: "",
-        value: "",
-        record: await Record.fromHash(recordUrl),
-      });
-    } else {
-      setElement(null);
-    }
-  };
-
-  useEffect(() => {
-    const hashQuery = searchParams.get("hash");
-    const hashFormatRegex = /^[a-f0-9]{64}$/gi;
-
-    if (hashQuery) {
-      if (hashFormatRegex.test(hashQuery as any)) {
-        setRecordUrl(hashQuery);
-      } else {
-        setErrorFetchDocument(true);
-      }
-    }
-
-    if (recordUrl) {
-      getRecordFromUrl();
-    }
-  }, [searchParams, recordUrl]);
 
   async function decodedDataLoader() {
     if (decodedData) {
       setElement({
         name: Truncate(decodedData as string, 30, "..."),
         value: decodedData,
-        record: await Record.fromString(decodedData),
+        record: await RecordBuilder.fromString(decodedData).build(),
       });
     } else {
       setElement(null);
@@ -122,19 +93,13 @@ const Home = () => {
         setElement({
           name: urlParam.href,
           value: JSON.parse(string),
-          record: await Record.fromJSON(JSON.parse(string)),
-        });
-      } else if (fileDetect(urlParam.href) === "application/pdf") {
-        setElement({
-          name: urlParam.href,
-          value: urlParam.href,
-          record: await Record.fromPDF(array),
+          record: await RecordBuilder.fromJson(JSON.parse(string)).build(),
         });
       } else if (fileDetect(urlParam.href)) {
         setElement({
           name: urlParam.href,
           value: array,
-          record: await Record.fromTypedArray(array),
+          record: await RecordBuilder.fromFile(array).build(),
         });
       } else {
         setElement(null);
