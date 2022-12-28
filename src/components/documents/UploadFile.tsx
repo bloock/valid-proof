@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { FileElement } from "../../pages/Home";
 import "../../styles.css";
-import { useFileType } from "../../utils/use-file-type";
+import { getFileType } from "../../utils/use-file-type";
 import Button from "../elements/Button";
 
 type FileSectionProps = {
@@ -57,7 +57,6 @@ const FileSection: React.FC<FileSectionProps> = ({
   const { t } = useTranslation("upload-file");
 
   const [element, setElement] = useState<FileElement | null>(elementType);
-  const fileTypeDetect = useFileType;
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length >= 0) {
@@ -123,9 +122,8 @@ const FileSection: React.FC<FileSectionProps> = ({
 
   const handleFileChange = async (file: File | null) => {
     if (file != null) {
-      let fileType = fileTypeDetect(file.type);
-      let record;
-      let records = [];
+      let bytes = await file.arrayBuffer();
+      let fileType = await getFileType(new Uint8Array(bytes));
       try {
         switch (fileType) {
           case "application/pdf":
