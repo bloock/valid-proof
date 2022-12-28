@@ -1,16 +1,17 @@
 import loadable from "@loadable/component";
 import { Buffer } from "buffer";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Document, Page, pdfjs } from "react-pdf";
-import { useFileType } from "../../utils/use-file-type";
+import { FileElement } from "../../pages/Home";
+import { getFileType } from "../../utils/use-file-type";
 import { useIsJson } from "../../utils/use-is-json";
 import { useIsUrl } from "../../utils/use-is-url";
 
 const ReactJson = loadable(() => import("react-json-view"));
 
 type FilePreviewProps = {
-  element: any;
+  element: FileElement;
 };
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
@@ -18,10 +19,11 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
   const { t } = useTranslation("file-preview");
 
-  const fileDetect = useFileType;
   const isJSONValid = useIsJson;
   const isURL = useIsUrl;
-  let detectedFile = fileDetect(element);
+
+  const [elementMimeType, setElementMimeType] = useState<string | null>(null);
+  const [srcElement, setSrcElement] = useState<any>(0);
   const [numPages, setNumPage] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState(1);
 
@@ -29,28 +31,37 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
     setNumPage(pdfInfo.numPages);
   }
 
-  let srcElement: any;
-
-  if (element) {
-    if (isURL(element?.name)) {
-      srcElement = element.name;
-    } else if (isJSONValid(element.value)) {
-      srcElement = element.value;
-    } else if (element.value instanceof Uint8Array) {
-      if (detectedFile === "application/json") {
-        srcElement = element.value;
-      } else if (detectedFile) {
-        let btoaElement = Buffer.from(element.value).toString("base64");
-        srcElement = `data:${detectedFile};base64,${btoaElement}`;
-      } else {
-        srcElement = null;
-      }
-    } else {
-      srcElement = null;
+  useEffect(() => {
+    async function fileType(value: any) {
+      setElementMimeType(getFileType(value));
     }
-  }
+
+    fileType(element.value);
+  }, [element]);
+
+  useEffect(() => {
+    if (element) {
+      if (isURL(element?.name)) {
+        setSrcElement(element.name);
+      } else if (isJSONValid(element.value)) {
+        setSrcElement(element.value);
+      } else if (element.value instanceof Uint8Array) {
+        if (elementMimeType === "application/json") {
+          setSrcElement(element.value);
+        } else if (elementMimeType) {
+          let btoaElement = Buffer.from(element.value).toString("base64");
+          setSrcElement(`data:${elementMimeType};base64,${btoaElement}`);
+        } else {
+          setSrcElement(null);
+        }
+      } else {
+        setSrcElement(null);
+      }
+    }
+  }, [element, elementMimeType]);
+
   function previewBasedOnMimeType() {
-    switch (detectedFile) {
+    switch (elementMimeType) {
       case "image/png":
       case "image/jpg":
       case "image/jpeg":

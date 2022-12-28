@@ -1,4 +1,4 @@
-import { lookup } from "mime-types";
+import filetype from "magic-bytes.js";
 
 enum FileType {
   "image/jpg",
@@ -10,33 +10,15 @@ enum FileType {
   "application/x-msdownload",
 }
 
-export const useFileType = (file: any) => {
-  if (file) {
-    let fileEncode;
-    if (file?.value) {
-      fileEncode = lookup(file.name);
-      if (fileEncode) {
-        if (Object.values(FileType).includes(fileEncode)) {
-          return fileEncode;
-        } else {
-          return null;
-        }
-      }
-    } else if (Object.values(FileType).includes(file)) {
-      return file;
-    } else {
-      fileEncode = lookup(file);
-      if (fileEncode) {
-        if (Object.values(FileType).includes(fileEncode)) {
-          return fileEncode;
-        } else {
-          return null;
-        }
-      } else {
-        return null;
-      }
+export const getFileType = (file: Uint8Array) => {
+  try {
+    let type = filetype(file);
+    if (type.length > 0) {
+      return type[0].mime || null;
     }
-  } else {
+
+    return null;
+  } catch (e) {
     return null;
   }
 };

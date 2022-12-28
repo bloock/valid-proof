@@ -16,7 +16,7 @@ import demoimage2 from "../images/verify_documents.jpg";
 import "../styles.css";
 import { getCookie } from "../utils/cookie";
 import { Truncate } from "../utils/truncate";
-import { useFileType } from "../utils/use-file-type";
+import { getFileType } from "../utils/use-file-type";
 import { useIsJson } from "../utils/use-is-json";
 import { useIsUrl } from "../utils/use-is-url";
 
@@ -69,7 +69,6 @@ const Home = () => {
 
   async function fileLoader(urlParam: any) {
     const isJSONValid = useIsJson;
-    const fileDetect = useFileType;
 
     urlParam = new URL(urlParam);
     let error;
@@ -83,10 +82,10 @@ const Home = () => {
       })
       .catch((e) => {
         error = e;
+        return Buffer.from([]);
       });
 
-    let array = new Uint8Array(bytes != undefined ? bytes : []);
-    var string = new TextDecoder().decode(array);
+    var string = new TextDecoder().decode(bytes);
 
     if (error === undefined) {
       if (isJSONValid(string)) {
@@ -95,11 +94,11 @@ const Home = () => {
           value: JSON.parse(string),
           record: await RecordBuilder.fromJson(JSON.parse(string)).build(),
         });
-      } else if (fileDetect(urlParam.href)) {
+      } else if (await getFileType(bytes)) {
         setElement({
           name: urlParam.href,
-          value: array,
-          record: await RecordBuilder.fromFile(array).build(),
+          value: bytes,
+          record: await RecordBuilder.fromFile(bytes).build(),
         });
       } else {
         setElement(null);

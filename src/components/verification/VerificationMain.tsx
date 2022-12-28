@@ -79,6 +79,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     const getProof = async () => {
       if (element && element.record) {
         try {
+          console.log(element, await element.record.getHash());
           const proof = await client.getProof([element.record]);
           console.log(proof);
           if (proof != null) {
@@ -102,7 +103,6 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
       if (recordProof != null) {
         try {
           const root = await client.verifyProof(recordProof);
-          console.log(root);
           if (root) {
             setActiveStep(2);
 
@@ -276,7 +276,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
                     : "justify-content-between"
                 } d-flex flex-column-reverse flex-lg-row p-3 `}
               >
-                {element?.name !== "" ? (
+                {element && element?.name !== "" ? (
                   <Col lg={5} className="my-4 px-4">
                     <FilePreview element={element} />
                   </Col>
