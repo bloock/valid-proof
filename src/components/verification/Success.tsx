@@ -359,6 +359,75 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
             </DataTable>
           </div>
           <div className="networks-cards-info">{networksCardData}</div>
+
+          <TooltipComponent
+            title={t("authorization")}
+            description={t("authorization-description")}
+          >
+            <div
+              className="text-secondary text-uppercase bold-text"
+              style={{ fontSize: "0.8rem" }}
+            >
+              <p className="d-flex align-items-center">
+                {t("authorization")}
+                <i className="pi pi-question-circle px-2 py-1 text-secondary"></i>
+              </p>
+            </div>
+          </TooltipComponent>
+
+          <div style={{ overflowWrap: "break-word" }}>
+            <div>Yes</div>
+          </div>
+          <Divider
+            className="my-3"
+            style={{ borderBottom: "1px solid #dbdbdb" }}
+          />
+
+          <TooltipComponent
+            title={t("access-control")}
+            description={t("acess-control-description")}
+          >
+            <div
+              className="text-secondary text-uppercase bold-text"
+              style={{ fontSize: "0.8rem" }}
+            >
+              <p className="d-flex align-items-center">
+                {t("access-control")}
+                <i className="pi pi-question-circle px-2 py-1 text-secondary"></i>
+              </p>
+            </div>
+          </TooltipComponent>
+
+          <div style={{ overflowWrap: "break-word" }}>
+            <div>No</div>
+          </div>
+          <Divider
+            className="my-3"
+            style={{ borderBottom: "1px solid #dbdbdb" }}
+          />
+
+          <TooltipComponent
+            title={t("data-availability")}
+            description={t("data-availability-description")}
+          >
+            <div
+              className="text-secondary text-uppercase bold-text"
+              style={{ fontSize: "0.8rem" }}
+            >
+              <p className="d-flex align-items-center">
+                {t("data-availability")}
+                <i className="pi pi-question-circle px-2 py-1 text-secondary"></i>
+              </p>
+            </div>
+          </TooltipComponent>
+
+          <div style={{ overflowWrap: "break-word" }}>
+            <div>Yes</div>
+          </div>
+          <Divider
+            className="my-3"
+            style={{ borderBottom: "1px solid #dbdbdb" }}
+          />
         </AccordionTab>
       </Accordion>
     </>
