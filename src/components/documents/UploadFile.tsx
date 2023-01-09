@@ -163,6 +163,7 @@ const FileSection: React.FC<FileSectionProps> = ({
     } else {
       onErrorFetchDocument(false);
       setElement(null);
+      setIsFileUploaded(false);
       goToTop();
       navigate("/");
     }
