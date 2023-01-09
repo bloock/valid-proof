@@ -57,7 +57,7 @@ const FileSection: React.FC<FileSectionProps> = ({
   const { t } = useTranslation("upload-file");
 
   const [element, setElement] = useState<FileElement | null>(elementType);
-
+  const [isFileUploaded, setIsFileUploaded] = useState<boolean>(false);
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length >= 0) {
       handleFileChange(acceptedFiles[0]);
@@ -121,6 +121,7 @@ const FileSection: React.FC<FileSectionProps> = ({
   }
 
   const handleFileChange = async (file: File | null) => {
+    setIsFileUploaded(true);
     if (file != null) {
       let bytes = await file.arrayBuffer();
       let fileType = await getFileType(new Uint8Array(bytes));
@@ -194,24 +195,44 @@ const FileSection: React.FC<FileSectionProps> = ({
           </div>
         </div>
       ) : (
-        <div
-          className="container mt-3"
-          {...getRootProps({ style: style as any })}
-        >
-          <div className="vertical-center horizontal-center">
-            <div>
-              <div id="select-file">
-                <p>{t("drag&drop")}</p>
-                <p>{t("or")}</p>
-
-                <Button className="button mt-1">
-                  <input {...getInputProps()} />
-                  {t("select")}
-                </Button>
+        <>
+          {isFileUploaded ? (
+            <div
+              className="container mt-3"
+              {...getRootProps({ style: style as any })}
+            >
+              <div className="vertical-center horizontal-center">
+                <i
+                  className="pi pi-spin pi-spinner"
+                  style={{ fontSize: "2rem" }}
+                ></i>
               </div>
             </div>
-          </div>
-        </div>
+          ) : (
+            <div
+              className="container mt-3"
+              {...getRootProps({ style: style as any })}
+            >
+              <div className="vertical-center horizontal-center">
+                <div>
+                  <div id="select-file">
+                    <p>{t("drag&drop")}</p>
+                    <p>{t("or")}</p>
+
+                    <Button
+                      className="button mt-1"
+                      disabled={element ? true : false}
+                    >
+                      <input {...getInputProps()} />
+
+                      {t("select")}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </section>
   );
