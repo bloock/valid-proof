@@ -29,7 +29,7 @@ const baseStyle = {
   borderRadius: 2,
   borderColor: "blue",
   backgroundColor: "#fafafa",
-  color: "#bdbdbd",
+  color: "#a6a6a6",
   transition: "border .24s ease-in-out",
   height: "323px",
   outline: "2px dashed var(--primary-bg-color)",
@@ -57,6 +57,7 @@ const FileSection: React.FC<FileSectionProps> = ({
   const { t } = useTranslation("upload-file");
 
   const [element, setElement] = useState<FileElement | null>(elementType);
+  const [documentTypeError, setDocumentTypeError] = useState<string>("");
   const [isFileUploaded, setIsFileUploaded] = useState<boolean>(false);
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length >= 0) {
@@ -121,6 +122,7 @@ const FileSection: React.FC<FileSectionProps> = ({
   }
 
   const handleFileChange = async (file: File | null) => {
+    setDocumentTypeError("");
     setIsFileUploaded(true);
     if (file != null) {
       let bytes = await file.arrayBuffer();
@@ -159,6 +161,7 @@ const FileSection: React.FC<FileSectionProps> = ({
         }
       } catch (e) {
         console.log(e);
+        setDocumentTypeError(t("file-not-accepted"));
       }
     } else {
       onErrorFetchDocument(false);
@@ -208,6 +211,9 @@ const FileSection: React.FC<FileSectionProps> = ({
                   style={{ fontSize: "2rem" }}
                 ></i>
               </div>
+              <p className="mt-2" style={{ fontSize: "10px" }}>
+                {t("file-types")}
+              </p>
             </div>
           ) : (
             <div
@@ -235,6 +241,13 @@ const FileSection: React.FC<FileSectionProps> = ({
           )}
         </>
       )}
+      {documentTypeError !== "" ? (
+        <>
+          <div className="p-2 px-3 mt-3 alert alert-warning">
+            {documentTypeError}
+          </div>
+        </>
+      ) : null}
     </section>
   );
 };

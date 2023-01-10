@@ -2,5 +2,7 @@
   "drag&drop": "Drag and drop your file",
   "or": "or",
   "select": "Select file",
-  "verify-another": "Verify another file"
+  "verify-another": "Verify another file",
+  "file-types": "Accepts jpg, png, pdf and json",
+  "file-not-accepted": "This file is not accepted. Please try it again with a different file type."
 }
