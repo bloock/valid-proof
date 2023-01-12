@@ -33,7 +33,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
   const [timestamp, setTimestamp] = useState<string>("");
 
   useEffect(() => {
-    let t = recordNetworks.map((network) => network.timestamp).sort()[
+    let t = recordNetworks.map((network: any) => network.created_at).sort()[
       recordNetworks.length - 1
     ];
 
@@ -71,7 +71,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
   }, [element]);
 
   const tableNetworksData = recordNetworks.map((network) => {
-    const dates = moment(network.timestamp * 1000).format(
+    const dates = moment(network.created_at * 1000).format(
       "DD-MM-YYYY HH:mm:ss"
     );
 
@@ -103,28 +103,28 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
           value={network.state}
         ></Tag>
       ),
-      tx_hash: network.txHash,
+      tx_hash: network.tx_hash,
     };
   });
 
   const networksCardData = recordNetworks.map((network) => {
-    const dates = moment(network.timestamp * 1000).format(
+    const dates = moment(network.created_at * 1000).format(
       "DD-MM-YYYY HH:mm:ss"
     );
 
-    let explorerUrl = `https://etherscan.io/tx/${network.txHash}`;
+    let explorerUrl = `https://etherscan.io/tx/${network.tx_hash}`;
     switch (network.name) {
       case "ethereum_mainnet":
-        explorerUrl = `https://etherscan.io/tx/${network.txHash}`;
+        explorerUrl = `https://etherscan.io/tx/${network.tx_hash}`;
         break;
       case "ethereum_rinkeby":
-        explorerUrl = `https://rinkeby.etherscan.io/tx/${network.txHash}`;
+        explorerUrl = `https://rinkeby.etherscan.io/tx/${network.tx_hash}`;
         break;
       case "gnosis_chain":
-        explorerUrl = `https://blockscout.com/xdai/mainnet/tx/${network.txHash}`;
+        explorerUrl = `https://blockscout.com/xdai/mainnet/tx/${network.tx_hash}`;
         break;
       case "polygon_chain":
-        explorerUrl = `https://polygonscan.com/tx/${network.txHash}`;
+        explorerUrl = `https://polygonscan.com/tx/${network.tx_hash}`;
         break;
       case "bloock_chain":
         explorerUrl = "";
@@ -359,7 +359,10 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
             </DataTable>
           </div>
           <div className="networks-cards-info">{networksCardData}</div>
-
+          <Divider
+            className="my-3"
+            style={{ borderBottom: "1px solid #dbdbdb" }}
+          />
           <TooltipComponent
             title={t("authorization")}
             description={t("authorization-description")}
