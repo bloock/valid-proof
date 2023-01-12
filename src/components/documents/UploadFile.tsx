@@ -29,7 +29,7 @@ const baseStyle = {
   borderRadius: 2,
   borderColor: "blue",
   backgroundColor: "#fafafa",
-  color: "#bdbdbd",
+  color: "#a6a6a6",
   transition: "border .24s ease-in-out",
   height: "323px",
   outline: "2px dashed var(--primary-bg-color)",
@@ -57,7 +57,8 @@ const FileSection: React.FC<FileSectionProps> = ({
   const { t } = useTranslation("upload-file");
 
   const [element, setElement] = useState<FileElement | null>(elementType);
-
+  const [documentTypeError, setDocumentTypeError] = useState<string>("");
+  const [isFileUploaded, setIsFileUploaded] = useState<boolean>(false);
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length >= 0) {
       handleFileChange(acceptedFiles[0]);
@@ -121,6 +122,8 @@ const FileSection: React.FC<FileSectionProps> = ({
   }
 
   const handleFileChange = async (file: File | null) => {
+    setDocumentTypeError("");
+    setIsFileUploaded(true);
     if (file != null) {
       let bytes = await file.arrayBuffer();
       let fileType = await getFileType(new Uint8Array(bytes));
@@ -158,10 +161,12 @@ const FileSection: React.FC<FileSectionProps> = ({
         }
       } catch (e) {
         console.log(e);
+        setDocumentTypeError(t("file-not-accepted"));
       }
     } else {
       onErrorFetchDocument(false);
       setElement(null);
+      setIsFileUploaded(false);
       goToTop();
       navigate("/");
     }
@@ -194,25 +199,55 @@ const FileSection: React.FC<FileSectionProps> = ({
           </div>
         </div>
       ) : (
-        <div
-          className="container mt-3"
-          {...getRootProps({ style: style as any })}
-        >
-          <div className="vertical-center horizontal-center">
-            <div>
-              <div id="select-file">
-                <p>{t("drag&drop")}</p>
-                <p>{t("or")}</p>
+        <>
+          {isFileUploaded ? (
+            <div
+              className="container mt-3"
+              {...getRootProps({ style: style as any })}
+            >
+              <div className="vertical-center horizontal-center">
+                <i
+                  className="pi pi-spin pi-spinner"
+                  style={{ fontSize: "2rem" }}
+                ></i>
+              </div>
+              <p className="mt-2" style={{ fontSize: "10px" }}>
+                {t("file-types")}
+              </p>
+            </div>
+          ) : (
+            <div
+              className="container mt-3"
+              {...getRootProps({ style: style as any })}
+            >
+              <div className="vertical-center horizontal-center">
+                <div>
+                  <div id="select-file">
+                    <p>{t("drag&drop")}</p>
+                    <p>{t("or")}</p>
 
-                <Button className="button mt-1">
-                  <input {...getInputProps()} />
-                  {t("select")}
-                </Button>
+                    <Button
+                      className="button mt-1"
+                      disabled={element ? true : false}
+                    >
+                      <input {...getInputProps()} />
+
+                      {t("select")}
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          )}
+        </>
       )}
+      {documentTypeError !== "" ? (
+        <>
+          <div className="p-2 px-3 mt-3 alert alert-warning">
+            {documentTypeError}
+          </div>
+        </>
+      ) : null}
     </section>
   );
 };
