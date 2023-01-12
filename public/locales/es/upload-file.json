@@ -2,5 +2,7 @@
   "drag&drop": "Arrastra y suelta",
   "or": "o",
   "select": "Selecciona archivo",
-  "verify-another": "Verificar otro documento"
+  "verify-another": "Verificar otro documento",
+  "file-types": "Acepta jpg, png, pdf y json",
+  "file-not-accepted": "Este documento no es válido. Por favor vuelve a intentarlo con otro tipo de archivo."
 }
