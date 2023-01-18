@@ -19,7 +19,11 @@
   "ethereum_rinkeby": "Ethereum Rinkeby",
   "ethereum_ropsten": "Ethereum Ropsten",
   "ethereum_ganache": "Ethereum Ganache",
+  "ethereum_goerli": "Ethereum Goerli",
   "bloock_chain": "Bloockchain Testnet",
   "gnosis_chain": "Gnosis Chain",
-  "polygon_chain": "Polygon"
+  "polygon_chain": "Polygon",
+  "authorization": "Authorization",
+  "accessControl": "Access control",
+  "Availability": "Data availability"
 }

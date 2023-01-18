@@ -14,6 +14,7 @@ import VerificationError from "./Error";
 import VerificationSuccess from "./Success";
 
 Bloock.setApiKey((window as any).env.API_KEY);
+
 const client = new BloockClient();
 
 const colors = {
@@ -31,8 +32,8 @@ type VerificationSectionProps = {
 export type RecordNetwork = {
   name: string;
   state: string;
-  txHash: string;
-  timestamp: number;
+  tx_hash: string;
+  created_at: number;
 };
 
 const VerificationSection: React.FC<VerificationSectionProps> = ({
@@ -126,31 +127,35 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
       if (recordRoot != null && recordProof) {
         try {
           let networks = [];
+
           for (let recordNetwork of recordProof.anchor.networks) {
-            let network = Network.ETHEREUM_MAINNET;
-            switch (recordNetwork.name) {
-              case "ethereum_mainnet":
-                network = Network.ETHEREUM_MAINNET;
-                break;
-              case "gnosis_chain":
-                network = Network.GNOSIS_CHAIN;
-                break;
-              case "bloock_chain":
-                network = Network.BLOOCK_CHAIN;
-                break;
-            }
+            if (recordNetwork.state === "Confirmed") {
+              let network = Network.ETHEREUM_MAINNET;
+              switch (recordNetwork.name) {
+                case "ethereum_mainnet":
+                  network = Network.ETHEREUM_MAINNET;
+                  break;
+                case "gnosis_chain":
+                  network = Network.GNOSIS_CHAIN;
+                  break;
+                case "bloock_chain":
+                  network = Network.BLOOCK_CHAIN;
+                  break;
+                case "ethereum_goerli":
+                  network = Network.ETHEREUM_GOERLI;
+              }
+              const timestamp = await client.validateRoot(recordRoot, network);
 
-            const timestamp = await client.validateRoot(recordRoot, network);
-
-            if (timestamp !== 0 && timestamp !== null) {
-              networks.push({
-                name: recordNetwork.name,
-                txHash: recordNetwork.txHash,
-                state: recordNetwork.state,
-                timestamp: timestamp,
-              });
-            } else {
-              setErrorStep(3);
+              if (timestamp !== 0 && timestamp !== null) {
+                networks.push({
+                  name: recordNetwork.name,
+                  tx_hash: recordNetwork.txHash,
+                  state: recordNetwork.state,
+                  created_at: timestamp,
+                });
+              } else {
+                setErrorStep(3);
+              }
             }
           }
 

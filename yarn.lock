@@ -1079,10 +1079,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@bloock/sdk@2.1.3":
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/@bloock/sdk/-/sdk-2.1.3.tgz#18309a80bb6908946cf8b3d3935e6dfe49c2b586"
-  integrity sha512-RTsx4gPKnT+lj+Kt79wo7LJY46MxNKoZdxR65r1kMGp8d3UCcVyyY7D1upn5t3yo0Jmxk46SoHa8A2EovqRXVw==
+"@bloock/sdk@2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@bloock/sdk/-/sdk-2.2.0.tgz#3ea93fabb2ec35ef0708bc94a1120d0e9fca1a38"
+  integrity sha512-IvIECWw6eCPl8nX3j4x4hgsoiT5mbn8pMqJhExkYa0TMYsCM/RhaMsmhF2Yuylb/laOdFfScRNHpzAKewBOiYQ==
   dependencies:
     node-fetch "^2.6.1"
     protobufjs "^7.1.2"
