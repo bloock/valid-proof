@@ -211,9 +211,6 @@ const FileSection: React.FC<FileSectionProps> = ({
                   style={{ fontSize: "2rem" }}
                 ></i>
               </div>
-              <p className="mt-2" style={{ fontSize: "10px" }}>
-                {t("file-types")}
-              </p>
             </div>
           ) : (
             <div
@@ -235,6 +232,9 @@ const FileSection: React.FC<FileSectionProps> = ({
                       {t("select")}
                     </Button>
                   </div>
+                  <p className="mt-2" style={{ fontSize: "10px" }}>
+                    {t("file-types")}
+                  </p>
                 </div>
               </div>
             </div>
