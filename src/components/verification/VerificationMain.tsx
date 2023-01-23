@@ -11,7 +11,7 @@ import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import React, { useEffect, useState } from "react";
-import { Button, Col, Form, Modal, Row } from "react-bootstrap";
+import { Alert, Button, Col, Form, Modal, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { FileElement } from "../../pages/Home";
 import "../../styles.css";
@@ -71,7 +71,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   const [show, setShow] = useState(false);
   const [encryptionPassword, setEncryptionPassword] = useState<string>("");
   const [recordCommonName, setRecordCommonName] = useState<string>("");
-
+  const [uiError, setUiError] = useState<string>("");
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -82,6 +82,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   const onPasswordChange = (e: any) => {
     console.log(e.target.value);
     setEncryptionPassword(e.target.value);
+    setUiError("");
   };
 
   console.log(encryptionPassword);
@@ -92,22 +93,20 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     setRecordNetworks(null);
   }, [element]);
 
-  useEffect(() => {
-    const decryptRecord = async () => {
-      const password = "holi";
-      if (isEncrypted && element?.record) {
-        try {
-          let decryptedRecord = await RecordBuilder.fromRecord(element?.record)
-            .withDecrypter(new AesDecrypter(password))
-            .build();
-          console.log(decryptedRecord);
-        } catch (e) {
-          console.log(e);
-        }
+  const decryptRecord = async () => {
+    if (isEncrypted && element?.record) {
+      try {
+        let decryptedRecord = await RecordBuilder.fromRecord(element?.record)
+          .withDecrypter(new AesDecrypter(encryptionPassword))
+          .build();
+        console.log(decryptedRecord);
+        handleClose();
+      } catch (e) {
+        console.log(e);
+        setUiError("This password seems to be incorrect");
       }
-    };
-    decryptRecord();
-  }, [isEncrypted, element]);
+    }
+  };
 
   console.log(element?.record);
   useEffect(() => {
@@ -116,7 +115,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
         try {
           let signatures = await element.record.getSignatures();
           let retrievedName = await signatures[1].getCommonName();
-          setRecordCommonName(retrievedName);
+          setRecordCommonName("Common name");
           console.log(signatures);
           console.log(retrievedName);
         } catch (e) {
@@ -395,6 +394,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
               <Form.Control onChange={onPasswordChange} type="password" />
             </Form.Group>
           </Form>
+          {uiError && <Alert variant="warning">{uiError}</Alert>}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
@@ -405,7 +405,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
               backgroundColor: "var(--primary-bg-color",
               border: "none",
             }}
-            onClick={handleClose}
+            onClick={decryptRecord}
           >
             Submit
           </Button>
