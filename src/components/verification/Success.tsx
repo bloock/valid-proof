@@ -18,6 +18,9 @@ type VerificationSuccessProps = {
   recordRoot: string;
   recordProof: Proof;
   recordNetworks: RecordNetwork[];
+  recordSignature: string;
+  recordEncryptionAlg: string;
+  isRecordSigned: boolean;
 };
 
 const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
@@ -25,6 +28,9 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
   recordProof,
   recordRoot,
   recordNetworks,
+  recordSignature,
+  recordEncryptionAlg,
+  isRecordSigned,
 }) => {
   const { t } = useTranslation("success");
 
@@ -379,7 +385,13 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
           </TooltipComponent>
 
           <div style={{ overflowWrap: "break-word" }}>
-            <div>Yes</div>
+            <div>
+              {isRecordSigned
+                ? recordSignature
+                  ? recordSignature
+                  : t("not-available")
+                : "No"}
+            </div>
           </div>
           <Divider
             className="my-3"
@@ -402,7 +414,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
           </TooltipComponent>
 
           <div style={{ overflowWrap: "break-word" }}>
-            <div>No</div>
+            <div>{recordEncryptionAlg ? recordEncryptionAlg : "No"}</div>
           </div>
           <Divider
             className="my-3"

@@ -25,5 +25,6 @@
   "polygon_chain": "Polygon",
   "authorization": "Authorization",
   "accessControl": "Access control",
-  "Availability": "Data availability"
+  "Availability": "Data availability",
+  "not-available": "Name not available"
 }

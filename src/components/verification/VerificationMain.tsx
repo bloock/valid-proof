@@ -4,6 +4,7 @@ import {
   BloockClient,
   Network,
   Proof,
+  Record,
   RecordBuilder,
 } from "@bloock/sdk";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -20,14 +21,7 @@ import StepperVerification from "../elements/Stepper";
 import VerificationError from "./Error";
 import VerificationSuccess from "./Success";
 
-/* Bloock.setApiKey((window as any).env.API_KEY);
- */
-
-Bloock.setApiHost("https://api.bloock.dev");
-Bloock.setProvider(Network.BLOOCK_CHAIN, "https://ganache.bloock.dev");
-Bloock.setApiKey(
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NzQ2NTU4NTYsIm5iZiI6MTY3NDA1MTA1NiwiaWF0IjoxNjc0MDUxMDU2LCJjbGllbnRfaWQiOiJlMTdlYTcyZS0yZmQ0LTRhZDktYThkNi1mOWMwODI5N2ZiMDYiLCJwcm9kdWN0IjpbeyJpZCI6InByb2RfTWxJZjdYSFFiVWk0TGciLCJtZXRhZGF0YSI6eyJpbnRlcnZhbCI6Im1vbnRobHkiLCJsaWNlbnNlIjoiIiwibmFtZSI6IkNlcnRpZmljYXRpb25zIC0gQmFzaWMgLSBNb250aGx5Iiwib3B0aW9uYWwiOiIwIiwicGxhbiI6ImJhc2ljIiwicHJpdmF0ZSI6IiIsInByb2R1Y3RfdHlwZSI6ImNlcnRpZmljYXRpb25zIn19LHsiaWQiOiJwcm9kX01sSk5BY3dZSDdNakxsIiwibWV0YWRhdGEiOnsiaW50ZXJ2YWwiOiJtb250aGx5IiwibGljZW5zZSI6IiIsIm5hbWUiOiJEYXRhIEF2YWlsYWJpbGl0eSAtIEJhc2ljIC0gTW9udGhseSIsIm9wdGlvbmFsIjoiMCIsInBsYW4iOiJiYXNpYyIsInByaXZhdGUiOiIiLCJwcm9kdWN0X3R5cGUiOiJkYXRhX2F2YWlsYWJpbGl0eSJ9fSx7ImlkIjoicHJvZF9NbEszQzVsVG1FRW5qYyIsIm1ldGFkYXRhIjp7ImludGVydmFsIjoibW9udGhseSIsImxpY2Vuc2UiOiIiLCJuYW1lIjoiTm9kZXMgLSBCYXNpYyAtIE1vbnRobHkiLCJvcHRpb25hbCI6IjAiLCJwbGFuIjoiYmFzaWMiLCJwcml2YXRlIjoiIiwicHJvZHVjdF90eXBlIjoibm9kZXMifX1dLCJ1c2VyIjp7Im5hbWUiOiJFZHVhcmQiLCJzdXJuYW1lIjoiVG9tYXMiLCJlbWFpbCI6ImVkdWFyZEBibG9vY2suY29tIiwiYWN0aXZhdGVkIjp0cnVlLCJ2ZXJpZmllZCI6dHJ1ZX0sInNjb3BlcyI6eyJjb3JlLXRlc3QuYW5jaG9yIjpbInJlYWQiXSwiY29yZS10ZXN0Lm1lc3NhZ2UiOlsicmVhZCIsImNyZWF0ZSJdLCJjb3JlLXRlc3QucHJvb2YiOlsicmVhZCJdLCJjb3JlLmFuY2hvciI6WyJyZWFkIl0sImNvcmUubWVzc2FnZSI6WyJyZWFkIiwiY3JlYXRlIl0sImNvcmUucHJvb2YiOlsicmVhZCJdLCJjcmVkZW50aWFscy10ZXN0LmFwaUtleSI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sImNyZWRlbnRpYWxzLmFwaWtleSI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sImNyZWRlbnRpYWxzLnNlc3Npb24iOlsidXBkYXRlIl0sImRhdGEtYXZhaWxhYmlsaXR5LnVwbG9hZCI6WyJjcmVhdGUiXSwiZXZlbnRzLmFjdGl2aXR5IjpbInJlYWQiXSwiZXZlbnRzLmFuY2hvciI6WyJyZWFkIl0sImV2ZW50cy53ZWJob29rIjpbInJlYWQiXSwibm9kZS1wcm94eS5yZWRpcmVjdCI6WyJyZWFkIl0sIm5vdGlmaWNhdGlvbnMuZmVlZGJhY2siOlsiY3JlYXRlIl0sIm5vdGlmaWNhdGlvbnMud2ViaG9vayI6WyJjcmVhdGUiLCJyZWFkIiwidXBkYXRlIiwiZGVsZXRlIl0sInN1YnNjcmlwdGlvbnMuaW52b2ljZSI6WyJyZWFkIl0sInN1YnNjcmlwdGlvbnMucGxhbiI6WyJyZWFkIiwidXBkYXRlIl0sInN1YnNjcmlwdGlvbnMuc3Vic2NyaXB0aW9uIjpbInJlYWQiLCJ1cGRhdGUiLCJkZWxldGUiXSwidXNlcnMuYnVzaW5lc3MiOlsicmVhZCIsInVwZGF0ZSIsImRlbGV0ZSJdLCJ1c2Vycy5tZXRhZGF0YSI6WyJyZWFkIl0sInVzZXJzLnVzZXIiOlsicmVhZCIsInVwZGF0ZSJdfX0.iV0iPC_p7gBSdA4ofm5Gz93JRLj-o9bgHPqx3CFVUJg"
-);
+Bloock.setApiKey((window as any).env.API_KEY);
 
 const client = new BloockClient();
 
@@ -68,9 +62,12 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   const [hasUserAlreadyValidated, setHasUserAlreadyValidated] =
     useState<boolean>(false);
   const [isEncrypted, setIsEncrypted] = useState<boolean>(false);
+  const [isSigned, setIsSigned] = useState<boolean>(false);
   const [show, setShow] = useState(false);
   const [encryptionPassword, setEncryptionPassword] = useState<string>("");
   const [recordCommonName, setRecordCommonName] = useState<string>("");
+  const [recordEncryptionAlg, setRecordEncryptionAlg] = useState<any>("");
+  const [decryptedRecord, setDecryptedRecord] = useState<Record | null>(null);
   const [uiError, setUiError] = useState<string>("");
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -80,12 +77,10 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   }
 
   const onPasswordChange = (e: any) => {
-    console.log(e.target.value);
     setEncryptionPassword(e.target.value);
     setUiError("");
   };
 
-  console.log(encryptionPassword);
   useEffect(() => {
     setErrorStep(null);
     setRecordProof(null);
@@ -93,38 +88,72 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     setRecordNetworks(null);
   }, [element]);
 
+  useEffect(() => {
+    const getEncryptionAlgorithm = async () => {
+      if (element?.record) {
+        try {
+          let encryptionAlg = await element.record.getEncryptionAlg();
+          setRecordEncryptionAlg(encryptionAlg);
+          if (encryptionAlg === 0 || encryptionAlg === 1) {
+            setIsEncrypted(true);
+            if (encryptionAlg === 0) {
+              setRecordEncryptionAlg("A256GCM");
+            } else if (encryptionAlg === 1) {
+              setRecordEncryptionAlg("RSA");
+            }
+          } else {
+            setIsEncrypted(false);
+            setRecordEncryptionAlg("");
+          }
+        } catch (e) {
+          setIsEncrypted(false);
+          return;
+        }
+      }
+    };
+    getEncryptionAlgorithm();
+  }, [element]);
+
   const decryptRecord = async () => {
-    if (isEncrypted && element?.record) {
+    if (isEncrypted && element?.record && encryptionPassword) {
       try {
         let decryptedRecord = await RecordBuilder.fromRecord(element?.record)
           .withDecrypter(new AesDecrypter(encryptionPassword))
           .build();
-        console.log(decryptedRecord);
         handleClose();
+        setIsEncrypted(false);
+        setDecryptedRecord(decryptedRecord);
       } catch (e) {
         console.log(e);
         setUiError("This password seems to be incorrect");
+        return;
       }
     }
   };
 
-  console.log(element?.record);
   useEffect(() => {
     const getRecordSignature = async () => {
-      if (element?.record) {
+      if (decryptedRecord && !isEncrypted) {
         try {
-          let signatures = await element.record.getSignatures();
-          let retrievedName = await signatures[1].getCommonName();
-          setRecordCommonName("Common name");
-          console.log(signatures);
-          console.log(retrievedName);
+          let signatures = await decryptedRecord?.getSignatures();
+          if (signatures.length > 0) {
+            setIsSigned(true);
+          }
+          let retrievedName = await signatures[0].getCommonName();
+          let signatureAlg = signatures && signatures[0]["header"].alg;
+          if (retrievedName) {
+            setRecordCommonName(retrievedName);
+          } else {
+            setRecordCommonName(signatureAlg);
+          }
         } catch (e) {
           console.log(e);
         }
       }
     };
     getRecordSignature();
-  }, [element]);
+  }, [decryptedRecord, isEncrypted]);
+
   useEffect(() => {
     if (!isEncrypted) {
       if (errorFetchDocument) {
@@ -138,15 +167,15 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     } else {
       handleShow();
     }
-  }, [errorFetchDocument, element, isEncrypted]);
+  }, [errorFetchDocument, element, isEncrypted, decryptedRecord]);
 
   useEffect(() => {
     const getProof = async () => {
-      if (element && element.record && !isEncrypted) {
+      if (!isEncrypted && element?.record) {
         try {
-          console.log(element, await element.record.getHash());
-          const proof = await client.getProof([element.record]);
-          console.log(proof);
+          const proof = await client.getProof([
+            decryptedRecord ? decryptedRecord : element?.record,
+          ]);
           if (proof != null) {
             setActiveStep(1);
             setRecordProof(proof);
@@ -161,7 +190,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     };
 
     setTimeout(() => getProof(), getRandomInterval(500, 1000));
-  }, [element]);
+  }, [decryptedRecord, isEncrypted, element?.record]);
 
   useEffect(() => {
     const verifyProof = async () => {
@@ -365,6 +394,9 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
                         recordRoot={recordRoot}
                         recordProof={recordProof}
                         recordNetworks={recordNetworks}
+                        isRecordSigned={isSigned}
+                        recordSignature={recordCommonName}
+                        recordEncryptionAlg={recordEncryptionAlg}
                       />
                     ) : (
                       <VerificationError
