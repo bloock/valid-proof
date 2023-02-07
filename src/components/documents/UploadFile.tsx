@@ -79,7 +79,7 @@ const FileSection: React.FC<FileSectionProps> = ({
     isDragReject,
     getRootProps,
     getInputProps,
-  } = useDropzone({ onDrop });
+  } = useDropzone({ onDrop, multiple: false });
 
   useEffect(() => {
     onElementChange(element);
