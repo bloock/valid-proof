@@ -7,5 +7,7 @@
   "second-step-helper": "Step 2",
   "third-step-helper": "Step 3",
   "file-step": "Downloading file",
-  "file-step-helper": "Retrieving document for verification"
+  "file-step-helper": "Retrieving document for verification",
+  "decrypt-modal-title": "Oh! Seems this file is encrypted!",
+  "decrypt-modal-body": " Please, introduce your password to decrypt the file and validate it. Note that if you exit the modal the validating process will be interrupted."
 }

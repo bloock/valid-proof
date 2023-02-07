@@ -414,12 +414,10 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Oh! Seems this file is encrypted!</Modal.Title>
+          <Modal.Title>{t("decrypt-modal-title")}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Please, introduce your password to decrypt the file and validate it.
-          Note that if you exit the modal the validating process will be
-          interrupted.
+          {t("decrypt-modal-body")}
           <Form>
             <Form.Group className="my-3" controlId="exampleForm.ControlInput1">
               <Form.Label className="text-sm">Password</Form.Label>
