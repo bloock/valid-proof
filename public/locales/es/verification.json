@@ -7,5 +7,7 @@
   "second-step-helper": "Paso 2",
   "third-step-helper": "Paso 3",
   "file-step": "Descargando documento",
-  "file-step-helper": "Obteniendo documento a verificar"
+  "file-step-helper": "Obteniendo documento a verificar",
+  "decrypt-modal-title": "Oh! Parece que este archivo está encriptado",
+  "decrypt-modal-body": "Por favor, introduce la contraseña para desencriptar el documento y poder validarlo. Si sales del modal el proceso de validación se verá interrumpido."
 }

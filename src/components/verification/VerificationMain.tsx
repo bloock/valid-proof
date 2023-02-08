@@ -1,10 +1,18 @@
-import { Bloock, BloockClient, Network, Proof } from "@bloock/sdk";
+import {
+  AesDecrypter,
+  Bloock,
+  BloockClient,
+  Network,
+  Proof,
+  Record,
+  RecordBuilder,
+} from "@bloock/sdk";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import React, { useEffect, useState } from "react";
-import { Col, Row } from "react-bootstrap";
+import { Alert, Button, Col, Form, Modal, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { FileElement } from "../../pages/Home";
 import "../../styles.css";
@@ -53,10 +61,25 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   const [componentTransition, setComponentTransition] = useState(false);
   const [hasUserAlreadyValidated, setHasUserAlreadyValidated] =
     useState<boolean>(false);
+  const [isEncrypted, setIsEncrypted] = useState<boolean>(false);
+  const [isSigned, setIsSigned] = useState<boolean>(false);
+  const [show, setShow] = useState(false);
+  const [encryptionPassword, setEncryptionPassword] = useState<string>("");
+  const [recordCommonName, setRecordCommonName] = useState<string>("");
+  const [recordEncryptionAlg, setRecordEncryptionAlg] = useState<any>("");
+  const [decryptedRecord, setDecryptedRecord] = useState<Record | null>(null);
+  const [uiError, setUiError] = useState<string>("");
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   function getRandomInterval(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
+
+  const onPasswordChange = (e: any) => {
+    setEncryptionPassword(e.target.value);
+    setUiError("");
+  };
 
   useEffect(() => {
     setErrorStep(null);
@@ -66,23 +89,93 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   }, [element]);
 
   useEffect(() => {
-    if (errorFetchDocument) {
-      setTimeout(
-        () => (onErrorFetchDocument(true), setErrorStep(0), setActiveStep(0)),
-        getRandomInterval(1500, 2000)
-      );
-    } else {
-      setActiveStep(0);
+    const getEncryptionAlgorithm = async () => {
+      if (element?.record) {
+        try {
+          let encryptionAlg = await element.record.getEncryptionAlg();
+          setRecordEncryptionAlg(encryptionAlg);
+          if (encryptionAlg === 0 || encryptionAlg === 1) {
+            setIsEncrypted(true);
+            if (encryptionAlg === 0) {
+              setRecordEncryptionAlg("A256GCM");
+            } else if (encryptionAlg === 1) {
+              setRecordEncryptionAlg("RSA");
+            }
+          } else {
+            setIsEncrypted(false);
+            setRecordEncryptionAlg("");
+          }
+        } catch (e) {
+          setIsEncrypted(false);
+          return;
+        }
+      }
+    };
+    getEncryptionAlgorithm();
+  }, [element]);
+
+  const decryptRecord = async () => {
+    if (isEncrypted && element?.record && encryptionPassword) {
+      try {
+        let decryptedRecord = await RecordBuilder.fromRecord(element?.record)
+          .withDecrypter(new AesDecrypter(encryptionPassword))
+          .build();
+        handleClose();
+        setIsEncrypted(false);
+        setDecryptedRecord(decryptedRecord);
+      } catch (e) {
+        console.log(e);
+        setUiError("This password seems to be incorrect");
+        return;
+      }
     }
-  }, [errorFetchDocument, element]);
+  };
+
+  useEffect(() => {
+    const getRecordSignature = async () => {
+      if (decryptedRecord && !isEncrypted) {
+        try {
+          let signatures = await decryptedRecord?.getSignatures();
+          if (signatures.length > 0) {
+            setIsSigned(true);
+          }
+          let retrievedName = await signatures[0].getCommonName();
+          let signatureAlg = signatures && signatures[0]["header"].alg;
+          if (retrievedName) {
+            setRecordCommonName(retrievedName);
+          } else {
+            setRecordCommonName(signatureAlg);
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    };
+    getRecordSignature();
+  }, [decryptedRecord, isEncrypted]);
+
+  useEffect(() => {
+    if (!isEncrypted) {
+      if (errorFetchDocument) {
+        setTimeout(
+          () => (onErrorFetchDocument(true), setErrorStep(0), setActiveStep(0)),
+          getRandomInterval(1500, 2000)
+        );
+      } else {
+        setActiveStep(0);
+      }
+    } else {
+      handleShow();
+    }
+  }, [errorFetchDocument, element, isEncrypted, decryptedRecord]);
 
   useEffect(() => {
     const getProof = async () => {
-      if (element && element.record) {
+      if (!isEncrypted && element?.record) {
         try {
-          console.log(element, await element.record.getHash());
-          const proof = await client.getProof([element.record]);
-          console.log(proof);
+          const proof = await client.getProof([
+            decryptedRecord ? decryptedRecord : element?.record,
+          ]);
           if (proof != null) {
             setActiveStep(1);
             setRecordProof(proof);
@@ -97,11 +190,11 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     };
 
     setTimeout(() => getProof(), getRandomInterval(500, 1000));
-  }, [element]);
+  }, [decryptedRecord, isEncrypted, element?.record]);
 
   useEffect(() => {
     const verifyProof = async () => {
-      if (recordProof != null) {
+      if (recordProof != null && !isEncrypted) {
         try {
           const root = await client.verifyProof(recordProof);
           if (root) {
@@ -124,7 +217,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
 
   useEffect(() => {
     const getRecordTimestamp = async () => {
-      if (recordRoot != null && recordProof) {
+      if (recordRoot != null && recordProof && !isEncrypted) {
         try {
           let networks = [];
 
@@ -173,7 +266,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   }, [recordRoot]);
 
   useEffect(() => {
-    if (recordNetworks || errorStep !== null) {
+    if (recordNetworks || (errorStep !== null && !isEncrypted)) {
       setTimeout(() => setComponentTransition(true), 500);
     }
   }, [recordNetworks, errorStep]);
@@ -257,7 +350,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
 
   return (
     <div className="mt-3 verification-section">
-      {!componentTransition ? (
+      {!componentTransition && !isEncrypted ? (
         <div
           className="horizontal-center timeline-margins mb-4 stepper bg-light rounded"
           style={{ paddingTop: "30px", paddingBottom: "20px" }}
@@ -268,7 +361,9 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
       ) : null}
       <div className="little-top-margin"></div>
       <div className="horizontal-center">
-        {!componentTransition ? null : (
+        {!componentTransition ? (
+          null && !isEncrypted
+        ) : (
           <div className="pt-2 mb-5">
             <div
               className="mt-2 border-0 bg-light verification-container"
@@ -281,35 +376,71 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
                     : "justify-content-between"
                 } d-flex flex-column-reverse flex-lg-row p-3 `}
               >
-                {element && element?.name !== "" ? (
+                {element && element?.name !== "" && !isEncrypted ? (
                   <Col lg={5} className="my-4 px-4">
                     <FilePreview element={element} />
                   </Col>
                 ) : null}
-                <Col lg={7} className="mb-4 mt-2 px-4">
-                  {element &&
-                  recordRoot &&
-                  recordProof &&
-                  recordNetworks &&
-                  errorStep === null ? (
-                    <VerificationSuccess
-                      element={element}
-                      recordRoot={recordRoot}
-                      recordProof={recordProof}
-                      recordNetworks={recordNetworks}
-                    />
-                  ) : (
-                    <VerificationError
-                      element={element}
-                      errorStep={errorStep}
-                    />
-                  )}
-                </Col>
+
+                {!isEncrypted ? (
+                  <Col lg={7} className="mb-4 mt-2 px-4">
+                    {element &&
+                    recordRoot &&
+                    recordProof &&
+                    recordNetworks &&
+                    errorStep === null ? (
+                      <VerificationSuccess
+                        element={element}
+                        recordRoot={recordRoot}
+                        recordProof={recordProof}
+                        recordNetworks={recordNetworks}
+                        isRecordSigned={isSigned}
+                        recordSignature={recordCommonName}
+                        recordEncryptionAlg={recordEncryptionAlg}
+                      />
+                    ) : (
+                      <VerificationError
+                        element={element}
+                        errorStep={errorStep}
+                      />
+                    )}
+                  </Col>
+                ) : null}
               </Row>
             </div>
           </div>
         )}
       </div>
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>{t("decrypt-modal-title")}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {t("decrypt-modal-body")}
+          <Form>
+            <Form.Group className="my-3" controlId="exampleForm.ControlInput1">
+              <Form.Label className="text-sm">Password</Form.Label>
+              <Form.Control onChange={onPasswordChange} type="password" />
+            </Form.Group>
+          </Form>
+          {uiError && <Alert variant="warning">{uiError}</Alert>}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button
+            style={{
+              backgroundColor: "var(--primary-bg-color",
+              border: "none",
+            }}
+            onClick={decryptRecord}
+          >
+            Submit
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
