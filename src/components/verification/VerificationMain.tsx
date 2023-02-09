@@ -23,6 +23,11 @@ import VerificationSuccess from "./Success";
 
 Bloock.setApiKey((window as any).env.API_KEY);
 
+if ((window as any).env.API_HOST) {
+  console.log((window as any).env.API_HOST);
+  Bloock.setApiHost((window as any).env.API_HOST);
+}
+
 const client = new BloockClient();
 
 const colors = {
