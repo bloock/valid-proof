@@ -1,11 +1,13 @@
 import {
   AesDecrypter,
+  AuthenticityClient,
   Bloock,
-  BloockClient,
+  EncryptionClient,
+  IntegrityClient,
   Network,
   Proof,
   Record,
-  RecordBuilder,
+  RecordClient,
 } from "@bloock/sdk";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "primeicons/primeicons.css";
@@ -21,13 +23,15 @@ import StepperVerification from "../elements/Stepper";
 import VerificationError from "./Error";
 import VerificationSuccess from "./Success";
 
-Bloock.setApiKey((window as any).env.API_KEY);
-
 if ((window as any).env.API_HOST) {
   Bloock.setApiHost((window as any).env.API_HOST);
 }
+Bloock.setApiKey((window as any).env.API_KEY);
 
-const client = new BloockClient();
+const integrityClient = new IntegrityClient();
+const authenticityClient = new AuthenticityClient();
+const recordClient = new RecordClient();
+const encryptionClient = new EncryptionClient();
 
 const colors = {
   success: "var(--primary-bg-color)",
@@ -96,7 +100,9 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     const getEncryptionAlgorithm = async () => {
       if (element?.record) {
         try {
-          let encryptionAlg = await element.record.getEncryptionAlg();
+          let encryptionAlg = await encryptionClient.getEncryptionAlg(
+            element.record
+          );
           setRecordEncryptionAlg(encryptionAlg);
           if (encryptionAlg === 0 || encryptionAlg === 1) {
             setIsEncrypted(true);
@@ -116,12 +122,13 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
       }
     };
     getEncryptionAlgorithm();
-  }, [element]);
+  }, [element?.record]);
 
   const decryptRecord = async () => {
     if (isEncrypted && element?.record && encryptionPassword) {
       try {
-        let decryptedRecord = await RecordBuilder.fromRecord(element?.record)
+        let decryptedRecord = await recordClient
+          .fromRecord(element?.record)
           .withDecrypter(new AesDecrypter(encryptionPassword))
           .build();
         handleClose();
@@ -139,16 +146,23 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     const getRecordSignature = async () => {
       if (decryptedRecord && !isEncrypted) {
         try {
-          let signatures = await decryptedRecord?.getSignatures();
-          if (signatures.length > 0) {
-            setIsSigned(true);
-          }
-          let retrievedName = await signatures[0].getCommonName();
-          let signatureAlg = signatures && signatures[0]["header"].alg;
-          if (retrievedName) {
-            setRecordCommonName(retrievedName);
-          } else {
-            setRecordCommonName(signatureAlg);
+          if (element?.record) {
+            let signatures = await authenticityClient.getSignatures(
+              element?.record
+            );
+            if (signatures?.length > 0) {
+              setIsSigned(true);
+            }
+
+            let retrievedName = await authenticityClient.getSignatureCommonName(
+              signatures[0]
+            );
+            let signatureAlg = signatures && signatures[0]["header"].alg;
+            if (retrievedName) {
+              setRecordCommonName(retrievedName);
+            } else {
+              setRecordCommonName(signatureAlg);
+            }
           }
         } catch (e) {
           console.log(e);
@@ -171,13 +185,19 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     } else {
       handleShow();
     }
-  }, [errorFetchDocument, element, isEncrypted, decryptedRecord]);
+  }, [
+    errorFetchDocument,
+    element,
+    element?.record,
+    isEncrypted,
+    decryptedRecord,
+  ]);
 
   useEffect(() => {
     const getProof = async () => {
       if (!isEncrypted && element?.record) {
         try {
-          const proof = await client.getProof([
+          const proof = await integrityClient.getProof([
             decryptedRecord ? decryptedRecord : element?.record,
           ]);
           if (proof != null) {
@@ -200,7 +220,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     const verifyProof = async () => {
       if (recordProof != null && !isEncrypted) {
         try {
-          const root = await client.verifyProof(recordProof);
+          const root = await integrityClient.verifyProof(recordProof);
           if (root) {
             setActiveStep(2);
 
@@ -241,7 +261,10 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
                 case "ethereum_goerli":
                   network = Network.ETHEREUM_GOERLI;
               }
-              const timestamp = await client.validateRoot(recordRoot, network);
+              const timestamp = await integrityClient.validateRoot(
+                recordRoot,
+                network
+              );
 
               if (timestamp !== 0 && timestamp !== null) {
                 networks.push({
