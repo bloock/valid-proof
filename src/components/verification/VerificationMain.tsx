@@ -440,10 +440,8 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
       </div>
 
       <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>{t("decrypt-modal-title")}</Modal.Title>
-        </Modal.Header>
         <Modal.Body>
+          <Modal.Title className="py-3">{t("decrypt-modal-title")}</Modal.Title>
           {t("decrypt-modal-body")}
           <Form>
             <Form.Group className="my-3" controlId="exampleForm.ControlInput1">
