@@ -1,4 +1,4 @@
-import { Record, RecordBuilder } from "@bloock/sdk";
+import { Record, RecordClient } from "@bloock/sdk";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Buffer } from "buffer";
@@ -29,6 +29,8 @@ export type FileElement = {
 const Home = () => {
   const { t } = useTranslation("home");
 
+  let recordClient = new RecordClient();
+
   const session = getCookie("hasValidated");
 
   const [element, setElement] = useState<FileElement | null>(null);
@@ -43,7 +45,7 @@ const Home = () => {
       setElement({
         name: Truncate(decodedData as string, 30, "..."),
         value: decodedData,
-        record: await RecordBuilder.fromString(decodedData).build(),
+        record: await recordClient.fromString(decodedData).build(),
       });
     } else {
       setElement(null);
@@ -92,13 +94,13 @@ const Home = () => {
         setElement({
           name: urlParam.href,
           value: JSON.parse(string),
-          record: await RecordBuilder.fromJson(JSON.parse(string)).build(),
+          record: await recordClient.fromJson(JSON.parse(string)).build(),
         });
       } else if (await getFileType(bytes)) {
         setElement({
           name: urlParam.href,
           value: bytes,
-          record: await RecordBuilder.fromFile(bytes).build(),
+          record: await recordClient.fromFile(bytes).build(),
         });
       } else {
         setElement(null);

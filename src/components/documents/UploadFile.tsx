@@ -1,4 +1,4 @@
-import { RecordBuilder } from "@bloock/sdk";
+import { RecordClient } from "@bloock/sdk";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
@@ -55,6 +55,8 @@ const FileSection: React.FC<FileSectionProps> = ({
   onErrorFetchDocument,
 }) => {
   const { t } = useTranslation("upload-file");
+
+  let recordClient = new RecordClient();
 
   const [element, setElement] = useState<FileElement | null>(elementType);
   const [documentTypeError, setDocumentTypeError] = useState<string>("");
@@ -133,18 +135,18 @@ const FileSection: React.FC<FileSectionProps> = ({
             setElement({
               name: file?.name,
               value: await fileToBytes(file),
-              record: await RecordBuilder.fromFile(
-                await fileToBytes(file)
-              ).build(),
+              record: await recordClient
+                .fromFile(await fileToBytes(file))
+                .build(),
             });
             break;
           case "application/json":
             setElement({
               name: file?.name,
               value: await fileToJSON(file),
-              record: await RecordBuilder.fromJson(
-                await fileToJSON(file)
-              ).build(),
+              record: await recordClient
+                .fromJson(await fileToJSON(file))
+                .build(),
             });
 
             break;
@@ -152,9 +154,9 @@ const FileSection: React.FC<FileSectionProps> = ({
             setElement({
               name: file?.name,
               value: await fileToBytes(file),
-              record: await RecordBuilder.fromFile(
-                await fileToBytes(file)
-              ).build(),
+              record: await recordClient
+                .fromFile(await fileToBytes(file))
+                .build(),
             });
 
             break;
