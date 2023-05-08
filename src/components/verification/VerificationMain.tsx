@@ -27,14 +27,17 @@ if ((window as any).env.API_HOST) {
   Bloock.setApiHost((window as any).env.API_HOST);
 }
 
-if ((window as any).env.PROVIDER) {
-  Bloock.setProvider(Network.BLOOCK_CHAIN, (window as any).env.PROVIDER);
+if ((window as any).env.BLOOCKCHAIN_PROVIDER) {
+  Bloock.setProvider(
+    Network.BLOOCK_CHAIN,
+    (window as any).env.BLOOCKCHAIN_PROVIDER
+  );
 }
 
-if ((window as any).env.CONTRACT_ADDRESS) {
+if ((window as any).env.BLOOCKCHAIN_CONTRACT_ADDRESS) {
   Bloock.setContractAddress(
     Network.BLOOCK_CHAIN,
-    (window as any).env.CONTRACT_ADDRESS
+    (window as any).env.BLOOCKCHAIN_CONTRACT_ADDRESS
   );
 }
 
