@@ -261,7 +261,7 @@ const VerificationSuccess: React.FC<VerificationSuccessProps> = ({
       >
         <p>{t("issuer")}</p>
       </div>
-      <div>{t("bloock")}</div>
+      <div> {recordSignature ? recordSignature : t("not-available")}</div>
       <Divider className="my-3" style={{ borderBottom: "1px solid #dbdbdb" }} />
       <div
         className="text-secondary text-uppercase bold-text"

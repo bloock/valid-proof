@@ -144,7 +144,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
 
   useEffect(() => {
     const getRecordSignature = async () => {
-      if (decryptedRecord && !isEncrypted) {
+      if (!isEncrypted) {
         try {
           if (element?.record) {
             let signatures = await authenticityClient.getSignatures(
@@ -170,7 +170,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
       }
     };
     getRecordSignature();
-  }, [decryptedRecord, isEncrypted]);
+  }, [element?.record, decryptedRecord, isEncrypted]);
 
   useEffect(() => {
     if (!isEncrypted) {
