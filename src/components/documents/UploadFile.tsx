@@ -164,6 +164,7 @@ const FileSection: React.FC<FileSectionProps> = ({
       } catch (e) {
         console.log(e);
         setDocumentTypeError(t("file-not-accepted"));
+        setIsFileUploaded(false);
       }
     } else {
       onErrorFetchDocument(false);
