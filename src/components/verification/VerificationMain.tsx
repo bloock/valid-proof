@@ -26,6 +26,18 @@ import VerificationSuccess from "./Success";
 if ((window as any).env.API_HOST) {
   Bloock.setApiHost((window as any).env.API_HOST);
 }
+
+if ((window as any).env.PROVIDER) {
+  Bloock.setProvider(Network.BLOOCK_CHAIN, (window as any).env.PROVIDER);
+}
+
+if ((window as any).env.CONTRACT_ADDRESS) {
+  Bloock.setContractAddress(
+    Network.BLOOCK_CHAIN,
+    (window as any).env.CONTRACT_ADDRESS
+  );
+}
+
 Bloock.setApiKey((window as any).env.API_KEY);
 
 const integrityClient = new IntegrityClient();
