@@ -17,12 +17,12 @@ export const getFileType = (file: Uint8Array) => {
       return type[0].mime || null;
     }
 
-    const firstChar = String.fromCharCode(file[0]);
+    JSON.parse(new TextDecoder().decode(file));
+    return "application/json";
+    /* const firstChar = String.fromCharCode(file[0]);
     if (firstChar === "{" || firstChar === "[") {
       return "application/json";
-    }
-
-    return null;
+    } */
   } catch (e) {
     return null;
   }
