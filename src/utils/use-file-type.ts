@@ -19,10 +19,6 @@ export const getFileType = (file: Uint8Array) => {
 
     JSON.parse(new TextDecoder().decode(file));
     return "application/json";
-    /* const firstChar = String.fromCharCode(file[0]);
-    if (firstChar === "{" || firstChar === "[") {
-      return "application/json";
-    } */
   } catch (e) {
     return null;
   }
