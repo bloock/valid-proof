@@ -37,7 +37,7 @@ if ((window as any).env.BLOOCKCHAIN_PROVIDER) {
 if ((window as any).env.GOERLI_PROVIDER) {
   Bloock.setProvider(
     Network.ETHEREUM_GOERLI,
-    (window as any).env.BLOOCKCHAIN_PROVIDER
+    (window as any).env.GOERLI_PROVIDER
   );
 }
 
