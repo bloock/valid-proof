@@ -17,7 +17,8 @@ export const getFileType = (file: Uint8Array) => {
       return type[0].mime || null;
     }
 
-    return null;
+    JSON.parse(new TextDecoder().decode(file));
+    return "application/json";
   } catch (e) {
     return null;
   }

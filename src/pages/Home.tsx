@@ -86,9 +86,7 @@ const Home = () => {
         error = e;
         return Buffer.from([]);
       });
-
     var string = new TextDecoder().decode(bytes);
-
     if (error === undefined) {
       if (isJSONValid(string)) {
         setElement({
