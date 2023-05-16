@@ -1,4 +1,10 @@
-import { Record, RecordClient } from "@bloock/sdk";
+import {
+  AesDecrypter,
+  Bloock,
+  EncryptionAlg,
+  Record,
+  RecordClient,
+} from "@bloock/sdk";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Buffer } from "buffer";
@@ -6,7 +12,8 @@ import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import { Fragment, useEffect, useRef, useState } from "react";
-import { Col, Row } from "react-bootstrap";
+import { Alert, Button, Col, Form, Modal, Row } from "react-bootstrap";
+
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import FileSection from "../components/documents/UploadFile";
@@ -29,7 +36,12 @@ export type FileElement = {
 const Home = () => {
   const { t } = useTranslation("home");
 
-  let recordClient = new RecordClient();
+  if ((window as any).env.API_HOST) {
+    Bloock.setApiHost((window as any).env.API_HOST);
+  }
+  Bloock.setApiKey((window as any).env.API_KEY);
+
+  const recordClient = new RecordClient();
 
   const session = getCookie("hasValidated");
 
@@ -39,6 +51,130 @@ const Home = () => {
   const [searchParams] = useSearchParams();
   const [errorFetchDocument, setErrorFetchDocument] = useState<boolean>(false);
   const [decodedData, setDecodedData] = useState<string | null>(null);
+  const [show, setShow] = useState(false);
+  const [isEncrypted, setIsEncrypted] = useState<boolean>(false);
+  const [encryptionAlg, setEncryptionAlg] = useState<EncryptionAlg | null>(
+    null
+  );
+  const [decryptedRecord, setDecryptedRecord] = useState<Record | null>(null);
+  const [uiError, setUiError] = useState<string>("");
+  const [encryptionPassword, setEncryptionPassword] = useState<string>("");
+  const [encryptedBytesDoc, setEncryptedBytesDoc] = useState<Uint8Array | null>(
+    null
+  );
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const onPasswordChange = (e: any) => {
+    setEncryptionPassword(e.target.value);
+    setUiError("");
+  };
+
+  useEffect(() => {
+    setDecryptedRecord(null);
+    setUiError("");
+  }, [encryptedBytesDoc]);
+
+  async function fileLoader(urlParam: any) {
+    const isJSONValid = useIsJson;
+
+    urlParam = new URL(urlParam);
+    let error;
+
+    let bytes = await axios
+      .get(urlParam, {
+        responseType: "arraybuffer",
+      })
+      .then((res) => {
+        return Buffer.from(res.data);
+      })
+      .catch((e) => {
+        error = e;
+        return Buffer.from([]);
+      });
+
+    setEncryptedBytesDoc(bytes);
+
+    let urlDecodedContent = new TextDecoder().decode(bytes);
+
+    if (error === undefined) {
+      if (isJSONValid(urlDecodedContent)) {
+        let value = JSON.parse(urlDecodedContent);
+        if (value["_metadata_"].is_encrypted) {
+          setEncryptionAlg(value["_metadata_"].encryption_alg);
+          setIsEncrypted(true);
+          handleShow();
+          setElement({
+            name: urlParam.href,
+            value: value,
+            record: undefined,
+          });
+        } else {
+          setElement({
+            name: urlParam.href,
+            value: value,
+            record: await recordClient
+              .fromJson(JSON.parse(urlDecodedContent))
+              .build(),
+          });
+        }
+      } else if (await getFileType(bytes)) {
+        setElement({
+          name: urlParam.href,
+          value: bytes,
+          record: await recordClient.fromFile(bytes).build(),
+        });
+      } else {
+        setElement(null);
+        setErrorFetchDocument(true);
+      }
+    } else {
+      setErrorFetchDocument(true);
+      setValidateFromUrl(false);
+      setElement(null);
+    }
+  }
+
+  useEffect(() => {
+    const recordQuery = searchParams.get("record");
+    const isURL = useIsUrl;
+
+    if (isURL(recordQuery)) {
+      fileLoader(recordQuery);
+      setValidateFromUrl(true);
+    } else {
+      setValidateFromUrl(false);
+    }
+  }, [searchParams]);
+
+  const decryptRecord = async () => {
+    if (
+      isEncrypted &&
+      encryptedBytesDoc &&
+      encryptionAlg &&
+      encryptionPassword
+    ) {
+      try {
+        let decryptedRecord = await recordClient
+          .fromBytes(encryptedBytesDoc)
+          .withDecrypter(new AesDecrypter(encryptionPassword))
+          .build();
+        handleClose();
+        setIsEncrypted(false);
+        setDecryptedRecord(decryptedRecord);
+        setElement({
+          name: element?.name,
+          value: element?.value,
+          record: decryptedRecord,
+        });
+      } catch (e) {
+        console.log(e);
+        setUiError("This password seems to be incorrect");
+        return;
+      }
+      setEncryptedBytesDoc(null);
+    }
+  };
 
   async function decodedDataLoader() {
     if (decodedData) {
@@ -68,61 +204,6 @@ const Home = () => {
       decodedDataLoader();
     }
   }, [searchParams, decodedData]);
-
-  async function fileLoader(urlParam: any) {
-    const isJSONValid = useIsJson;
-
-    urlParam = new URL(urlParam);
-    let error;
-
-    let bytes = await axios
-      .get(urlParam, {
-        responseType: "arraybuffer",
-      })
-      .then((res) => {
-        return Buffer.from(res.data);
-      })
-      .catch((e) => {
-        error = e;
-        return Buffer.from([]);
-      });
-
-    var string = new TextDecoder().decode(bytes);
-
-    if (error === undefined) {
-      if (isJSONValid(string)) {
-        setElement({
-          name: urlParam.href,
-          value: JSON.parse(string),
-          record: await recordClient.fromJson(JSON.parse(string)).build(),
-        });
-      } else if (await getFileType(bytes)) {
-        setElement({
-          name: urlParam.href,
-          value: bytes,
-          record: await recordClient.fromFile(bytes).build(),
-        });
-      } else {
-        setElement(null);
-        setErrorFetchDocument(true);
-      }
-    } else {
-      setErrorFetchDocument(true);
-      setValidateFromUrl(false);
-    }
-  }
-
-  useEffect(() => {
-    const recordQuery = searchParams.get("record");
-    const isURL = useIsUrl;
-
-    if (isURL(recordQuery)) {
-      fileLoader(recordQuery);
-      setValidateFromUrl(true);
-    } else {
-      setValidateFromUrl(false);
-    }
-  }, [searchParams]);
 
   useEffect(() => {
     const id: string | null = "scoll-offset";
@@ -195,6 +276,7 @@ const Home = () => {
                   errorFetchDocument={errorFetchDocument}
                   onErrorFetchDocument={(error) => setErrorFetchDocument(error)}
                   element={null}
+                  isDocumentEncrypted={isEncrypted}
                 ></FileSection>
               </Col>
             ) : null}
@@ -212,11 +294,11 @@ const Home = () => {
                 onErrorFetchDocument={(error) => setErrorFetchDocument(error)}
                 errorFetchDocument={errorFetchDocument}
                 element={element}
+                isDocumentEncrypted={isEncrypted}
               ></FileSection>
             </div>
           ) : null}
         </div>
-
         <div className="top-margin"></div>
         {!!session === false ? (
           <div className="bg-light pt-3 pb-5 mt-3">
@@ -319,6 +401,39 @@ const Home = () => {
             </div>
           </div>
         ) : null}
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Body>
+            <Modal.Title className="py-3">
+              {t("decrypt-modal-title")}
+            </Modal.Title>
+            {t("decrypt-modal-body")}
+            <Form>
+              <Form.Group
+                className="my-3"
+                controlId="exampleForm.ControlInput1"
+              >
+                <Form.Label className="text-sm">Password</Form.Label>
+                <Form.Control onChange={onPasswordChange} type="password" />
+              </Form.Group>
+            </Form>
+            {uiError && <Alert variant="warning">{uiError}</Alert>}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+            <Button
+              style={{
+                backgroundColor: "var(--primary-bg-color",
+                border: "none",
+              }}
+              onClick={decryptRecord}
+            >
+              Submit
+            </Button>
+          </Modal.Footer>
+        </Modal>
+        ;
       </div>
     </Fragment>
   );

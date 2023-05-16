@@ -1,20 +1,16 @@
 import {
-  AesDecrypter,
   AuthenticityClient,
   Bloock,
-  EncryptionClient,
   IntegrityClient,
   Network,
   Proof,
-  Record,
-  RecordClient,
 } from "@bloock/sdk";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import React, { useEffect, useState } from "react";
-import { Alert, Button, Col, Form, Modal, Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { FileElement } from "../../pages/Home";
 import "../../styles.css";
@@ -30,8 +26,6 @@ Bloock.setApiKey((window as any).env.API_KEY);
 
 const integrityClient = new IntegrityClient();
 const authenticityClient = new AuthenticityClient();
-const recordClient = new RecordClient();
-const encryptionClient = new EncryptionClient();
 
 const colors = {
   success: "var(--primary-bg-color)",
@@ -69,137 +63,66 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   const [componentTransition, setComponentTransition] = useState(false);
   const [hasUserAlreadyValidated, setHasUserAlreadyValidated] =
     useState<boolean>(false);
-  const [isEncrypted, setIsEncrypted] = useState<boolean>(false);
   const [isSigned, setIsSigned] = useState<boolean>(false);
-  const [show, setShow] = useState(false);
-  const [encryptionPassword, setEncryptionPassword] = useState<string>("");
   const [recordCommonName, setRecordCommonName] = useState<string>("");
   const [recordEncryptionAlg, setRecordEncryptionAlg] = useState<any>("");
-  const [decryptedRecord, setDecryptedRecord] = useState<Record | null>(null);
-  const [uiError, setUiError] = useState<string>("");
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   function getRandomInterval(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
-
-  const onPasswordChange = (e: any) => {
-    setEncryptionPassword(e.target.value);
-    setUiError("");
-  };
 
   useEffect(() => {
     setErrorStep(null);
     setRecordProof(null);
     setRecordRoot(null);
     setRecordNetworks(null);
-  }, [element]);
-
-  useEffect(() => {
-    const getEncryptionAlgorithm = async () => {
-      if (element?.record) {
-        try {
-          let encryptionAlg = await encryptionClient.getEncryptionAlg(
-            element.record
-          );
-          setRecordEncryptionAlg(encryptionAlg);
-          if (encryptionAlg === 0 || encryptionAlg === 1) {
-            setIsEncrypted(true);
-            if (encryptionAlg === 0) {
-              setRecordEncryptionAlg("A256GCM");
-            } else if (encryptionAlg === 1) {
-              setRecordEncryptionAlg("RSA");
-            }
-          } else {
-            setIsEncrypted(false);
-            setRecordEncryptionAlg("");
-          }
-        } catch (e) {
-          setIsEncrypted(false);
-          return;
-        }
-      }
-    };
-    getEncryptionAlgorithm();
-  }, [element?.record]);
-
-  const decryptRecord = async () => {
-    if (isEncrypted && element?.record && encryptionPassword) {
-      try {
-        let decryptedRecord = await recordClient
-          .fromRecord(element?.record)
-          .withDecrypter(new AesDecrypter(encryptionPassword))
-          .build();
-        handleClose();
-        setIsEncrypted(false);
-        setDecryptedRecord(decryptedRecord);
-      } catch (e) {
-        console.log(e);
-        setUiError("This password seems to be incorrect");
-        return;
-      }
-    }
-  };
+    setComponentTransition(false);
+  }, [element, errorFetchDocument]);
 
   useEffect(() => {
     const getRecordSignature = async () => {
-      if (decryptedRecord && !isEncrypted) {
-        try {
-          if (element?.record) {
-            let signatures = await authenticityClient.getSignatures(
-              element?.record
-            );
-            if (signatures?.length > 0) {
-              setIsSigned(true);
-            }
-
-            let retrievedName = await authenticityClient.getSignatureCommonName(
-              signatures[0]
-            );
-            let signatureAlg = signatures && signatures[0]["header"].alg;
-            if (retrievedName) {
-              setRecordCommonName(retrievedName);
-            } else {
-              setRecordCommonName(signatureAlg);
-            }
+      try {
+        if (element?.record) {
+          let signatures = await authenticityClient.getSignatures(
+            element?.record
+          );
+          if (signatures?.length > 0) {
+            setIsSigned(true);
           }
-        } catch (e) {
-          console.log(e);
+
+          let retrievedName = await authenticityClient.getSignatureCommonName(
+            signatures[0]
+          );
+          let signatureAlg = signatures && signatures[0]["header"].alg;
+          if (retrievedName) {
+            setRecordCommonName(retrievedName);
+          } else {
+            setRecordCommonName(signatureAlg);
+          }
         }
+      } catch (e) {
+        console.log(e);
       }
     };
     getRecordSignature();
-  }, [decryptedRecord, isEncrypted]);
+  }, []);
 
   useEffect(() => {
-    if (!isEncrypted) {
-      if (errorFetchDocument) {
-        setTimeout(
-          () => (onErrorFetchDocument(true), setErrorStep(0), setActiveStep(0)),
-          getRandomInterval(1500, 2000)
-        );
-      } else {
-        setActiveStep(0);
-      }
+    if (errorFetchDocument) {
+      setTimeout(
+        () => (onErrorFetchDocument(true), setErrorStep(0), setActiveStep(0)),
+        getRandomInterval(1500, 2000)
+      );
     } else {
-      handleShow();
+      setActiveStep(0);
     }
-  }, [
-    errorFetchDocument,
-    element,
-    element?.record,
-    isEncrypted,
-    decryptedRecord,
-  ]);
+  }, [errorFetchDocument, element, element?.record]);
 
   useEffect(() => {
     const getProof = async () => {
-      if (!isEncrypted && element?.record) {
+      if (element?.record) {
         try {
-          const proof = await integrityClient.getProof([
-            decryptedRecord ? decryptedRecord : element?.record,
-          ]);
+          const proof = await integrityClient.getProof([element?.record]);
           if (proof != null) {
             setActiveStep(1);
             setRecordProof(proof);
@@ -214,11 +137,11 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
     };
 
     setTimeout(() => getProof(), getRandomInterval(500, 1000));
-  }, [decryptedRecord, isEncrypted, element?.record]);
+  }, [element?.record]);
 
   useEffect(() => {
     const verifyProof = async () => {
-      if (recordProof != null && !isEncrypted) {
+      if (recordProof != null) {
         try {
           const root = await integrityClient.verifyProof(recordProof);
           if (root) {
@@ -241,7 +164,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
 
   useEffect(() => {
     const getRecordTimestamp = async () => {
-      if (recordRoot != null && recordProof && !isEncrypted) {
+      if (recordRoot != null && recordProof) {
         try {
           let networks = [];
 
@@ -293,7 +216,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   }, [recordRoot]);
 
   useEffect(() => {
-    if (recordNetworks || (errorStep !== null && !isEncrypted)) {
+    if (recordNetworks || errorStep !== null) {
       setTimeout(() => setComponentTransition(true), 500);
     }
   }, [recordNetworks, errorStep]);
@@ -377,7 +300,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
 
   return (
     <div className="mt-3 verification-section">
-      {!componentTransition && !isEncrypted ? (
+      {!componentTransition ? (
         <div
           className="horizontal-center timeline-margins mb-4 stepper bg-light rounded"
           style={{ paddingTop: "30px", paddingBottom: "20px" }}
@@ -388,9 +311,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
       ) : null}
       <div className="little-top-margin"></div>
       <div className="horizontal-center">
-        {!componentTransition ? (
-          null && !isEncrypted
-        ) : (
+        {!componentTransition ? null : (
           <div className="pt-2 mb-5">
             <div
               className="mt-2 border-0 bg-light verification-container"
@@ -403,13 +324,13 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
                     : "justify-content-between"
                 } d-flex flex-column-reverse flex-lg-row p-3 `}
               >
-                {element && element?.name !== "" && !isEncrypted ? (
+                {element && element?.name !== "" ? (
                   <Col lg={5} className="my-4 px-4">
                     <FilePreview element={element} />
                   </Col>
                 ) : null}
 
-                {!isEncrypted ? (
+                {element ? (
                   <Col lg={7} className="mb-4 mt-2 px-4">
                     {element &&
                     recordRoot &&
@@ -438,34 +359,6 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
           </div>
         )}
       </div>
-
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Body>
-          <Modal.Title className="py-3">{t("decrypt-modal-title")}</Modal.Title>
-          {t("decrypt-modal-body")}
-          <Form>
-            <Form.Group className="my-3" controlId="exampleForm.ControlInput1">
-              <Form.Label className="text-sm">Password</Form.Label>
-              <Form.Control onChange={onPasswordChange} type="password" />
-            </Form.Group>
-          </Form>
-          {uiError && <Alert variant="warning">{uiError}</Alert>}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button
-            style={{
-              backgroundColor: "var(--primary-bg-color",
-              border: "none",
-            }}
-            onClick={decryptRecord}
-          >
-            Submit
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </div>
   );
 };

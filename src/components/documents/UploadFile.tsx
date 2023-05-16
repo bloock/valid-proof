@@ -1,15 +1,17 @@
-import { RecordClient } from "@bloock/sdk";
+import { AesDecrypter, EncryptionAlg, RecordClient } from "@bloock/sdk";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Alert, Form, Modal, Button as ModalButton } from "react-bootstrap";
 import { useDropzone } from "react-dropzone";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { FileElement } from "../../pages/Home";
 import "../../styles.css";
 import { getFileType } from "../../utils/use-file-type";
+import { useIsJson } from "../../utils/use-is-json";
 import Button from "../elements/Button";
 
 type FileSectionProps = {
@@ -17,6 +19,7 @@ type FileSectionProps = {
   element: FileElement | null;
   errorFetchDocument: boolean;
   onErrorFetchDocument: (error: any) => any;
+  isDocumentEncrypted: boolean;
 };
 
 const baseStyle = {
@@ -53,6 +56,7 @@ const FileSection: React.FC<FileSectionProps> = ({
   element: elementType,
   errorFetchDocument,
   onErrorFetchDocument,
+  isDocumentEncrypted,
 }) => {
   const { t } = useTranslation("upload-file");
 
@@ -61,6 +65,28 @@ const FileSection: React.FC<FileSectionProps> = ({
   const [element, setElement] = useState<FileElement | null>(elementType);
   const [documentTypeError, setDocumentTypeError] = useState<string>("");
   const [isFileUploaded, setIsFileUploaded] = useState<boolean>(false);
+  const [show, setShow] = useState(false);
+
+  const [encryptionAlg, setEncryptionAlg] = useState<EncryptionAlg | null>(
+    null
+  );
+  const [isEncrypted, setIsEncrypted] = useState<boolean>(false);
+  const [encryptionPassword, setEncryptionPassword] = useState<string>("");
+  const [decodedFile, setDecodedFile] = useState<string | null>(null);
+
+  const [uiError, setUiError] = useState<string>("");
+
+  const [isVerifyAnotherClicked, setIsVerifyAnotherClicked] =
+    useState<boolean>(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const onPasswordChange = (e: any) => {
+    setEncryptionPassword(e.target.value);
+    setUiError("");
+  };
+
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length >= 0) {
       handleFileChange(acceptedFiles[0]);
@@ -85,7 +111,7 @@ const FileSection: React.FC<FileSectionProps> = ({
 
   useEffect(() => {
     onElementChange(element);
-  }, [element]);
+  }, [element?.record]);
 
   function fileToBytes(file: File): Promise<Uint8Array> {
     return new Promise((resolve, reject) => {
@@ -126,51 +152,103 @@ const FileSection: React.FC<FileSectionProps> = ({
   const handleFileChange = async (file: File | null) => {
     setDocumentTypeError("");
     setIsFileUploaded(true);
+    const isJSONValid = useIsJson;
+
     if (file != null) {
       let bytes = await file.arrayBuffer();
-      let fileType = await getFileType(new Uint8Array(bytes));
-      try {
-        switch (fileType) {
-          case "application/pdf":
-            setElement({
-              name: file?.name,
-              value: await fileToBytes(file),
-              record: await recordClient
-                .fromFile(await fileToBytes(file))
-                .build(),
-            });
-            break;
-          case "application/json":
-            setElement({
-              name: file?.name,
-              value: await fileToJSON(file),
-              record: await recordClient
-                .fromJson(await fileToJSON(file))
-                .build(),
-            });
+      let decodedFile = new TextDecoder().decode(bytes);
+      setDecodedFile(decodedFile);
 
-            break;
-          default:
-            setElement({
-              name: file?.name,
-              value: await fileToBytes(file),
-              record: await recordClient
-                .fromFile(await fileToBytes(file))
-                .build(),
-            });
-
-            break;
+      if (isJSONValid(decodedFile)) {
+        let value = JSON.parse(decodedFile);
+        if (value["_metadata_"].is_encrypted) {
+          setEncryptionAlg(value["_metadata_"].encryption_alg);
+          setIsEncrypted(true);
+          handleShow();
+          setElement({
+            name: file.name,
+            value: value,
+            record: undefined,
+          });
+        } else {
+          setElement({
+            name: file.name,
+            value: value,
+            record: await recordClient
+              .fromJson(JSON.parse(decodedFile))
+              .build(),
+          });
         }
-      } catch (e) {
-        console.log(e);
-        setDocumentTypeError(t("file-not-accepted"));
+      } else {
+        let fileType = await getFileType(new Uint8Array(bytes));
+        try {
+          switch (fileType) {
+            case "application/pdf":
+              setElement({
+                name: file?.name,
+                value: await fileToBytes(file),
+                record: await recordClient
+                  .fromFile(await fileToBytes(file))
+                  .build(),
+              });
+              break;
+            case "application/json":
+              setElement({
+                name: file?.name,
+                value: await fileToJSON(file),
+                record: await recordClient
+                  .fromJson(await fileToJSON(file))
+                  .build(),
+              });
+
+              break;
+            default:
+              setElement({
+                name: file?.name,
+                value: await fileToBytes(file),
+                record: await recordClient
+                  .fromFile(await fileToBytes(file))
+                  .build(),
+              });
+
+              break;
+          }
+        } catch (e) {
+          console.log(e);
+          setDocumentTypeError(t("file-not-accepted"));
+          setIsFileUploaded(false);
+        }
       }
     } else {
-      onErrorFetchDocument(false);
+      onErrorFetchDocument(null);
       setElement(null);
       setIsFileUploaded(false);
       goToTop();
       navigate("/");
+      setIsEncrypted(false);
+    }
+  };
+
+  const decryptRecord = async () => {
+    if (isEncrypted && decodedFile && encryptionAlg && encryptionPassword) {
+      try {
+        let decryptedRecord = await recordClient
+          .fromString(decodedFile)
+          .withDecrypter(new AesDecrypter(encryptionPassword))
+          .build();
+        handleClose();
+        setIsEncrypted(false);
+        setElement({
+          name: element?.name,
+          value: element?.value,
+          record: decryptedRecord,
+        });
+      } catch (e) {
+        console.log(e);
+        setUiError("This password seems to be incorrect");
+        return;
+      }
+      setDecodedFile(null);
     }
   };
 
@@ -250,6 +328,34 @@ const FileSection: React.FC<FileSectionProps> = ({
           </div>
         </>
       ) : null}
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Body>
+          <Modal.Title className="py-3">{t("decrypt-modal-title")}</Modal.Title>
+          {t("decrypt-modal-body")}
+          <Form>
+            <Form.Group className="my-3" controlId="exampleForm.ControlInput1">
+              <Form.Label className="text-sm">Password</Form.Label>
+              <Form.Control onChange={onPasswordChange} type="password" />
+            </Form.Group>
+          </Form>
+          {uiError && <Alert variant="warning">{uiError}</Alert>}
+        </Modal.Body>
+        <Modal.Footer>
+          <ModalButton variant="secondary" onClick={handleClose}>
+            Close
+          </ModalButton>
+          <ModalButton
+            style={{
+              backgroundColor: "var(--primary-bg-color",
+              border: "none",
+            }}
+            onClick={decryptRecord}
+          >
+            Submit
+          </ModalButton>
+        </Modal.Footer>
+      </Modal>
     </section>
   );
 };
