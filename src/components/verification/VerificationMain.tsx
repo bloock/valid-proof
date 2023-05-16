@@ -22,6 +22,35 @@ import VerificationSuccess from "./Success";
 if ((window as any).env.API_HOST) {
   Bloock.setApiHost((window as any).env.API_HOST);
 }
+
+if ((window as any).env.BLOOCKCHAIN_PROVIDER) {
+  Bloock.setProvider(
+    Network.BLOOCK_CHAIN,
+    (window as any).env.BLOOCKCHAIN_PROVIDER
+  );
+}
+
+if ((window as any).env.GOERLI_PROVIDER) {
+  Bloock.setProvider(
+    Network.ETHEREUM_GOERLI,
+    (window as any).env.GOERLI_PROVIDER
+  );
+}
+
+if ((window as any).env.BLOOCKCHAIN_CONTRACT_ADDRESS) {
+  Bloock.setContractAddress(
+    Network.BLOOCK_CHAIN,
+    (window as any).env.BLOOCKCHAIN_CONTRACT_ADDRESS
+  );
+}
+
+if ((window as any).env.GOERLI_CONTRACT_ADDRESS) {
+  Bloock.setContractAddress(
+    Network.ETHEREUM_GOERLI,
+    (window as any).env.GOERLI_CONTRACT_ADDRESS
+  );
+}
+
 Bloock.setApiKey((window as any).env.API_KEY);
 
 const integrityClient = new IntegrityClient();
