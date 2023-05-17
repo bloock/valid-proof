@@ -1,10 +1,9 @@
-import { AesDecrypter, EncryptionAlg, RecordClient } from "@bloock/sdk";
+import { AesDecrypter, RecordClient, RsaDecrypter } from "@bloock/sdk";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Alert, Form, Modal, Button as ModalButton } from "react-bootstrap";
 import { useDropzone } from "react-dropzone";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +12,7 @@ import "../../styles.css";
 import { getFileType } from "../../utils/use-file-type";
 import { useIsJson } from "../../utils/use-is-json";
 import Button from "../elements/Button";
+import Popup from "../elements/Modal";
 
 type FileSectionProps = {
   onElementChange: (element: any) => any;
@@ -56,7 +56,6 @@ const FileSection: React.FC<FileSectionProps> = ({
   element: elementType,
   errorFetchDocument,
   onErrorFetchDocument,
-  isDocumentEncrypted,
 }) => {
   const { t } = useTranslation("upload-file");
 
@@ -67,17 +66,12 @@ const FileSection: React.FC<FileSectionProps> = ({
   const [isFileUploaded, setIsFileUploaded] = useState<boolean>(false);
   const [show, setShow] = useState(false);
 
-  const [encryptionAlg, setEncryptionAlg] = useState<EncryptionAlg | null>(
-    null
-  );
+  const [encryptionAlg, setEncryptionAlg] = useState<string | null>(null);
   const [isEncrypted, setIsEncrypted] = useState<boolean>(false);
   const [encryptionPassword, setEncryptionPassword] = useState<string>("");
   const [decodedFile, setDecodedFile] = useState<string | null>(null);
 
   const [uiError, setUiError] = useState<string>("");
-
-  const [isVerifyAnotherClicked, setIsVerifyAnotherClicked] =
-    useState<boolean>(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -161,7 +155,7 @@ const FileSection: React.FC<FileSectionProps> = ({
 
       if (isJSONValid(decodedFile)) {
         let value = JSON.parse(decodedFile);
-        if (value["_metadata_"].is_encrypted) {
+        if (value && value["_metadata_"].is_encrypted) {
           setEncryptionAlg(value["_metadata_"].encryption_alg);
           setIsEncrypted(true);
           handleShow();
@@ -234,7 +228,11 @@ const FileSection: React.FC<FileSectionProps> = ({
       try {
         let decryptedRecord = await recordClient
           .fromString(decodedFile)
-          .withDecrypter(new AesDecrypter(encryptionPassword))
+          .withDecrypter(
+            encryptionAlg === "A256GCM"
+              ? new AesDecrypter(encryptionPassword)
+              : new RsaDecrypter(encryptionPassword)
+          )
           .build();
         handleClose();
         setIsEncrypted(false);
@@ -245,7 +243,7 @@ const FileSection: React.FC<FileSectionProps> = ({
         });
       } catch (e) {
         console.log(e);
-        setUiError("This password seems to be incorrect");
+        setUiError(t("ui-password-error"));
         return;
       }
       setDecodedFile(null);
@@ -329,33 +327,17 @@ const FileSection: React.FC<FileSectionProps> = ({
         </>
       ) : null}
 
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Body>
-          <Modal.Title className="py-3">{t("decrypt-modal-title")}</Modal.Title>
-          {t("decrypt-modal-body")}
-          <Form>
-            <Form.Group className="my-3" controlId="exampleForm.ControlInput1">
-              <Form.Label className="text-sm">Password</Form.Label>
-              <Form.Control onChange={onPasswordChange} type="password" />
-            </Form.Group>
-          </Form>
-          {uiError && <Alert variant="warning">{uiError}</Alert>}
-        </Modal.Body>
-        <Modal.Footer>
-          <ModalButton variant="secondary" onClick={handleClose}>
-            Close
-          </ModalButton>
-          <ModalButton
-            style={{
-              backgroundColor: "var(--primary-bg-color",
-              border: "none",
-            }}
-            onClick={decryptRecord}
-          >
-            Submit
-          </ModalButton>
-        </Modal.Footer>
-      </Modal>
+      <Popup
+        title={t("decrypt-modal-title")}
+        body={t("decrypt-modal-body")}
+        firstInput={t("password")}
+        firstInputType="password"
+        onChange={onPasswordChange}
+        onClick={decryptRecord}
+        uiError={uiError}
+        onHide={handleClose}
+        onShow={show}
+      ></Popup>
     </section>
   );
 };

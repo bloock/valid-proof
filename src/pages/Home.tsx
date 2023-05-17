@@ -12,11 +12,12 @@ import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import { Fragment, useEffect, useRef, useState } from "react";
-import { Alert, Button, Col, Form, Modal, Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import FileSection from "../components/documents/UploadFile";
+import Popup from "../components/elements/Modal";
 import VerificationSection from "../components/verification/VerificationMain";
 import demoimage3 from "../images/get_results.jpg";
 import demoimage2 from "../images/verify_documents.jpg";
@@ -35,6 +36,7 @@ export type FileElement = {
 
 const Home = () => {
   const { t } = useTranslation("home");
+  const { t: tr } = useTranslation("upload-file");
 
   if ((window as any).env.API_HOST) {
     Bloock.setApiHost((window as any).env.API_HOST);
@@ -169,7 +171,7 @@ const Home = () => {
         });
       } catch (e) {
         console.log(e);
-        setUiError("This password seems to be incorrect");
+        setUiError(tr("ui-password-error"));
         return;
       }
       setEncryptedBytesDoc(null);
@@ -401,39 +403,17 @@ const Home = () => {
             </div>
           </div>
         ) : null}
-        <Modal show={show} onHide={handleClose}>
-          <Modal.Body>
-            <Modal.Title className="py-3">
-              {t("decrypt-modal-title")}
-            </Modal.Title>
-            {t("decrypt-modal-body")}
-            <Form>
-              <Form.Group
-                className="my-3"
-                controlId="exampleForm.ControlInput1"
-              >
-                <Form.Label className="text-sm">Password</Form.Label>
-                <Form.Control onChange={onPasswordChange} type="password" />
-              </Form.Group>
-            </Form>
-            {uiError && <Alert variant="warning">{uiError}</Alert>}
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              Close
-            </Button>
-            <Button
-              style={{
-                backgroundColor: "var(--primary-bg-color",
-                border: "none",
-              }}
-              onClick={decryptRecord}
-            >
-              Submit
-            </Button>
-          </Modal.Footer>
-        </Modal>
-        ;
+        <Popup
+          title={tr("decrypt-modal-title")}
+          body={tr("decrypt-modal-body")}
+          firstInput={t("password")}
+          firstInputType="password"
+          onChange={onPasswordChange}
+          onClick={decryptRecord}
+          uiError={uiError}
+          onHide={handleClose}
+          onShow={show}
+        ></Popup>
       </div>
     </Fragment>
   );

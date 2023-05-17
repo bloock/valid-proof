@@ -4,5 +4,9 @@
   "select": "Select file",
   "verify-another": "Verify another file",
   "file-types": "Accepts jpg, png, pdf and json",
-  "file-not-accepted": "This file is not accepted. Please try it again with a different file type."
+  "file-not-accepted": "This file is not accepted. Please try it again with a different file type.",
+  "decrypt-modal-title": "Oh! Seems this file is encrypted!",
+  "decrypt-modal-body": " Please, introduce your password to decrypt the file and validate it. Note that if you exit the modal the validating process will be interrupted.",
+  "password": "Password",
+  "ui-password-error": "This password seems to be incorrect"
 }
