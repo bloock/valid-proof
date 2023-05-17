@@ -1,10 +1,4 @@
-import {
-  AesDecrypter,
-  Bloock,
-  EncryptionAlg,
-  Record,
-  RecordClient,
-} from "@bloock/sdk";
+import { AesDecrypter, Bloock, Record, RecordClient } from "@bloock/sdk";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Buffer } from "buffer";
@@ -48,17 +42,13 @@ const Home = () => {
   const session = getCookie("hasValidated");
 
   const [element, setElement] = useState<FileElement | null>(null);
-  const [validateFromUrl, setValidateFromUrl] = useState<boolean>(false);
   const verificationRef = useRef<HTMLInputElement>(null);
   const [searchParams] = useSearchParams();
   const [errorFetchDocument, setErrorFetchDocument] = useState<boolean>(false);
   const [decodedData, setDecodedData] = useState<string | null>(null);
   const [show, setShow] = useState(false);
   const [isEncrypted, setIsEncrypted] = useState<boolean>(false);
-  const [encryptionAlg, setEncryptionAlg] = useState<EncryptionAlg | null>(
-    null
-  );
-  const [decryptedRecord, setDecryptedRecord] = useState<Record | null>(null);
+  const [encryptionAlg, setEncryptionAlg] = useState<string | null>(null);
   const [uiError, setUiError] = useState<string>("");
   const [encryptionPassword, setEncryptionPassword] = useState<string>("");
   const [encryptedBytesDoc, setEncryptedBytesDoc] = useState<Uint8Array | null>(
@@ -73,7 +63,6 @@ const Home = () => {
   };
 
   useEffect(() => {
-    setDecryptedRecord(null);
     setUiError("");
   }, [encryptedBytesDoc]);
 
@@ -132,7 +121,6 @@ const Home = () => {
       }
     } else {
       setErrorFetchDocument(true);
-      setValidateFromUrl(false);
       setElement(null);
     }
   }
@@ -143,9 +131,6 @@ const Home = () => {
 
     if (isURL(recordQuery)) {
       fileLoader(recordQuery);
-      setValidateFromUrl(true);
-    } else {
-      setValidateFromUrl(false);
     }
   }, [searchParams]);
 
@@ -163,7 +148,6 @@ const Home = () => {
           .build();
         handleClose();
         setIsEncrypted(false);
-        setDecryptedRecord(decryptedRecord);
         setElement({
           name: element?.name,
           value: element?.value,
@@ -290,6 +274,7 @@ const Home = () => {
                 element={element}
                 errorFetchDocument={errorFetchDocument}
                 onErrorFetchDocument={(error) => setErrorFetchDocument(error)}
+                encryptionAlg={encryptionAlg ? encryptionAlg : null}
               />
               <FileSection
                 onElementChange={(element) => setElement(element)}

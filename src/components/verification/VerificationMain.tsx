@@ -1,6 +1,7 @@
 import {
   AuthenticityClient,
   Bloock,
+  EncryptionClient,
   IntegrityClient,
   Network,
   Proof,
@@ -66,6 +67,7 @@ type VerificationSectionProps = {
   element: FileElement | null;
   errorFetchDocument?: boolean;
   onErrorFetchDocument: (error: boolean) => any;
+  encryptionAlg?: string | null;
 };
 
 export type RecordNetwork = {
@@ -79,8 +81,11 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   element,
   errorFetchDocument,
   onErrorFetchDocument,
+  encryptionAlg,
 }) => {
   const { t } = useTranslation("verification");
+
+  const encryptionClient = new EncryptionClient();
 
   const [recordProof, setRecordProof] = useState<Proof | null>(null);
   const [recordRoot, setRecordRoot] = useState<string | null>(null);
@@ -134,6 +139,31 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
       }
     };
     getRecordSignature();
+  }, []);
+
+  useEffect(() => {
+    const getEncryptionAlgorithm = async () => {
+      if (element?.record) {
+        try {
+          let encryptionAlg = await encryptionClient.getEncryptionAlg(
+            element.record
+          );
+          setRecordEncryptionAlg(encryptionAlg);
+          if (encryptionAlg === 0 || encryptionAlg === 1) {
+            if (encryptionAlg === 0) {
+              setRecordEncryptionAlg("A256GCM");
+            } else if (encryptionAlg === 1) {
+              setRecordEncryptionAlg("RSA");
+            }
+          } else {
+            setRecordEncryptionAlg("");
+          }
+        } catch (e) {
+          return;
+        }
+      }
+    };
+    getEncryptionAlgorithm();
   }, []);
 
   useEffect(() => {
@@ -373,7 +403,9 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
                         recordNetworks={recordNetworks}
                         isRecordSigned={isSigned}
                         recordSignature={recordCommonName}
-                        recordEncryptionAlg={recordEncryptionAlg}
+                        recordEncryptionAlg={
+                          encryptionAlg ? encryptionAlg : null
+                        }
                       />
                     ) : (
                       <VerificationError

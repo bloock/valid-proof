@@ -152,10 +152,9 @@ const FileSection: React.FC<FileSectionProps> = ({
       let bytes = await file.arrayBuffer();
       let decodedFile = new TextDecoder().decode(bytes);
       setDecodedFile(decodedFile);
-
       if (isJSONValid(decodedFile)) {
         let value = JSON.parse(decodedFile);
-        if (value && value["_metadata_"].is_encrypted) {
+        if (value["_metadata_"] && value["_metadata_"].is_encrypted) {
           setEncryptionAlg(value["_metadata_"].encryption_alg);
           setIsEncrypted(true);
           handleShow();
