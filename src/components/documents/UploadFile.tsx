@@ -1,4 +1,4 @@
-import { AesDecrypter, RecordClient, RsaDecrypter } from "@bloock/sdk";
+import { AesDecrypter, RecordClient } from "@bloock/sdk";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
@@ -20,6 +20,7 @@ type FileSectionProps = {
   errorFetchDocument: boolean;
   onErrorFetchDocument: (error: any) => any;
   isDocumentEncrypted: boolean;
+  commonName: string | null;
 };
 
 const baseStyle = {
@@ -56,6 +57,7 @@ const FileSection: React.FC<FileSectionProps> = ({
   element: elementType,
   errorFetchDocument,
   onErrorFetchDocument,
+  commonName,
 }) => {
   const { t } = useTranslation("upload-file");
 
@@ -227,11 +229,7 @@ const FileSection: React.FC<FileSectionProps> = ({
       try {
         let decryptedRecord = await recordClient
           .fromString(decodedFile)
-          .withDecrypter(
-            encryptionAlg === "A256GCM"
-              ? new AesDecrypter(encryptionPassword)
-              : new RsaDecrypter(encryptionPassword)
-          )
+          .withDecrypter(new AesDecrypter(encryptionPassword))
           .build();
         handleClose();
         setIsEncrypted(false);

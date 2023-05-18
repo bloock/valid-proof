@@ -1,4 +1,10 @@
-import { AesDecrypter, Bloock, Record, RecordClient } from "@bloock/sdk";
+import {
+  AesDecrypter,
+  AuthenticityClient,
+  Bloock,
+  Record,
+  RecordClient,
+} from "@bloock/sdk";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Buffer } from "buffer";
@@ -38,6 +44,7 @@ const Home = () => {
   Bloock.setApiKey((window as any).env.API_KEY);
 
   const recordClient = new RecordClient();
+  const authenticityClient = new AuthenticityClient();
 
   const session = getCookie("hasValidated");
 
@@ -54,6 +61,9 @@ const Home = () => {
   const [encryptedBytesDoc, setEncryptedBytesDoc] = useState<Uint8Array | null>(
     null
   );
+  const [isSigned, setIsSigned] = useState<boolean>(false);
+  const [recordCommonName, setRecordCommonName] = useState<string | null>(null);
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -134,6 +144,18 @@ const Home = () => {
     }
   }, [searchParams]);
 
+  async function decodedDataLoader() {
+    if (decodedData) {
+      setElement({
+        name: Truncate(decodedData as string, 30, "..."),
+        value: decodedData,
+        record: await recordClient.fromString(decodedData).build(),
+      });
+    } else {
+      setElement(null);
+    }
+  }
+
   const decryptRecord = async () => {
     if (
       isEncrypted &&
@@ -162,17 +184,6 @@ const Home = () => {
     }
   };
 
-  async function decodedDataLoader() {
-    if (decodedData) {
-      setElement({
-        name: Truncate(decodedData as string, 30, "..."),
-        value: decodedData,
-        record: await recordClient.fromString(decodedData).build(),
-      });
-    } else {
-      setElement(null);
-    }
-  }
   useEffect(() => {
     const base64regex =
       /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
@@ -190,6 +201,36 @@ const Home = () => {
       decodedDataLoader();
     }
   }, [searchParams, decodedData]);
+
+  useEffect(() => {
+    const getRecordSignature = async () => {
+      try {
+        if (element?.record) {
+          let signatures = await authenticityClient.getSignatures(
+            element?.record
+          );
+
+          console.log(signatures);
+          if (signatures?.length > 0) {
+            setIsSigned(true);
+          }
+
+          let retrievedName = await authenticityClient.getSignatureCommonName(
+            signatures[0]
+          );
+          console.log(retrievedName);
+          if (retrievedName) {
+            setRecordCommonName(retrievedName);
+          } else {
+            setRecordCommonName(null);
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getRecordSignature();
+  }, [element?.record]);
 
   useEffect(() => {
     const id: string | null = "scoll-offset";
@@ -263,6 +304,7 @@ const Home = () => {
                   onErrorFetchDocument={(error) => setErrorFetchDocument(error)}
                   element={null}
                   isDocumentEncrypted={isEncrypted}
+                  commonName={recordCommonName}
                 ></FileSection>
               </Col>
             ) : null}
@@ -275,6 +317,7 @@ const Home = () => {
                 errorFetchDocument={errorFetchDocument}
                 onErrorFetchDocument={(error) => setErrorFetchDocument(error)}
                 encryptionAlg={encryptionAlg ? encryptionAlg : null}
+                commonName={recordCommonName}
               />
               <FileSection
                 onElementChange={(element) => setElement(element)}
@@ -282,6 +325,7 @@ const Home = () => {
                 errorFetchDocument={errorFetchDocument}
                 element={element}
                 isDocumentEncrypted={isEncrypted}
+                commonName={recordCommonName}
               ></FileSection>
             </div>
           ) : null}

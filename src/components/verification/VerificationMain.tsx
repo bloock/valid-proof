@@ -68,6 +68,7 @@ type VerificationSectionProps = {
   errorFetchDocument?: boolean;
   onErrorFetchDocument: (error: boolean) => any;
   encryptionAlg?: string | null;
+  commonName?: string | null;
 };
 
 export type RecordNetwork = {
@@ -82,6 +83,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   errorFetchDocument,
   onErrorFetchDocument,
   encryptionAlg,
+  commonName,
 }) => {
   const { t } = useTranslation("verification");
 
@@ -120,6 +122,8 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
           let signatures = await authenticityClient.getSignatures(
             element?.record
           );
+
+          console.log(signatures);
           if (signatures?.length > 0) {
             setIsSigned(true);
           }
