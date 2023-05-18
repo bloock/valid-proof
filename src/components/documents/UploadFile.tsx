@@ -1,4 +1,9 @@
-import { AesDecrypter, RecordClient } from "@bloock/sdk";
+import {
+  AesDecrypter,
+  AuthenticityClient,
+  RecordClient,
+  RsaDecrypter,
+} from "@bloock/sdk";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
@@ -62,6 +67,7 @@ const FileSection: React.FC<FileSectionProps> = ({
   const { t } = useTranslation("upload-file");
 
   let recordClient = new RecordClient();
+  const authenticityClient = new AuthenticityClient();
 
   const [element, setElement] = useState<FileElement | null>(elementType);
   const [documentTypeError, setDocumentTypeError] = useState<string>("");
@@ -72,6 +78,8 @@ const FileSection: React.FC<FileSectionProps> = ({
   const [isEncrypted, setIsEncrypted] = useState<boolean>(false);
   const [encryptionPassword, setEncryptionPassword] = useState<string>("");
   const [decodedFile, setDecodedFile] = useState<string | null>(null);
+
+  const [recordCommonName, setRecordCommonName] = useState<string | null>(null);
 
   const [uiError, setUiError] = useState<string>("");
 
@@ -104,10 +112,6 @@ const FileSection: React.FC<FileSectionProps> = ({
     getRootProps,
     getInputProps,
   } = useDropzone({ onDrop, multiple: false });
-
-  useEffect(() => {
-    onElementChange(element);
-  }, [element?.record]);
 
   function fileToBytes(file: File): Promise<Uint8Array> {
     return new Promise((resolve, reject) => {
@@ -227,17 +231,31 @@ const FileSection: React.FC<FileSectionProps> = ({
   const decryptRecord = async () => {
     if (isEncrypted && decodedFile && encryptionAlg && encryptionPassword) {
       try {
-        let decryptedRecord = await recordClient
-          .fromString(decodedFile)
-          .withDecrypter(new AesDecrypter(encryptionPassword))
-          .build();
-        handleClose();
-        setIsEncrypted(false);
-        setElement({
-          name: element?.name,
-          value: element?.value,
-          record: decryptedRecord,
-        });
+        if (encryptionAlg === "A256GCM") {
+          let decryptedRecord = await recordClient
+            .fromString(decodedFile)
+            .withDecrypter(new AesDecrypter(encryptionPassword))
+            .build();
+          handleClose();
+          setIsEncrypted(false);
+          setElement({
+            name: element?.name,
+            value: element?.value,
+            record: decryptedRecord,
+          });
+        } else {
+          let decryptedRecord = await recordClient
+            .fromString(decodedFile)
+            .withDecrypter(new RsaDecrypter(encryptionPassword))
+            .build();
+          handleClose();
+          setIsEncrypted(false);
+          setElement({
+            name: element?.name,
+            value: element?.value,
+            record: decryptedRecord,
+          });
+        }
       } catch (e) {
         console.log(e);
         setUiError(t("ui-password-error"));
@@ -246,6 +264,33 @@ const FileSection: React.FC<FileSectionProps> = ({
       setDecodedFile(null);
     }
   };
+
+  useEffect(() => {
+    const getRecordSignature = async () => {
+      try {
+        if (element?.record) {
+          let signatures = await authenticityClient.getSignatures(
+            element?.record
+          );
+
+          console.log(signatures);
+
+          let retrievedName = await authenticityClient.getSignatureCommonName(
+            signatures[0]
+          );
+          console.log(retrievedName);
+          if (retrievedName) {
+            setRecordCommonName(retrievedName);
+          } else {
+            setRecordCommonName(null);
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getRecordSignature();
+  }, []);
 
   const style = useMemo(
     () => ({
@@ -256,6 +301,10 @@ const FileSection: React.FC<FileSectionProps> = ({
     }),
     [isDragActive, isDragReject, isDragAccept]
   );
+
+  useEffect(() => {
+    onElementChange(element);
+  }, [element?.record]);
 
   return (
     <section>

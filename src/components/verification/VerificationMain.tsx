@@ -83,7 +83,6 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
   errorFetchDocument,
   onErrorFetchDocument,
   encryptionAlg,
-  commonName,
 }) => {
   const { t } = useTranslation("verification");
 
@@ -123,7 +122,6 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
             element?.record
           );
 
-          console.log(signatures);
           if (signatures?.length > 0) {
             setIsSigned(true);
           }
@@ -152,6 +150,7 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
           let encryptionAlg = await encryptionClient.getEncryptionAlg(
             element.record
           );
+          console.log(encryptionAlg);
           setRecordEncryptionAlg(encryptionAlg);
           if (encryptionAlg === 0 || encryptionAlg === 1) {
             if (encryptionAlg === 0) {

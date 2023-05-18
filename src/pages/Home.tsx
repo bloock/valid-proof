@@ -4,6 +4,7 @@ import {
   Bloock,
   Record,
   RecordClient,
+  RsaDecrypter,
 } from "@bloock/sdk";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -61,6 +62,8 @@ const Home = () => {
   const [encryptedBytesDoc, setEncryptedBytesDoc] = useState<Uint8Array | null>(
     null
   );
+  const [validateFromUrl, setValidateFromUrl] = useState<boolean>(false);
+
   const [isSigned, setIsSigned] = useState<boolean>(false);
   const [recordCommonName, setRecordCommonName] = useState<string | null>(null);
 
@@ -91,9 +94,10 @@ const Home = () => {
       })
       .catch((e) => {
         error = e;
+        setErrorFetchDocument(true);
+
         return Buffer.from([]);
       });
-
     setEncryptedBytesDoc(bytes);
 
     let urlDecodedContent = new TextDecoder().decode(bytes);
@@ -126,12 +130,12 @@ const Home = () => {
           record: await recordClient.fromFile(bytes).build(),
         });
       } else {
-        setElement(null);
         setErrorFetchDocument(true);
+        setElement(null);
       }
     } else {
       setErrorFetchDocument(true);
-      setElement(null);
+      setValidateFromUrl(false);
     }
   }
 
@@ -141,6 +145,9 @@ const Home = () => {
 
     if (isURL(recordQuery)) {
       fileLoader(recordQuery);
+      setValidateFromUrl(true);
+    } else {
+      setValidateFromUrl(false);
     }
   }, [searchParams]);
 
@@ -164,17 +171,31 @@ const Home = () => {
       encryptionPassword
     ) {
       try {
-        let decryptedRecord = await recordClient
-          .fromBytes(encryptedBytesDoc)
-          .withDecrypter(new AesDecrypter(encryptionPassword))
-          .build();
-        handleClose();
-        setIsEncrypted(false);
-        setElement({
-          name: element?.name,
-          value: element?.value,
-          record: decryptedRecord,
-        });
+        if (encryptionAlg === "A256GCM") {
+          let decryptedRecord = await recordClient
+            .fromBytes(encryptedBytesDoc)
+            .withDecrypter(new AesDecrypter(encryptionPassword))
+            .build();
+          handleClose();
+          setIsEncrypted(false);
+          setElement({
+            name: element?.name,
+            value: element?.value,
+            record: decryptedRecord,
+          });
+        } else {
+          let decryptedRecord = await recordClient
+            .fromBytes(encryptedBytesDoc)
+            .withDecrypter(new RsaDecrypter(encryptionPassword))
+            .build();
+          handleClose();
+          setIsEncrypted(false);
+          setElement({
+            name: element?.name,
+            value: element?.value,
+            record: decryptedRecord,
+          });
+        }
       } catch (e) {
         console.log(e);
         setUiError(tr("ui-password-error"));
@@ -230,7 +251,7 @@ const Home = () => {
       }
     };
     getRecordSignature();
-  }, [element?.record]);
+  }, []);
 
   useEffect(() => {
     const id: string | null = "scoll-offset";
@@ -296,7 +317,7 @@ const Home = () => {
               </ul>
             </Col>
 
-            {!element ? (
+            {!element && !errorFetchDocument ? (
               <Col>
                 <FileSection
                   onElementChange={(element) => setElement(element)}
