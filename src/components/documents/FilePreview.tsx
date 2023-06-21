@@ -8,7 +8,7 @@ import { getFileType } from "../../utils/use-file-type";
 import { useIsJson } from "../../utils/use-is-json";
 import { useIsUrl } from "../../utils/use-is-url";
 
-const ReactJson = loadable(() => import("react-json-view"));
+const ReactJson = loadable(() => import("@uiw/react-json-view"));
 
 type FilePreviewProps = {
   element: FileElement;
@@ -79,8 +79,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
               }}
               displayDataTypes={false}
               displayObjectSize={false}
-              name={false}
-              src={srcElement}
+              value={srcElement}
             />
           );
         } else {
