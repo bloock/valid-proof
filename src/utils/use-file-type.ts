@@ -1,6 +1,6 @@
 import filetype from "magic-bytes.js";
 
-export const getFileType = (file: any) => {
+export const getFileType = (file: Uint8Array) => {
   try {
     let type = filetype(file);
     if (type.length > 0) {
