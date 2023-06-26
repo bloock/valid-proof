@@ -41,9 +41,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({ element }) => {
 
   useEffect(() => {
     if (element) {
-      if (isURL(element?.name)) {
-        setSrcElement(element.name);
-      } else if (isJSONValid(element.value)) {
+      if (isJSONValid(element.value)) {
         setSrcElement(element.value);
       } else if (element.value instanceof Uint8Array) {
         if (elementMimeType === "application/json") {
