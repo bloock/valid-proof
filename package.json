@@ -5,7 +5,7 @@
   "homepage": ".",
   "dependencies": {
     "@babel/core": "^7.16.0",
-    "@bloock/sdk": "^2.5.6",
+    "@bloock/sdk": "^2.5.7",
     "@loadable/component": "^5.15.3",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
     "@react-pdf/renderer": "^3.1.12",

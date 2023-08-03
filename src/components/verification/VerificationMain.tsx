@@ -289,6 +289,10 @@ const VerificationSection: React.FC<VerificationSectionProps> = ({
                   break;
                 case "ethereum_goerli":
                   network = Network.ETHEREUM_GOERLI;
+                  break;
+                case "polygon_chain":
+                  network = Network.POLYGON_CHAIN;
+                  break;
               }
               const timestamp = await integrityClient.validateRoot(
                 recordRoot,
