@@ -1,4 +1,11 @@
-import { Record, RecordClient } from "@bloock/sdk";
+import {
+  AesDecrypter,
+  AuthenticityClient,
+  Bloock,
+  Record,
+  RecordClient,
+  RsaDecrypter,
+} from "@bloock/sdk";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Buffer } from "buffer";
@@ -7,9 +14,11 @@ import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { Col, Row } from "react-bootstrap";
+
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import FileSection from "../components/documents/UploadFile";
+import Popup from "../components/elements/Modal";
 import VerificationSection from "../components/verification/VerificationMain";
 import demoimage3 from "../images/get_results.jpg";
 import demoimage2 from "../images/verify_documents.jpg";
@@ -28,46 +37,47 @@ export type FileElement = {
 
 const Home = () => {
   const { t } = useTranslation("home");
+  const { t: tr } = useTranslation("upload-file");
 
-  let recordClient = new RecordClient();
+  if ((window as any).env.API_HOST) {
+    Bloock.setApiHost((window as any).env.API_HOST);
+  }
+  Bloock.setApiKey((window as any).env.API_KEY);
+
+  const recordClient = new RecordClient();
+  const authenticityClient = new AuthenticityClient();
 
   const session = getCookie("hasValidated");
 
   const [element, setElement] = useState<FileElement | null>(null);
-  const [validateFromUrl, setValidateFromUrl] = useState<boolean>(false);
   const verificationRef = useRef<HTMLInputElement>(null);
   const [searchParams] = useSearchParams();
   const [errorFetchDocument, setErrorFetchDocument] = useState<boolean>(false);
   const [decodedData, setDecodedData] = useState<string | null>(null);
+  const [show, setShow] = useState(false);
+  const [isEncrypted, setIsEncrypted] = useState<boolean>(false);
+  const [encryptionAlg, setEncryptionAlg] = useState<string | null>(null);
+  const [uiError, setUiError] = useState<string>("");
+  const [encryptionPassword, setEncryptionPassword] = useState<string>("");
+  const [encryptedBytesDoc, setEncryptedBytesDoc] = useState<Uint8Array | null>(
+    null
+  );
+  const [validateFromUrl, setValidateFromUrl] = useState<boolean>(false);
 
-  async function decodedDataLoader() {
-    if (decodedData) {
-      setElement({
-        name: Truncate(decodedData as string, 30, "..."),
-        value: decodedData,
-        record: await recordClient.fromString(decodedData).build(),
-      });
-    } else {
-      setElement(null);
-    }
-  }
+  const [isSigned, setIsSigned] = useState<boolean>(false);
+  const [recordCommonName, setRecordCommonName] = useState<string | null>(null);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const onPasswordChange = (e: any) => {
+    setEncryptionPassword(e.target.value);
+    setUiError("");
+  };
+
   useEffect(() => {
-    const base64regex =
-      /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
-    const dataQuery = searchParams.get("data");
-
-    if (base64regex) {
-      if (base64regex.test(dataQuery as any)) {
-        setDecodedData(window.atob(dataQuery as any));
-      } else {
-        setErrorFetchDocument(true);
-      }
-    }
-
-    if (decodedData && dataQuery) {
-      decodedDataLoader();
-    }
-  }, [searchParams, decodedData]);
+    setUiError("");
+  }, [encryptedBytesDoc]);
 
   async function fileLoader(urlParam: any) {
     const isJSONValid = useIsJson;
@@ -84,16 +94,35 @@ const Home = () => {
       })
       .catch((e) => {
         error = e;
+        setErrorFetchDocument(true);
+
         return Buffer.from([]);
       });
-    let string = new TextDecoder().decode(bytes);
+
+    setEncryptedBytesDoc(bytes);
+
+    let urlDecodedContent = new TextDecoder().decode(bytes);
     if (error === undefined) {
-      if (isJSONValid(string)) {
-        setElement({
-          name: urlParam.href,
-          value: JSON.parse(string),
-          record: await recordClient.fromJson(JSON.parse(string)).build(),
-        });
+      if (isJSONValid(urlDecodedContent)) {
+        let value = JSON.parse(urlDecodedContent);
+        if (value["_metadata_"].is_encrypted) {
+          setEncryptionAlg(value["_metadata_"].encryption_alg);
+          setIsEncrypted(true);
+          handleShow();
+          setElement({
+            name: urlParam.href,
+            value: value,
+            record: undefined,
+          });
+        } else {
+          setElement({
+            name: urlParam.href,
+            value: value,
+            record: await recordClient
+              .fromJson(JSON.parse(urlDecodedContent))
+              .build(),
+          });
+        }
       } else if (await getFileType(bytes)) {
         setElement({
           name: urlParam.href,
@@ -101,8 +130,8 @@ const Home = () => {
           record: await recordClient.fromFile(bytes).build(),
         });
       } else {
-        setElement(null);
         setErrorFetchDocument(true);
+        setElement(null);
       }
     } else {
       setErrorFetchDocument(true);
@@ -121,6 +150,108 @@ const Home = () => {
       setValidateFromUrl(false);
     }
   }, [searchParams]);
+
+  async function decodedDataLoader() {
+    if (decodedData) {
+      setElement({
+        name: Truncate(decodedData as string, 30, "..."),
+        value: decodedData,
+        record: await recordClient.fromString(decodedData).build(),
+      });
+    } else {
+      setElement(null);
+    }
+  }
+
+  const decryptRecord = async () => {
+    if (
+      isEncrypted &&
+      encryptedBytesDoc &&
+      encryptionAlg &&
+      encryptionPassword
+    ) {
+      try {
+        if (encryptionAlg === "A256GCM") {
+          let decryptedRecord = await recordClient
+            .fromBytes(encryptedBytesDoc)
+            .withDecrypter(new AesDecrypter(encryptionPassword))
+            .build();
+          handleClose();
+          setIsEncrypted(false);
+          setElement({
+            name: element?.name,
+            value: decryptedRecord.retrieve(),
+            record: decryptedRecord,
+          });
+        } else {
+          let decryptedRecord = await recordClient
+            .fromBytes(encryptedBytesDoc)
+            .withDecrypter(new RsaDecrypter(encryptionPassword))
+            .build();
+          handleClose();
+          setIsEncrypted(false);
+          setElement({
+            name: element?.name,
+            value: decryptedRecord.retrieve(),
+            record: decryptedRecord,
+          });
+        }
+      } catch (e) {
+        console.log(e);
+        setUiError(tr("ui-password-error"));
+        return;
+      }
+      setEncryptedBytesDoc(null);
+    }
+  };
+
+  useEffect(() => {
+    const base64regex =
+      /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
+    const dataQuery = searchParams.get("data");
+
+    if (base64regex) {
+      if (base64regex.test(dataQuery as any)) {
+        setDecodedData(window.atob(dataQuery as any));
+      } else {
+        setErrorFetchDocument(true);
+      }
+    }
+
+    if (decodedData && dataQuery) {
+      decodedDataLoader();
+    }
+  }, [searchParams, decodedData]);
+
+  useEffect(() => {
+    const getRecordSignature = async () => {
+      try {
+        if (element?.record) {
+          let signatures = await authenticityClient.getSignatures(
+            element?.record
+          );
+
+          console.log(signatures);
+          if (signatures?.length > 0) {
+            setIsSigned(true);
+          }
+
+          let retrievedName = await authenticityClient.getSignatureCommonName(
+            signatures[0]
+          );
+          console.log(retrievedName);
+          if (retrievedName) {
+            setRecordCommonName(retrievedName);
+          } else {
+            setRecordCommonName(null);
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getRecordSignature();
+  }, []);
 
   useEffect(() => {
     const id: string | null = "scoll-offset";
@@ -186,13 +317,15 @@ const Home = () => {
               </ul>
             </Col>
 
-            {!element ? (
+            {!element && !errorFetchDocument ? (
               <Col>
                 <FileSection
                   onElementChange={(element) => setElement(element)}
                   errorFetchDocument={errorFetchDocument}
                   onErrorFetchDocument={(error) => setErrorFetchDocument(error)}
                   element={null}
+                  isDocumentEncrypted={isEncrypted}
+                  commonName={recordCommonName}
                 ></FileSection>
               </Col>
             ) : null}
@@ -204,17 +337,20 @@ const Home = () => {
                 element={element}
                 errorFetchDocument={errorFetchDocument}
                 onErrorFetchDocument={(error) => setErrorFetchDocument(error)}
+                encryptionAlg={encryptionAlg ? encryptionAlg : null}
+                commonName={recordCommonName}
               />
               <FileSection
                 onElementChange={(element) => setElement(element)}
                 onErrorFetchDocument={(error) => setErrorFetchDocument(error)}
                 errorFetchDocument={errorFetchDocument}
                 element={element}
+                isDocumentEncrypted={isEncrypted}
+                commonName={recordCommonName}
               ></FileSection>
             </div>
           ) : null}
         </div>
-
         <div className="top-margin"></div>
         {!!session === false ? (
           <div className="bg-light pt-3 pb-5 mt-3">
@@ -317,6 +453,17 @@ const Home = () => {
             </div>
           </div>
         ) : null}
+        <Popup
+          title={tr("decrypt-modal-title")}
+          body={tr("decrypt-modal-body")}
+          firstInput={tr("password")}
+          firstInputType="password"
+          onChange={onPasswordChange}
+          onClick={decryptRecord}
+          uiError={uiError}
+          onHide={handleClose}
+          onShow={show}
+        ></Popup>
       </div>
     </Fragment>
   );

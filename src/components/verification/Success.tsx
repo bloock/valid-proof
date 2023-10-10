@@ -18,8 +18,8 @@ type VerificationSuccessProps = {
   recordRoot: string;
   recordProof: Proof;
   recordNetworks: RecordNetwork[];
-  recordSignature: string;
-  recordEncryptionAlg: string;
+  recordSignature: string | null;
+  recordEncryptionAlg: string | null;
   isRecordSigned: boolean;
 };
 
