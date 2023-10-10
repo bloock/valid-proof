@@ -4,5 +4,9 @@
   "select": "Selecciona archivo",
   "verify-another": "Verificar otro documento",
   "file-types": "Acepta jpg, png, pdf y json",
-  "file-not-accepted": "Este documento no es válido. Por favor vuelve a intentarlo con otro tipo de archivo."
+  "file-not-accepted": "Este documento no es válido. Por favor vuelve a intentarlo con otro tipo de archivo.",
+  "decrypt-modal-title": "Oh! Parece que este archivo está encriptado",
+  "decrypt-modal-body": "Por favor, introduce la contraseña para desencriptar el documento y poder validarlo. Si cierras el modal el proceso de validación se verá interrumpido.",
+  "password": "Contraseña",
+  "ui-password-error": "Esta contraseña parece no ser válida"
 }

@@ -1,4 +1,9 @@
-import { RecordClient } from "@bloock/sdk";
+import {
+  AesDecrypter,
+  AuthenticityClient,
+  RecordClient,
+  RsaDecrypter,
+} from "@bloock/sdk";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "primeicons/primeicons.css";
 import "primereact/resources/primereact.min.css";
@@ -10,13 +15,17 @@ import { useNavigate } from "react-router-dom";
 import { FileElement } from "../../pages/Home";
 import "../../styles.css";
 import { getFileType } from "../../utils/use-file-type";
+import { useIsJson } from "../../utils/use-is-json";
 import Button from "../elements/Button";
+import Popup from "../elements/Modal";
 
 type FileSectionProps = {
   onElementChange: (element: any) => any;
   element: FileElement | null;
   errorFetchDocument: boolean;
   onErrorFetchDocument: (error: any) => any;
+  isDocumentEncrypted: boolean;
+  commonName: string | null;
 };
 
 const baseStyle = {
@@ -53,14 +62,35 @@ const FileSection: React.FC<FileSectionProps> = ({
   element: elementType,
   errorFetchDocument,
   onErrorFetchDocument,
+  commonName,
 }) => {
   const { t } = useTranslation("upload-file");
 
   let recordClient = new RecordClient();
+  const authenticityClient = new AuthenticityClient();
 
   const [element, setElement] = useState<FileElement | null>(elementType);
   const [documentTypeError, setDocumentTypeError] = useState<string>("");
   const [isFileUploaded, setIsFileUploaded] = useState<boolean>(false);
+  const [show, setShow] = useState(false);
+
+  const [encryptionAlg, setEncryptionAlg] = useState<string | null>(null);
+  const [isEncrypted, setIsEncrypted] = useState<boolean>(false);
+  const [encryptionPassword, setEncryptionPassword] = useState<string>("");
+  const [decodedFile, setDecodedFile] = useState<string | null>(null);
+
+  const [recordCommonName, setRecordCommonName] = useState<string | null>(null);
+
+  const [uiError, setUiError] = useState<string>("");
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const onPasswordChange = (e: any) => {
+    setEncryptionPassword(e.target.value);
+    setUiError("");
+  };
+
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length >= 0) {
       handleFileChange(acceptedFiles[0]);
@@ -82,10 +112,6 @@ const FileSection: React.FC<FileSectionProps> = ({
     getRootProps,
     getInputProps,
   } = useDropzone({ onDrop, multiple: false });
-
-  useEffect(() => {
-    onElementChange(element);
-  }, [element]);
 
   function fileToBytes(file: File): Promise<Uint8Array> {
     return new Promise((resolve, reject) => {
@@ -126,54 +152,145 @@ const FileSection: React.FC<FileSectionProps> = ({
   const handleFileChange = async (file: File | null) => {
     setDocumentTypeError("");
     setIsFileUploaded(true);
+    const isJSONValid = useIsJson;
+
     if (file != null) {
       let bytes = await file.arrayBuffer();
-      let fileType = await getFileType(new Uint8Array(bytes));
-      try {
-        switch (fileType) {
-          case "application/pdf":
-            setElement({
-              name: file?.name,
-              value: await fileToBytes(file),
-              record: await recordClient
-                .fromFile(await fileToBytes(file))
-                .build(),
-            });
-            break;
-          case "application/json":
-            setElement({
-              name: file?.name,
-              value: await fileToJSON(file),
-              record: await recordClient
-                .fromJson(await fileToJSON(file))
-                .build(),
-            });
-
-            break;
-          default:
-            setElement({
-              name: file?.name,
-              value: await fileToBytes(file),
-              record: await recordClient
-                .fromFile(await fileToBytes(file))
-                .build(),
-            });
-
-            break;
+      let decodedFile = new TextDecoder().decode(bytes);
+      setDecodedFile(decodedFile);
+      if (isJSONValid(decodedFile)) {
+        let value = JSON.parse(decodedFile);
+        if (value["_metadata_"] && value["_metadata_"].is_encrypted) {
+          setEncryptionAlg(value["_metadata_"].encryption_alg);
+          setIsEncrypted(true);
+          handleShow();
+          setElement({
+            name: file.name,
+            value: value,
+            record: undefined,
+          });
+        } else {
+          setElement({
+            name: file.name,
+            value: value,
+            record: await recordClient
+              .fromJson(JSON.parse(decodedFile))
+              .build(),
+          });
         }
-      } catch (e) {
-        console.log(e);
-        setDocumentTypeError(t("file-not-accepted"));
-        setIsFileUploaded(false);
+      } else {
+        let fileType = await getFileType(new Uint8Array(bytes));
+        try {
+          switch (fileType) {
+            case "application/pdf":
+              setElement({
+                name: file?.name,
+                value: await fileToBytes(file),
+                record: await recordClient
+                  .fromFile(await fileToBytes(file))
+                  .build(),
+              });
+              break;
+            case "application/json":
+              setElement({
+                name: file?.name,
+                value: await fileToJSON(file),
+                record: await recordClient
+                  .fromJson(await fileToJSON(file))
+                  .build(),
+              });
+
+              break;
+            default:
+              setElement({
+                name: file?.name,
+                value: await fileToBytes(file),
+                record: await recordClient
+                  .fromFile(await fileToBytes(file))
+                  .build(),
+              });
+
+              break;
+          }
+        } catch (e) {
+          console.log(e);
+          setDocumentTypeError(t("file-not-accepted"));
+          setIsFileUploaded(false);
+        }
       }
     } else {
-      onErrorFetchDocument(false);
+      onErrorFetchDocument(null);
       setElement(null);
       setIsFileUploaded(false);
       goToTop();
       navigate("/");
+      setIsEncrypted(false);
     }
   };
+
+  const decryptRecord = async () => {
+    if (isEncrypted && decodedFile && encryptionAlg && encryptionPassword) {
+      try {
+        if (encryptionAlg === "A256GCM") {
+          let decryptedRecord = await recordClient
+            .fromString(decodedFile)
+            .withDecrypter(new AesDecrypter(encryptionPassword))
+            .build();
+          handleClose();
+          setIsEncrypted(false);
+          setElement({
+            name: element?.name,
+            value: element?.value,
+            record: decryptedRecord,
+          });
+        } else {
+          let decryptedRecord = await recordClient
+            .fromString(decodedFile)
+            .withDecrypter(new RsaDecrypter(encryptionPassword))
+            .build();
+          handleClose();
+          setIsEncrypted(false);
+          setElement({
+            name: element?.name,
+            value: element?.value,
+            record: decryptedRecord,
+          });
+        }
+      } catch (e) {
+        console.log(e);
+        setUiError(t("ui-password-error"));
+        return;
+      }
+      setDecodedFile(null);
+    }
+  };
+
+  useEffect(() => {
+    const getRecordSignature = async () => {
+      try {
+        if (element?.record) {
+          let signatures = await authenticityClient.getSignatures(
+            element?.record
+          );
+
+          console.log(signatures);
+
+          let retrievedName = await authenticityClient.getSignatureCommonName(
+            signatures[0]
+          );
+          console.log(retrievedName);
+          if (retrievedName) {
+            setRecordCommonName(retrievedName);
+          } else {
+            setRecordCommonName(null);
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getRecordSignature();
+  }, []);
 
   const style = useMemo(
     () => ({
@@ -184,6 +301,10 @@ const FileSection: React.FC<FileSectionProps> = ({
     }),
     [isDragActive, isDragReject, isDragAccept]
   );
+
+  useEffect(() => {
+    onElementChange(element);
+  }, [element?.record]);
 
   return (
     <section>
@@ -251,6 +372,18 @@ const FileSection: React.FC<FileSectionProps> = ({
           </div>
         </>
       ) : null}
+
+      <Popup
+        title={t("decrypt-modal-title")}
+        body={t("decrypt-modal-body")}
+        firstInput={t("password")}
+        firstInputType="password"
+        onChange={onPasswordChange}
+        onClick={decryptRecord}
+        uiError={uiError}
+        onHide={handleClose}
+        onShow={show}
+      ></Popup>
     </section>
   );
 };
