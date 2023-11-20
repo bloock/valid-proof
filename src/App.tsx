@@ -7,6 +7,8 @@ import DecryptFilePassword from "./DecryptFilePassword";
 import validProofLogo from "./assets/logo-ValidProf.svg";
 import { DownOutlined } from "@ant-design/icons";
 import DecryptFileUpload from "./DecryptFileUpload";
+import VerifiedDocument from "./verifiedDocument";
+import IntegrityDetails from "./IntegrityDetails";
 
 function App() {
   return (
@@ -38,6 +40,8 @@ function App() {
         <Information />
         <DecryptFilePassword />
         <DecryptFileUpload />
+        <VerifiedDocument />
+        <IntegrityDetails />
       </Content>
     </Layout>
   );

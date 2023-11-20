@@ -7,7 +7,6 @@ function DecryptFilePassword() {
   const SubmitButton = ({ form }: { form: FormInstance }) => {
     const [submittable, setSubmittable] = React.useState(false);
 
-    // Watch all values
     const values = Form.useWatch([], form);
 
     React.useEffect(() => {
@@ -23,7 +22,7 @@ function DecryptFilePassword() {
 
     return (
       <Button type="primary" htmlType="submit" disabled={!submittable}>
-        Submit
+        Send
       </Button>
     );
   };
@@ -48,36 +47,40 @@ function DecryptFilePassword() {
           >
             <div className="flex flex-col justify-center p-12">
               <p className="text-left font-bold text-xl mb-4">Decrypt File</p>
-              <p className="text-left text-lg text-gray-500">
+              <p className="text-left text-lg text-gray-400">
                 Please, introduce your{" "}
                 <strong className="font-bold">password</strong>, <br />
                 to decrypt the file and continue with the validation process.
               </p>
 
               <Form
-                className="mb-4 w-full p-2 py-8"
+                className="flex mb-4 w-full p-2 py-8"
                 form={form}
                 name="validateOnly"
                 layout="vertical"
                 autoComplete="off"
               >
-                <Form.Item
-                  className="mb-4 w-full"
-                  name="password"
-                  label="Password"
-                  rules={[{ required: true }]}
-                  style={{
-                    width: "750px",
-                    height: "50px",
-                  }}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item>
-                  <Space>
-                    <SubmitButton form={form} />
-                  </Space>
-                </Form.Item>
+                <div className="flex w-full">
+                  <Form.Item
+                    name="password"
+                    label="Password"
+                    rules={[{ required: true }]}
+                    style={{
+                      width: "650px",
+                      height: "50px",
+                    }}
+                  >
+                    <Space>
+                      <Input
+                        style={{
+                          width: "650px",
+                          height: "35px",
+                        }}
+                      />
+                      <SubmitButton form={form} />
+                    </Space>
+                  </Form.Item>
+                </div>
               </Form>
             </div>
           </Card>
