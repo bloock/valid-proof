@@ -1,23 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
-  .font-montserrat {
-    font-family: "Montserrat", sans-serif;
-  }
-}
 
 @layer utilities {
   .text-custom-size {
     font-size: 25px;
   }
-}
-
-.ant-steps-item-finish .ant-steps-item-icon .ant-steps-icon {
-  color: #72c040 !important;
-}
-
-.ant-steps-item-finish .ant-steps-item-title {
-  color: #72c040 !important;
 }
