@@ -8,19 +8,24 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "optimize": "vite optimize"
+    "optimize": "vite optimize",
+    "translations": "i18next"
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
-    "@bloock/sdk": "^2.7.0-beta.1",
+    "@bloock/sdk": "^2.7.0-beta.4",
     "@cyntler/react-doc-viewer": "^1.14.1",
     "antd": "^5.11.0",
+    "date-fns": "^2.30.0",
+    "i18next": "^23.7.7",
+    "i18next-browser-languagedetector": "^7.2.0",
     "isomorphic-fetch": "^3.0.0",
     "magic-bytes.js": "^1.5.0",
     "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-dropzone": "^14.2.3"
+    "react-dropzone": "^14.2.3",
+    "react-i18next": "^13.5.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
@@ -32,6 +37,7 @@
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "i18next-parser": "^8.9.0",
     "postcss": "^8.4.31",
     "tailwindcss": "^3.3.5",
     "typescript": "^5.0.2",

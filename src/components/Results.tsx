@@ -1,10 +1,12 @@
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
+  CloseOutlined,
   ExclamationCircleOutlined,
   InfoCircleOutlined,
 } from "@ant-design/icons";
 import {
+  Button,
   Card,
   Collapse,
   CollapseProps,
@@ -13,23 +15,28 @@ import {
   Table,
   Tag,
   Tooltip,
-  Typography,
   theme,
 } from "antd";
 import Wrapper from "./Wrapper";
 import { useVerification } from "../providers/VerificationProvider";
 import moment from "moment";
-import { formatBytes } from "../utils/utils";
+import {
+  formatBytes,
+  getNetworkTranslation,
+  getTxHashURL,
+} from "../utils/utils";
 import DocViewer, {
   DocViewerRenderers,
   IDocument,
 } from "@cyntler/react-doc-viewer";
-import { ComponentType } from "react";
+import { ComponentType, PropsWithChildren } from "react";
 import Link from "antd/es/typography/Link";
 import { EllipsisMiddle } from "./EllipsisMiddle";
+import { useTranslation } from "react-i18next";
 const { useToken } = theme;
 
 function Results() {
+  const { t } = useTranslation();
   const { token } = useToken();
   const {
     isFileValid,
@@ -37,6 +44,7 @@ function Results() {
     authenticityDetails,
     encryptionDetails,
     availabilityDetails,
+    reset,
   } = useVerification();
 
   console.log(
@@ -47,11 +55,37 @@ function Results() {
     availabilityDetails
   );
 
+  const Field: React.FC<
+    PropsWithChildren<{ tooltip?: string; label: string }>
+  > = (props) => (
+    <>
+      <Tooltip placement="leftTop" title={props.tooltip}>
+        <p className="font-bold">
+          <InfoCircleOutlined className="mr-1" />
+          {props.label}:
+        </p>
+      </Tooltip>
+      <p className="w-full pt-2 text-gray-500 text-sm">{props.children}</p>
+    </>
+  );
+
   const integrityCollapse = () => {
     const networkColumns = [
-      { title: "Network", dataIndex: "name", key: "network" },
-      { title: "Status", dataIndex: "status", key: "status" },
-      { title: "Timestamp", dataIndex: "timestamp", key: "timestamp" },
+      {
+        title: t("results.integrity.network"),
+        dataIndex: "name",
+        key: "network",
+      },
+      {
+        title: t("results.integrity.status"),
+        dataIndex: "status",
+        key: "status",
+      },
+      {
+        title: t("results.integrity.timestamp"),
+        dataIndex: "timestamp",
+        key: "timestamp",
+      },
     ];
 
     const networkData = integrityDetails?.networks?.map((network, index) => {
@@ -70,97 +104,98 @@ function Results() {
 
       return {
         ...network,
+        name: t(getNetworkTranslation(network)),
         status: (
           <Tag color={getNetworkStatusColor()} className="bg-gray-100 text-sm">
             {network.status}
           </Tag>
         ),
-        timestamp: moment.unix(network.timestamp).format("DD-MM-YYYY hh:mm:ss"),
+        timestamp: network.timestamp
+          ? moment.unix(network.timestamp).format("DD-MM-YYYY hh:mm:ss")
+          : t("results.not-available"),
+        url: getTxHashURL(network.name, network.txHash),
         key: index,
       };
     });
 
     return (
       <div className="flex flex-col items-start p-6">
-        <Tooltip
-          placement="leftTop"
-          title="Digital Fingerprint of the document."
+        <Field
+          tooltip={t("results.tooltip.hash")}
+          label={t("results.integrity.hash")}
         >
-          <p className="font-bold">
-            <InfoCircleOutlined />
-            &nbsp;Hash:
-          </p>
-        </Tooltip>
-        <p className="text-gray-500 text-sm">{integrityDetails?.hash}</p>
-
+          {integrityDetails?.hash}
+        </Field>
         <Divider />
-        <Tooltip
-          placement="leftTop"
-          title="Networks where document fingerprint was recorded"
+        <Field
+          tooltip={t("results.tooltip.networks")}
+          label={t("results.integrity.networks.label")}
         >
-          <p className="font-bold">
-            <InfoCircleOutlined />
-            &nbsp;Networks:
-          </p>
-        </Tooltip>
-        <Table
-          className="w-full pt-4"
-          columns={networkColumns}
-          pagination={{ hideOnSinglePage: true }}
-          expandable={{
-            expandedRowRender: (network) => (
-              <p style={{ margin: 10 }}>
-                {
-                  <div className="flex flex-col items-start">
-                    <Tooltip
-                      placement="leftTop"
-                      title="Unique address of a transaction in a
-                        blockchain that acts as a or proof 
-                        that the transaction has taken place"
-                    >
-                      <p className="font-bold">
-                        <InfoCircleOutlined />
-                        &nbsp;Transaction Hash:
-                      </p>
-                    </Tooltip>
-                    <p className="text-gray-500 text-sm">{network.txHash}</p>
-                    <Divider />
-                    <Tooltip
-                      placement="leftTop"
-                      title="Identifier of the BLOOCK state transition the document has been included in"
-                    >
-                      <p className="font-bold">
-                        <InfoCircleOutlined />
-                        &nbsp;Anchor ID:
-                      </p>
-                    </Tooltip>
-                    <p className="text-gray-500 text-sm">{network.anchorId}</p>
-                    <Divider />
-                    <Tooltip
-                      placement="leftTop"
-                      title="Digital fingerprint representing all records included in BLOOCK state since inception"
-                    >
-                      <p className="font-bold">
-                        <InfoCircleOutlined />
-                        &nbsp;Root:
-                      </p>
-                    </Tooltip>
-                    <p className="text-gray-500 text-sm">{network.root}</p>
-                  </div>
-                }
-              </p>
-            ),
-          }}
-          dataSource={networkData}
-        />
+          <Table
+            className="w-full pt-4"
+            columns={networkColumns}
+            pagination={{ hideOnSinglePage: true }}
+            expandable={{
+              expandedRowRender: (network) => (
+                <p style={{ margin: 10 }}>
+                  {
+                    <div className="flex flex-col items-start">
+                      <Field
+                        tooltip={t("results.tooltip.tx-hash")}
+                        label={t("results.integrity.tx-hash")}
+                      >
+                        {network.url ? (
+                          <Link
+                            className="text-gray-500 text-sm"
+                            href={network.url}
+                            target="_blank"
+                          >
+                            {network.txHash || t("results.not-available")}
+                          </Link>
+                        ) : (
+                          <p className="text-gray-500 text-sm">
+                            {network.txHash}
+                          </p>
+                        )}
+                      </Field>
+                      <Divider />
+                      <Field
+                        tooltip={t("results.tooltip.anchor-id")}
+                        label={t("results.integrity.anchor-id")}
+                      >
+                        {network.anchorId}
+                      </Field>
+                      <Divider />
+                      <Field
+                        tooltip={t("results.tooltip.root")}
+                        label={t("results.integrity.root")}
+                      >
+                        {network.root || t("results.not-available")}
+                      </Field>
+                    </div>
+                  }
+                </p>
+              ),
+            }}
+            dataSource={networkData}
+          />
+        </Field>
       </div>
     );
   };
 
   const authenticityCollapse = () => {
     const signatureColumns = [
-      { title: "Signature", dataIndex: "title", key: "title" },
-      { title: "Key", dataIndex: "kid", key: "kid" },
+      {
+        title: t("results.authenticity.signature"),
+        dataIndex: "title",
+        key: "title",
+      },
+      {
+        title: t("results.authenticity.subject"),
+        dataIndex: "commonName",
+        key: "commonName",
+      },
     ];
 
     const signatureData = authenticityDetails?.signatures?.map(
@@ -168,77 +203,65 @@ function Results() {
         return {
           ...signature,
           key: index,
-          title: `Signature ${index + 1}`,
-          kid: (
-            <EllipsisMiddle lenght={30}>
-              {signature.key || "Not available"}
-            </EllipsisMiddle>
-          ),
+          title: `${t("results.authenticity.signature")} ${index + 1}`,
+          commonName:
+            authenticityDetails?.subject?.CN || t("results.not-available"),
         };
       }
     );
 
     return (
       <div className="flex flex-col items-start p-6">
-        <Tooltip
-          placement="leftTop"
-          title="Networks where document fingerprint was recorded"
+        <Field
+          tooltip={t("results.tooltip.signatures")}
+          label={t("results.authenticity.signatures")}
         >
-          <p className="font-bold">
-            <InfoCircleOutlined />
-            &nbsp;Signatures:
-          </p>
-        </Tooltip>
-
-        <Table
-          className="w-full pt-4"
-          columns={signatureColumns}
-          pagination={{ hideOnSinglePage: true }}
-          expandable={{
-            expandedRowRender: (signature) => (
-              <div className="flex flex-col items-start p-6">
-                <Tooltip
-                  placement="leftTop"
-                  title="Digital Fingerprint of the document."
-                >
-                  <p className="font-bold">
-                    <InfoCircleOutlined />
-                    &nbsp;Algorithm:
-                  </p>
-                </Tooltip>
-                <p className="text-gray-500 text-sm">
-                  {signature.signAlg || "Not available"}{" "}
-                </p>
-                <Divider />
-
-                <Tooltip
-                  placement="leftTop"
-                  title="Digital Fingerprint of the document."
-                >
-                  <p className="font-bold">
-                    <InfoCircleOutlined />
-                    &nbsp;Signature:
-                  </p>
-                </Tooltip>
-                <EllipsisMiddle lenght={40}>
-                  {signature.signature}
-                </EllipsisMiddle>
-                <Divider />
-                <Tooltip
-                  placement="leftTop"
-                  title="Digital Fingerprint of the document."
-                >
-                  <p className="font-bold">
-                    <InfoCircleOutlined />
-                    &nbsp;Key ID:
-                  </p>
-                </Tooltip>
-                {signature.kid}
-              </div>
-            ),
-          }}
-          dataSource={signatureData}
-        />
+          <Table
+            className="w-full pt-4"
+            columns={signatureColumns}
+            pagination={{ hideOnSinglePage: true }}
+            expandable={{
+              expandedRowRender: (signature) => (
+                <div className="flex flex-col items-start p-6">
+                  <Field
+                    tooltip={t("results.tooltip.subject")}
+                    label={t("results.authenticity.subject")}
+                  >
+                    {signature.commonName}
+                  </Field>
+                  <Divider />
+                  <Field
+                    tooltip={t("results.tooltip.algorithm")}
+                    label={t("results.authenticity.algorithm")}
+                  >
+                    {signature.alg || t("results.not-available")}
+                  </Field>
+                  <Divider />
+                  <Field
+                    tooltip={t("results.tooltip.signature")}
+                    label={t("results.authenticity.signature")}
+                  >
+                    <EllipsisMiddle lenght={40}>
+                      {signature.signature}
+                    </EllipsisMiddle>
+                  </Field>
+                  <Divider />
+                  <Field
+                    tooltip={t("results.tooltip.public-key")}
+                    label={t("results.authenticity.public-key")}
+                  >
+                    <EllipsisMiddle lenght={30}>
+                      {signature.kid
+                        ? t("results.authenticity.copy-key")
+                        : t("results.not-available")}
+                    </EllipsisMiddle>
+                  </Field>
+                </div>
+              ),
+            }}
+            dataSource={signatureData}
+          />
+        </Field>
       </div>
     );
   };
@@ -246,32 +269,29 @@ function Results() {
   const encryptionCollapse = () => {
     return (
       <div className="flex flex-col items-start p-6">
-        <Tooltip
-          placement="leftTop"
-          title="Digital Fingerprint of the document."
+        <Field
+          tooltip={t("results.tooltip.algorithm")}
+          label={t("results.encryption.algorithm")}
         >
-          <p className="font-bold">
-            <InfoCircleOutlined />
-            &nbsp;Algorithm:
-          </p>
-        </Tooltip>
-        <p className="text-gray-500 text-sm">
-          {encryptionDetails?.encryptionAlg || "Not available"}
-        </p>
+          {encryptionDetails?.alg || t("results.not-available")}
+        </Field>
         <Divider />
 
-        <Tooltip
-          placement="leftTop"
-          title="Digital Fingerprint of the document."
+        <Field
+          tooltip={t("results.tooltip.public-key")}
+          label={t("results.encryption.public-key")}
         >
-          <p className="font-bold">
-            <InfoCircleOutlined />
-            &nbsp;Key ID:
-          </p>
-        </Tooltip>
-        <p className="text-gray-500 text-sm">
-          {encryptionDetails?.key || "Not available"}
-        </p>
+          {encryptionDetails?.key || t("results.not-available")}
+        </Field>
+
+        <Divider />
+
+        <Field
+          tooltip={t("results.tooltip.subject")}
+          label={t("results.encryption.subject")}
+        >
+          {encryptionDetails?.subject || t("results.not-available")}
+        </Field>
       </div>
     );
   };
@@ -279,65 +299,46 @@ function Results() {
   const availabilityCollapse = () => {
     return (
       <div className="flex flex-col items-start p-6">
-        <Tooltip
-          placement="leftTop"
-          title="Networks where document fingerprint was recorded."
+        <Field
+          tooltip={t("results.tooltip.filename")}
+          label={t("results.availability.filename")}
         >
-          <p className="font-bold">
-            <InfoCircleOutlined />
-            &nbsp;File Name:
-          </p>
-        </Tooltip>
-        <p className="text-gray-500 text-sm">{availabilityDetails?.filename}</p>
+          {availabilityDetails?.filename}
+        </Field>
         <Divider />
-
-        <Tooltip
-          placement="leftTop"
-          title="Networks where document fingerprint was recorded."
+        <Field
+          tooltip={t("results.tooltip.link")}
+          label={t("results.availability.link")}
         >
-          <p className="font-bold">
-            <InfoCircleOutlined />
-            &nbsp;Link:
-          </p>
-        </Tooltip>
-        {availabilityDetails?.link ? (
-          <Link
-            copyable
-            className="text-gray-500 text-sm"
-            href={availabilityDetails?.link}
-            target="_blank"
-          >
-            {availabilityDetails?.link || "Not available"}
-          </Link>
-        ) : (
-          <p className="text-gray-500 text-sm">{"Not available"}</p>
-        )}
+          {availabilityDetails?.link ? (
+            <Link
+              copyable
+              className="text-gray-500 text-sm"
+              href={availabilityDetails?.link}
+              target="_blank"
+            >
+              {availabilityDetails?.link || t("results.not-available")}
+            </Link>
+          ) : (
+            <p className="text-gray-500 text-sm">
+              {t("results.not-available")}
+            </p>
+          )}
+        </Field>
         <Divider />
-        <Tooltip
-          placement="leftTop"
-          title="Networks where document fingerprint was recorded."
+        <Field
+          tooltip={t("results.tooltip.size")}
+          label={t("results.availability.size")}
         >
-          <p className="font-bold">
-            <InfoCircleOutlined />
-            &nbsp;Size:
-          </p>
-        </Tooltip>
-        <p className="text-gray-500 text-sm">
           {formatBytes(availabilityDetails?.size)}
-        </p>
+        </Field>
         <Divider />
-        <Tooltip
-          placement="leftTop"
-          title="Networks where document fingerprint was recorded."
+        <Field
+          tooltip={t("results.tooltip.content-type")}
+          label={t("results.availability.content-type")}
         >
-          <p className="font-bold">
-            <InfoCircleOutlined />
-            &nbsp;Type:
-          </p>
-        </Tooltip>
-        <p className="text-gray-500 text-sm">
-          {availabilityDetails?.type || "Not available"}
-        </p>
+          {availabilityDetails?.type || t("results.not-available")}
+        </Field>
       </div>
     );
   };
@@ -345,7 +346,7 @@ function Results() {
   const items: CollapseProps["items"] = [
     {
       key: "1",
-      label: "Integrity details",
+      label: t("results.integrity.title"),
       children: integrityCollapse(),
       collapsible: integrityDetails?.enabled ? "header" : "disabled",
       extra: integrityDetails?.error && (
@@ -356,7 +357,7 @@ function Results() {
     },
     {
       key: "2",
-      label: "Authenticity details",
+      label: t("results.authenticity.title"),
       children: authenticityCollapse(),
       collapsible: authenticityDetails?.enabled ? "header" : "disabled",
       extra: authenticityDetails?.error && (
@@ -367,7 +368,7 @@ function Results() {
     },
     {
       key: "3",
-      label: "Access control details",
+      label: t("results.encryption.title"),
       children: encryptionCollapse(),
       collapsible: encryptionDetails?.enabled ? "header" : "disabled",
       extra: encryptionDetails?.error && (
@@ -378,7 +379,7 @@ function Results() {
     },
     {
       key: "4",
-      label: "Availability details",
+      label: t("results.availability.title"),
       children: availabilityCollapse(),
       extra: availabilityDetails?.error && (
         <Tooltip placement="left" title={availabilityDetails.error}>
@@ -395,7 +396,9 @@ function Results() {
     return (
       <div className="w-64 h-48 rounded-md">
         <Skeleton.Image className="!h-full !w-full" />
-        <p className="-mt-8 text-center text-xs">Preview not available</p>
+        <p className="-mt-8 text-center text-xs">
+          {t("results.preview.not-available")}
+        </p>
       </div>
     );
   };
@@ -412,16 +415,29 @@ function Results() {
           }}
           bordered={false}
         >
-          <div className="flex justify-left p-12">
+          <Button
+            type="text"
+            shape="circle"
+            size="large"
+            icon={<CloseOutlined />}
+            onClick={() => reset()}
+          />
+          <div className="flex justify-left p-12 pt-6">
             <div className="flex flex-col items-center mr-12">
               {availabilityDetails && (
                 <DocViewer
                   documents={[
                     {
                       uri: URL.createObjectURL(
-                        new Blob([availabilityDetails!.buffer], {
-                          type: availabilityDetails!.type,
-                        })
+                        new Blob(
+                          [
+                            availabilityDetails!.payload ||
+                              availabilityDetails.buffer,
+                          ],
+                          {
+                            type: availabilityDetails!.type,
+                          }
+                        )
                       ),
                       fileName: availabilityDetails.filename,
                       fileType: availabilityDetails.type || "empty",
@@ -450,7 +466,7 @@ function Results() {
                   className="pl-8 bg-gray-100 flex items-center text-sm"
                   style={{ width: "450px", height: "35px" }}
                 >
-                  Your document has been verified
+                  {t("results.verification.success")}
                 </Tag>
               )}
 
@@ -461,7 +477,7 @@ function Results() {
                   className="pl-8 bg-gray-100 flex items-center text-sm"
                   style={{ width: "450px", height: "35px" }}
                 >
-                  Your document is not valid
+                  {t("results.verification.error")}
                 </Tag>
               )}
 
@@ -472,21 +488,24 @@ function Results() {
                   className="pl-8 bg-gray-100 flex items-center text-sm"
                   style={{ width: "450px", height: "35px" }}
                 >
-                  Your document couldn't be verified
+                  {t("results.verification.invalid")}
                 </Tag>
               )}
               <div className="p-4">
-                <p className="font-bold">Name</p>
+                <p className="font-bold">{t("results.general.name")}</p>
                 <p className="text-gray-500 text-sm">
                   {availabilityDetails?.filename}
                 </p>
                 <br />
-                <p className="font-bold">Issuer</p>
-                <p className="text-gray-500 text-sm">Harvard University</p>
+                <p className="font-bold">{t("results.general.issuer")}</p>
+                <p className="text-gray-500 text-sm">
+                  {authenticityDetails?.subject?.CN ||
+                    t("results.not-available")}
+                </p>
                 <br />
                 {integrityDetails?.timestamp && (
                   <>
-                    <p className="font-bold">Date</p>
+                    <p className="font-bold">{t("results.general.date")}</p>
                     <p className="text-gray-500 text-sm">
                       {moment
                         .unix(integrityDetails.timestamp)
@@ -503,6 +522,11 @@ function Results() {
               items={items}
               defaultActiveKey={[]}
             />
+          </div>
+          <div className="flex justify-center p-10 pt-2">
+            <Button type="primary" size="large" onClick={() => reset()}>
+              {t("results.verify-another")}
+            </Button>
           </div>
         </Card>
       </div>

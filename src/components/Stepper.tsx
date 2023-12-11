@@ -3,6 +3,7 @@ import Wrapper from "./Wrapper";
 import { useVerification } from "../providers/VerificationProvider";
 import { useEffect, useState } from "react";
 import { LoadingOutlined } from "@ant-design/icons";
+import { useTranslation } from "react-i18next";
 const { Step } = Steps;
 
 export enum VerificationStep {
@@ -13,6 +14,7 @@ export enum VerificationStep {
 }
 
 function Stepper() {
+  const { t } = useTranslation();
   const {
     integrityDetails,
     authenticityDetails,
@@ -24,54 +26,52 @@ function Stepper() {
   const steps = [
     {
       id: VerificationStep.RETRIEVING_FILE,
-      title: "Retrieving file",
+      title: t("stepper.retrieving-file"),
     },
     {
       id: VerificationStep.CHECKING_ACCESS_CONTROL,
-      title: "Checking Access control",
+      title: t("stepper.check-encryption"),
     },
     {
       id: VerificationStep.VERIFYING_AUTHENTICITY,
-      title: "Verifying Authenticity",
+      title: t("stepper.verify-authenticity"),
     },
     {
       id: VerificationStep.VERIFYING_INTEGRITY,
-      title: "Verifying Integrity",
+      title: t("stepper.verify-integrity"),
     },
   ];
 
   useEffect(() => {
-    if (!availabilityDetails) {
-      setCurrent(
-        steps.findIndex((s) => s.id === VerificationStep.RETRIEVING_FILE)
-      );
-    }
+    const getCurrentStep = (): number => {
+      if (!availabilityDetails) {
+        return steps.findIndex(
+          (s) => s.id === VerificationStep.RETRIEVING_FILE
+        );
+      }
 
-    if (!encryptionDetails) {
-      setCurrent(
-        steps.findIndex(
+      if (!encryptionDetails) {
+        return steps.findIndex(
           (s) => s.id === VerificationStep.CHECKING_ACCESS_CONTROL
-        )
-      );
+        );
+      }
 
-      return;
-    }
+      if (!authenticityDetails) {
+        return steps.findIndex(
+          (s) => s.id === VerificationStep.VERIFYING_AUTHENTICITY
+        );
+      }
 
-    if (!authenticityDetails) {
-      setCurrent(
-        steps.findIndex((s) => s.id === VerificationStep.VERIFYING_AUTHENTICITY)
-      );
+      if (!integrityDetails) {
+        return steps.findIndex(
+          (s) => s.id === VerificationStep.VERIFYING_INTEGRITY
+        );
+      }
 
-      return;
-    }
+      return 0;
+    };
 
-    if (!integrityDetails) {
-      setCurrent(
-        steps.findIndex((s) => s.id === VerificationStep.VERIFYING_INTEGRITY)
-      );
-
-      return;
-    }
+    setCurrent(getCurrentStep());
   }, [
     integrityDetails,
     authenticityDetails,
@@ -93,9 +93,7 @@ function Stepper() {
             bordered={false}
           >
             <div className="flex flex-col justify-center p-12">
-              <p className="text-left text-xl mb-12">
-                Please, wait for your file to be verified...
-              </p>
+              <p className="text-left text-xl mb-12">{t("stepper.title")}</p>
 
               <Steps
                 current={current}
@@ -106,13 +104,7 @@ function Stepper() {
                   <Step
                     key={s.id}
                     title={s.title}
-                    icon={
-                      current === idx ? (
-                        <LoadingOutlined />
-                      ) : (
-                        <LoadingOutlined />
-                      )
-                    }
+                    icon={idx == current ? <LoadingOutlined /> : undefined}
                   />
                 ))}
               </Steps>

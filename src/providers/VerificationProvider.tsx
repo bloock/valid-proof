@@ -26,6 +26,7 @@ export type VerificationState = {
   encryptionDetails: EncryptionDetails | undefined;
   availabilityDetails: AvailabilityDetails | undefined;
   service: BloockService;
+  reset: () => void;
 };
 
 const VerificationContext = createContext<VerificationState | undefined>(
@@ -108,8 +109,11 @@ export const VerificationProvider: React.FC = () => {
     return bloockService
       .checkEncryption(availabilityDetails.buffer)
       .then((_encryptionDetails) => {
-        if (_encryptionDetails.enabled) {
+        if (encryptionDetails?.enabled !== true) {
           setEncryptionDetails(_encryptionDetails);
+        }
+
+        if (_encryptionDetails.enabled) {
           setComponent(steps.decrypt);
         } else {
           return bloockService.checkAuthenticity(availabilityDetails.buffer);
@@ -164,6 +168,15 @@ export const VerificationProvider: React.FC = () => {
       .catch(console.error);
   };
 
+  const reset = () => {
+    setIsFileValid(undefined);
+    setIntegrityDetails(undefined);
+    setAuthenticityDetails(undefined);
+    setEncryptionDetails(undefined);
+    setAvailabilityDetails(undefined);
+    setComponent(steps.loader);
+  };
+
   const value: VerificationState = {
     onInputChange,
     onDecryptFile,
@@ -173,6 +186,7 @@ export const VerificationProvider: React.FC = () => {
     encryptionDetails,
     availabilityDetails,
     service: bloockService,
+    reset,
   };
 
   return (

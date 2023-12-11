@@ -6,15 +6,17 @@ import {
   FileProtectOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
-import { Divider, theme, message, Card } from "antd";
+import { Divider, theme, message, Card, Row, Col } from "antd";
 import { useCallback, useEffect } from "react";
 import { DropzoneOptions, useDropzone } from "react-dropzone";
 import { useVerification } from "../providers/VerificationProvider";
 import Wrapper from "./Wrapper";
+import { useTranslation } from "react-i18next";
 
 const { useToken } = theme;
 
 function FileLoader() {
+  const { t } = useTranslation();
   const { token } = useToken();
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -37,9 +39,9 @@ function FileLoader() {
     if (files.length === 1) {
       onInputChange(files[0]);
     } else if (files.length > 1) {
-      messageApi.error("Only one file is supported");
+      messageApi.error(t("home.error.only-one"));
     } else {
-      messageApi.error("No files selected");
+      messageApi.error(t("home.error.no-files"));
     }
   }, []);
 
@@ -59,7 +61,13 @@ function FileLoader() {
   } = useDropzone({ ...dropzoneOptions, noClick: true });
 
   return (
-    <div className="flex flex-col items-center snap-mandatory snap-y scroll-smooth">
+    <div
+      className="flex flex-col items-center overflow-y-scroll snap-mandatory snap-y scroll-smooth"
+      style={{
+        scrollSnapType: "y proximity",
+        scrollPaddingTop: "15vh",
+      }}
+    >
       {contextHolder}
       <Wrapper {...getRootPropsDrag()} className="snap-center">
         <div
@@ -68,66 +76,73 @@ function FileLoader() {
             backgroundColor: token.colorPrimary,
             opacity: isDragActive ? "1" : "0",
             zIndex: isDragActive ? "999" : "0",
-
-            // visibility: isDragActive ? "visible" : "hidden",
-            // transition: "opacity 500ms, visibility 500ms",
           }}
         >
           <p
             className="text-0 leading-14 text-white font-bold mb-8"
             style={{ fontSize: "50px", lineHeight: "50px" }}
           >
-            Drop files here
+            {t("home.drop.drop-here")}
           </p>
         </div>
-        <div
-          className="flex flex-row items-center mx-20 z-50"
+
+        <Row
+          className="mx-20 z-50"
           style={{
-            height: "26rem",
             opacity: !isDragActive ? "1" : "0",
           }}
+          gutter={[16, 16]}
+          justify="center"
+          align="middle"
         >
-          <div
-            className="h-full flex flex-col items-center shadow-xl bg-white rounded-lg transition-opacity duration-500 ease-in-out p-4"
-            style={{
-              minWidth: "15.5rem",
-            }}
-          >
-            <input {...getInputPropsDrag()} />
-            <div
-              className="w-full flex flex-col items-center cursor-pointer py-10"
-              {...getRootProps()}
-            >
-              <input {...getInputProps()} />
+          <Col lg={8} md={24}>
+            <div className="w-full h-full flex flex-col items-center justify-center">
               <div
-                className="flex items-center justify-center h-32  h-9 w-9 rounded-full mb-2 p-8 mt-8"
-                style={{ backgroundColor: token.colorPrimary }}
+                className="h-full flex flex-col items-center shadow-xl bg-white rounded-lg transition-opacity duration-500 ease-in-out p-4"
+                style={{
+                  width: "15.5rem",
+                }}
               >
-                <UploadOutlined className="text-white text-2xl" />
+                <input {...getInputPropsDrag()} />
+                <div
+                  className="w-full flex flex-col items-center cursor-pointer py-10"
+                  {...getRootProps()}
+                >
+                  <input {...getInputProps()} />
+                  <div
+                    className="flex items-center justify-center h-32  h-9 w-9 rounded-full mb-2 p-8 mt-8"
+                    style={{ backgroundColor: token.colorPrimary }}
+                  >
+                    <UploadOutlined className="text-white text-2xl" />
+                  </div>
+                  <p className="text-lg mb-4 pt-2 text-center">
+                    {t("home.drop.select-file")}
+                  </p>
+                </div>
+                <Divider className="flex-1 m-0" />
+                <div className="flex items-center py-8">
+                  <p className="text-center">{t("home.drop.subtitle")}</p>
+                </div>
               </div>
-              <p className="text-lg mb-4 pt-2 text-center">Select a file</p>
             </div>
-            <Divider className="flex-1 m-0" />
-            <div className="flex items-center py-8">
-              <p className="text-center">X Validate another file</p>
+          </Col>
+          <Col lg={16} md={24}>
+            <div className="min-h-full flex flex-col justify-center">
+              <p
+                className="text-0 leading-14 text-white font-bold mb-8"
+                style={{ fontSize: "50px", lineHeight: "50px" }}
+              >
+                {t("home.title")}
+              </p>
+              <p
+                className="text-0 leading-14 text-white"
+                style={{ fontSize: "30px", lineHeight: "40px" }}
+              >
+                {t("home.subtitle")}
+              </p>
             </div>
-          </div>
-          <div className="min-h-full flex flex-col justify-center ml-20">
-            <p
-              className="text-0 leading-14 text-white font-bold mb-8"
-              style={{ fontSize: "50px", lineHeight: "50px" }}
-            >
-              Verify document's authenticity
-            </p>
-            <p
-              className="text-0 leading-14 text-white"
-              style={{ fontSize: "30px", lineHeight: "40px" }}
-            >
-              Unequivocally check whether a document <br />
-              has been tampered with
-            </p>
-          </div>
-        </div>
+          </Col>
+        </Row>
       </Wrapper>
       <DownOutlined
         className="-mt-14 cursor-pointer p-4 text-xl text-white z-50"
@@ -141,7 +156,7 @@ function FileLoader() {
       >
         <div className="my-20 px-20">
           <div className="text-center text-white text-custom-size p-4">
-            <p>Test the verification tool</p>
+            <p>{t("home.information.title")}</p>
           </div>
           <div className="flex flex-wrap justify-center">
             <Card
@@ -161,7 +176,7 @@ function FileLoader() {
                     <DownloadOutlined className="text-white text-2xl" />
                   </div>
                   <p className="text-center text-gray-500">
-                    Valid test Certificate
+                    {t("home.information.title")}
                   </p>
                 </div>
                 <div className="flex flex-col items-center ">
@@ -179,10 +194,10 @@ function FileLoader() {
               <Divider className="mt-4" />
               <div className="flex flex-col items-center">
                 <p className="text-center font-bold text-md">
-                  Try out with demo documents
+                  {t("home.information.try-out.title")}
                 </p>
                 <p className="text-center text-sm text-gray-500">
-                  Download the demo documents to see how it’s done.
+                  {t("home.information.try-out.subtitle")}
                 </p>
               </div>
             </Card>
@@ -211,11 +226,10 @@ function FileLoader() {
               <Divider className="mt-8" />
               <div className="flex flex-col items-center">
                 <p className="text-center font-bold text-md">
-                  Verify the documents
+                  {t("home.information.verify-documents.title")}
                 </p>
                 <p className="text-center text-sm text-gray-500">
-                  Drag and drop each document into the tool or click on the tool
-                  to open your file browser.
+                  {t("home.information.verify-documents.subtitle")}
                 </p>
               </div>
             </Card>
@@ -255,11 +269,10 @@ function FileLoader() {
               <Divider className="mt-4" />
               <div className="flex flex-col items-center">
                 <p className="text-center font-bold text-md">
-                  Check the results
+                  {t("home.information.check-results.title")}
                 </p>
                 <p className="text-center text-sm text-gray-500">
-                  Check if the certification is valid and get the evidence
-                  report.
+                  {t("home.information.check-results.subtitle")}
                 </p>
               </div>
             </Card>

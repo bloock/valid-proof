@@ -19,6 +19,8 @@ export const EllipsisMiddle: React.FC<{
   }
 
   return (
-    <Typography.Text style={{ maxWidth: "100%" }}>{children}</Typography.Text>
+    <Typography.Text copyable style={{ maxWidth: "100%" }}>
+      {children}
+    </Typography.Text>
   );
 };

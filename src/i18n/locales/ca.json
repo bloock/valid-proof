@@ -1,0 +1,119 @@
+{
+  "decrypt": {
+    "error": {
+      "invalid-key": ""
+    },
+    "password": "",
+    "submit": "",
+    "subtitle": "",
+    "title": ""
+  },
+  "home": {
+    "drop": {
+      "drop-here": "",
+      "select-file": "",
+      "subtitle": ""
+    },
+    "error": {
+      "no-files": "",
+      "only-one": ""
+    },
+    "information": {
+      "check-results": {
+        "subtitle": "",
+        "title": ""
+      },
+      "title": "",
+      "try-out": {
+        "subtitle": "",
+        "title": ""
+      },
+      "verify-documents": {
+        "subtitle": "",
+        "title": ""
+      }
+    },
+    "subtitle": "",
+    "title": ""
+  },
+  "results": {
+    "authenticity": {
+      "algorithm": "",
+      "copy-key": "",
+      "public-key": "",
+      "signature": "",
+      "signatures": "",
+      "subject": "",
+      "title": ""
+    },
+    "availability": {
+      "content-type": "",
+      "filename": "",
+      "link": "",
+      "size": "",
+      "title": ""
+    },
+    "encryption": {
+      "algorithm": "",
+      "public-key": "",
+      "subject": "",
+      "title": ""
+    },
+    "general": {
+      "date": "",
+      "issuer": "",
+      "name": ""
+    },
+    "integrity": {
+      "anchor-id": "",
+      "hash": "",
+      "network": "",
+      "networks": {
+        "bloock_chain": "",
+        "ethereum_mainnet": "",
+        "gnosis_chain": "",
+        "label": "",
+        "polygon_chain": "",
+        "unknown": ""
+      },
+      "root": "",
+      "status": "",
+      "timestamp": "",
+      "title": "",
+      "tx-hash": ""
+    },
+    "not-available": "",
+    "preview": {
+      "not-available": ""
+    },
+    "tooltip": {
+      "algorithm": "",
+      "anchor-id": "",
+      "content-type": "",
+      "filename": "",
+      "hash": "",
+      "link": "",
+      "networks": "",
+      "public-key": "",
+      "root": "",
+      "signature": "",
+      "signatures": "",
+      "size": "",
+      "subject": "",
+      "tx-hash": ""
+    },
+    "verification": {
+      "error": "",
+      "invalid": "",
+      "success": ""
+    },
+    "verify-another": ""
+  },
+  "stepper": {
+    "check-encryption": "",
+    "retrieving-file": "",
+    "title": "",
+    "verify-authenticity": "",
+    "verify-integrity": ""
+  }
+}

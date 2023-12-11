@@ -1,0 +1,119 @@
+{
+  "decrypt": {
+    "error": {
+      "invalid-key": "Invalid key provided"
+    },
+    "password": "Password",
+    "submit": "Submit",
+    "subtitle": "Please, introduce your password, to decrypt the file and continue with the validation process.",
+    "title": "Decrypt File"
+  },
+  "home": {
+    "drop": {
+      "drop-here": "Drop files here",
+      "select-file": "Select a file",
+      "subtitle": "X Validate another file"
+    },
+    "error": {
+      "no-files": "No files selected",
+      "only-one": "Only one file is supported"
+    },
+    "information": {
+      "check-results": {
+        "subtitle": "Check if the certification is valid and get the evidence report.",
+        "title": "Check the results"
+      },
+      "title": "Test the verification tool",
+      "try-out": {
+        "subtitle": "Download the demo documents to see how it's done.",
+        "title": "Try out with demo documents"
+      },
+      "verify-documents": {
+        "subtitle": "Drag and drop each document into the tool or click on the tool to open your file browser.",
+        "title": "Verify the documents"
+      }
+    },
+    "subtitle": "Unequivocally check whether a document has been tampered with",
+    "title": "Verify document's authenticity"
+  },
+  "results": {
+    "authenticity": {
+      "algorithm": "Algorithm",
+      "copy-key": "Copy key",
+      "public-key": "Public key",
+      "signature": "Signature",
+      "signatures": "Signatures",
+      "subject": "Subject",
+      "title": "Authenticity details"
+    },
+    "availability": {
+      "content-type": "Content type",
+      "filename": "File name",
+      "link": "Link",
+      "size": "Size",
+      "title": "Availability details"
+    },
+    "encryption": {
+      "algorithm": "Algorithm",
+      "public-key": "Public key",
+      "subject": "Subject",
+      "title": "Encryption details"
+    },
+    "general": {
+      "date": "Date",
+      "issuer": "Issuer",
+      "name": "Name"
+    },
+    "integrity": {
+      "anchor-id": "Anchor ID",
+      "hash": "Hash",
+      "network": "Network",
+      "networks": {
+        "bloock_chain": "Bloock Chain",
+        "ethereum_mainnet": "Ethereum",
+        "gnosis_chain": "Gnosis",
+        "label": "Networks",
+        "polygon_chain": "Polygon",
+        "unknown": "Unknown"
+      },
+      "root": "Root",
+      "status": "Status",
+      "timestamp": "Timestamp",
+      "title": "Integrity details",
+      "tx-hash": "Transaction Hash"
+    },
+    "not-available": "Not available",
+    "preview": {
+      "not-available": "Preview not available"
+    },
+    "tooltip": {
+      "algorithm": "",
+      "anchor-id": "",
+      "content-type": "",
+      "filename": "",
+      "hash": "",
+      "link": "",
+      "networks": "",
+      "public-key": "",
+      "root": "",
+      "signature": "",
+      "signatures": "",
+      "size": "",
+      "subject": "",
+      "tx-hash": ""
+    },
+    "verification": {
+      "error": "Your document is not valid",
+      "invalid": "Your document couldn't be verified",
+      "success": "Your document has been verified"
+    },
+    "verify-another": "Verify another file"
+  },
+  "stepper": {
+    "check-encryption": "Checking Access control",
+    "retrieving-file": "Retrieving file",
+    "title": "Please, wait for your file to be verified...",
+    "verify-authenticity": "Verifying Authenticity",
+    "verify-integrity": "Verifying Integrity"
+  }
+}

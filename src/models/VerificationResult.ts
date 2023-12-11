@@ -1,5 +1,3 @@
-import { EncryptionAlg } from "@bloock/sdk";
-
 export type VerificationInput = {
   name: string;
   bytes: Uint8Array;
@@ -11,12 +9,12 @@ export type IntegrityNetwork = {
   timestamp: number;
   txHash: string;
   anchorId: number;
-  root: string;
+  root?: string;
 };
 
 export type IntegrityDetails = {
   enabled: boolean;
-  hash: string;
+  hash?: string;
   valid: boolean;
   timestamp?: number;
   networks?: IntegrityNetwork[];
@@ -24,22 +22,25 @@ export type IntegrityDetails = {
 };
 
 export type AuthenticitySignature = {
-  signAlg?: string;
-  key?: string;
+  alg?: string;
+  kid?: string;
   signature?: string;
+  subject?: Record<string, string>;
 };
 
 export type AuthenticityDetails = {
   enabled: boolean;
   valid: boolean;
   signatures: AuthenticitySignature[];
+  subject?: Record<string, string>;
   error?: string;
 };
 
 export type EncryptionDetails = {
   enabled: boolean;
-  encryptionAlg?: EncryptionAlg;
+  alg?: string;
   key?: string;
+  subject?: string;
   error?: string;
 };
 
@@ -49,5 +50,6 @@ export type AvailabilityDetails = {
   size?: number;
   type?: string;
   buffer: Uint8Array;
+  payload?: Uint8Array;
   error?: string;
 };

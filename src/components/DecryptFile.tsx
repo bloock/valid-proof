@@ -3,8 +3,10 @@ import { Button, Form, Input } from "antd";
 import Wrapper from "./Wrapper";
 import { useVerification } from "../providers/VerificationProvider";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 function DecryptFile() {
+  const { t } = useTranslation();
   const { onDecryptFile } = useVerification();
   const [loading, setLoading] = useState(false);
 
@@ -18,7 +20,7 @@ function DecryptFile() {
           form.setFields([
             {
               name: "password",
-              errors: ["Invalid key provided"],
+              errors: [t("decrypt.error.invalid-key")],
             },
           ]);
         }
@@ -41,11 +43,11 @@ function DecryptFile() {
             bordered={false}
           >
             <div className="flex flex-col justify-center p-12">
-              <p className="text-left font-bold text-xl mb-4">Decrypt File</p>
+              <p className="text-left font-bold text-xl mb-4">
+                {t("decrypt.title")}
+              </p>
               <p className="text-left text-lg text-gray-400">
-                Please, introduce your{" "}
-                <strong className="font-bold">password</strong>, to decrypt the
-                file and continue with the validation process.
+                {t("decrypt.subtitle")}
               </p>
 
               <Form
@@ -58,7 +60,7 @@ function DecryptFile() {
                 <div className="flex w-full">
                   <Form.Item
                     name="password"
-                    label="Password"
+                    label={t("decrypt.password")}
                     className="w-full"
                     rules={[{ required: true }]}
                   >
@@ -69,7 +71,7 @@ function DecryptFile() {
                         htmlType="submit"
                         loading={loading}
                       >
-                        Submit
+                        {t("decrypt.submit")}
                       </Button>
                     </Flex>
                   </Form.Item>

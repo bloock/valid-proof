@@ -1,5 +1,9 @@
-import { AesDecrypter, BloockClient, Record } from "@bloock/sdk";
-import { convertAnchorNetworkToNetwork, waitRandomTime } from "../utils/utils";
+import { BloockClient, Record, Encrypter, KeyType } from "@bloock/sdk";
+import {
+  convertAnchorNetworkToNetwork,
+  parseCertificateSubject,
+  waitRandomTime,
+} from "../utils/utils";
 import {
   IntegrityDetails,
   AuthenticityDetails,
@@ -7,7 +11,7 @@ import {
   IntegrityNetwork,
   AvailabilityDetails,
 } from "../models/VerificationResult";
-import { filetypemime } from "magic-bytes.js";
+import { RecordDetails } from "@bloock/sdk/dist/entity/record/record-details";
 
 export default class BloockService {
   private bloockClient: BloockClient;
@@ -20,10 +24,14 @@ export default class BloockService {
     return await this.bloockClient.RecordClient.fromFile(bytes).build();
   }
 
+  public async getDetails(bytes: Uint8Array): Promise<RecordDetails> {
+    return this.bloockClient.RecordClient.fromFile(bytes).getDetails();
+  }
+
   public async checkIntegrity(bytes: Uint8Array): Promise<IntegrityDetails> {
     await waitRandomTime(500, 800);
 
-    let record: Record;
+    let recordDetails: RecordDetails;
     let details: IntegrityDetails = {
       enabled: false,
       hash: "",
@@ -31,16 +39,15 @@ export default class BloockService {
     };
 
     try {
-      record = await this.loadFile(bytes);
-      const hash = await record.getHash();
-
-      details.hash = hash;
+      recordDetails = await this.getDetails(bytes);
+      details.hash = recordDetails.integrity?.hash;
     } catch (err) {
       details.error = this.parseError(err);
       return details;
     }
 
     try {
+      const record = await this.loadFile(bytes);
       const proof = await this.bloockClient.IntegrityClient.getProof([record]);
       if (proof) {
         details.enabled = true;
@@ -51,7 +58,7 @@ export default class BloockService {
       for (let i = 0; i < proof.anchor.networks.length; i++) {
         const network = proof.anchor.networks[i];
         const timestamp = await this.bloockClient.IntegrityClient.validateRoot(
-          root,
+          network.root || root,
           convertAnchorNetworkToNetwork(network)
         );
         networks.push({
@@ -60,7 +67,7 @@ export default class BloockService {
           timestamp,
           txHash: network.txHash,
           anchorId: proof.anchor.anchorID,
-          root: proof.anchor.root,
+          root: network.root,
         });
       }
 
@@ -96,20 +103,31 @@ export default class BloockService {
     };
 
     try {
-      const record = await this.loadFile(bytes);
-      const signatures =
-        await this.bloockClient.AuthenticityClient.getSignatures(record);
+      const recordDetails = await this.getDetails(bytes);
 
-      if (signatures.length > 0) {
+      if (recordDetails.authenticity?.signatures) {
         details.enabled = true;
-        details.signatures = signatures.map((signature) => {
-          return {
-            signAlg: signature.alg,
-            key: signature.kid,
-            signature: signature.signature,
-          };
-        });
+        details.signatures = recordDetails.authenticity.signatures.map(
+          (signature) => {
+            return {
+              alg: signature.alg,
+              kid: signature.kid,
+              signature: signature.signature,
+              subject: signature.subject
+                ? parseCertificateSubject(signature.subject)
+                : undefined,
+            };
+          }
+        );
 
+        const subject = recordDetails.authenticity.signatures.filter(
+          (s) => !!s.subject
+        )[0]?.subject;
+        if (subject) {
+          details.subject = parseCertificateSubject(subject);
+        }
+
+        const record = await this.loadFile(bytes);
         const valid = await this.bloockClient.AuthenticityClient.verify(record);
         details.valid = valid;
       }
@@ -129,8 +147,14 @@ export default class BloockService {
     };
 
     try {
-      await this.loadFile(bytes);
-      return details;
+      const recordDetails = await this.getDetails(bytes);
+      return {
+        ...details,
+        enabled: !!recordDetails.encryption,
+        alg: recordDetails.encryption?.alg?.toString(),
+        key: recordDetails.encryption?.key,
+        subject: recordDetails.encryption?.subject,
+      };
     } catch (err) {
       let error = this.parseError(err);
       if (error.includes("Cannot create record from an encrypted document")) {
@@ -149,8 +173,13 @@ export default class BloockService {
   ): Promise<Uint8Array> {
     await waitRandomTime(500, 800);
 
+    let aesKey = await this.bloockClient.KeyClient.loadLocalKey(
+      KeyType.Aes256,
+      key
+    );
+
     let record = await this.bloockClient.RecordClient.fromFile(bytes)
-      .withDecrypter(new AesDecrypter(key))
+      .withDecrypter(new Encrypter(aesKey))
       .build();
     return record.retrieve();
   }
@@ -200,14 +229,21 @@ export default class BloockService {
     defaults?: Partial<AvailabilityDetails>
   ): Promise<AvailabilityDetails> {
     await waitRandomTime(500, 800);
-    const fileType = await filetypemime(buffer);
+    const recordDetails = await this.getDetails(buffer);
 
-    return {
+    let details = {
       ...defaults,
       buffer,
       size: buffer.byteLength,
-      type: fileType.length > 0 ? fileType[0] : undefined,
+      type: recordDetails.availability?.contentType,
     };
+    if (!recordDetails.encryption) {
+      const record = await this.loadFile(buffer);
+      const payload = await record.getPayload();
+      details.payload = payload;
+    }
+
+    return details;
   }
 
   private parseError(err: any): string {
