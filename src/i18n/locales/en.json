@@ -11,7 +11,7 @@
   "home": {
     "drop": {
       "drop-here": "Drop files here",
-      "select-file": "Select a file",
+      "select-file": "Select or drag your file",
       "subtitle": "X Validate another file"
     },
     "error": {
@@ -20,21 +20,28 @@
     },
     "information": {
       "check-results": {
-        "subtitle": "Check if the certification is valid and get the evidence report.",
-        "title": "Check the results"
+        "subtitle": "Check if the document is valid and get the evidence report.",
+        "title": "Check the results",
+        "title-icon": "Valid Proof",
+        "second-title-icon": "invalid Proof"
       },
-      "title": "Test the verification tool",
+      "title": "Valid document",
+      "second-title": "Tampered document",
       "try-out": {
-        "subtitle": "Download the demo documents to see how it's done.",
+        "subtitle": "Download the demo documents to see how it works.",
         "title": "Try out with demo documents"
       },
       "verify-documents": {
         "subtitle": "Drag and drop each document into the tool or click on the tool to open your file browser.",
-        "title": "Verify the documents"
+        "title": "Verify the documents",
+        "title-icon": "Select or drag your document"
       }
     },
-    "subtitle": "Unequivocally check whether a document has been tampered with",
-    "title": "Verify document's authenticity"
+    "subtitle-verify-independently": "Verify independently your files on blockchain",
+    "subtitle-validate-digital": "Validate digital signatures",
+    "subtitle-enhance-security": "Enhance security with access control",
+    "subtitle-ensure-document": "Ensure document availability across distributed systems",
+    "title": "Verify your document's integrity and authenticity"
   },
   "results": {
     "authenticity": {

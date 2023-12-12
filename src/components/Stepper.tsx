@@ -81,13 +81,13 @@ function Stepper() {
 
   return (
     <Wrapper>
-      <div className=" p-4">
-        <div className="flex flex-wrap justify-center">
+      <div className="p-4">
+        <div className="flex justify-center py-24 sm:py-12 md:py-16 lg:py-24">
           <Card
-            className="m-10 sm:w-72 md:w-80 lg:w-96 xl:w-2/4 sm:h-64 md:h-72 lg:h-80 xl:h-96"
+            className="w-full h-full flex flex-col p-4 sm:p-6 md:p-8 lg:p-10 xl:p-10"
             style={{
-              width: "1000px",
-              height: "400px",
+              width: "auto",
+              height: "auto",
               backgroundColor: "rgba(255, 255, 255, 0.9)",
             }}
             bordered={false}

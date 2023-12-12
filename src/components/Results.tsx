@@ -405,12 +405,12 @@ function Results() {
 
   return (
     <Wrapper>
-      <div className="flex flex-wrap justify-center py-24">
+      <div className="flex justify-center py-24 sm:py-12 md:py-16 lg:py-24">
         <Card
-          className=""
+          className="w-full h-full flex flex-col p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12"
           style={{
-            width: "1000px",
-            minHeight: "500px",
+            width: "90%",
+            minHeight: "100vh",
             backgroundColor: "rgba(255, 255, 255, 0.9)",
           }}
           bordered={false}
@@ -422,8 +422,8 @@ function Results() {
             icon={<CloseOutlined />}
             onClick={() => reset()}
           />
-          <div className="flex justify-left p-12 pt-6">
-            <div className="flex flex-col items-center mr-12">
+          <div className="flex flex-col sm:flex-row p-4">
+            <div className="flex flex-col items-center sm:items-start sm:mr-12 mb-6 sm:mb-2">
               {availabilityDetails && (
                 <DocViewer
                   documents={[
@@ -445,7 +445,10 @@ function Results() {
                   ]}
                   pluginRenderers={DocViewerRenderers}
                   style={{
-                    backgroundColor: "transparent",
+                    backgroundColor: "",
+                    width: "auto",
+                    height: "auto",
+                    maxWidth: "350px",
                   }}
                   config={{
                     header: {
@@ -458,13 +461,13 @@ function Results() {
                 />
               )}
             </div>
-            <div className="flex flex-col items-left flex-1">
+            <div className="flex flex-col items-center sm:items-start">
               {isFileValid === true && (
                 <Tag
                   icon={<CheckCircleOutlined />}
                   color="success"
-                  className="pl-8 bg-gray-100 flex items-center text-sm"
-                  style={{ width: "450px", height: "35px" }}
+                  className="pl-4 bg-gray-100 flex items-center text-sm"
+                  style={{ width: "auto", height: "35px" }}
                 >
                   {t("results.verification.success")}
                 </Tag>
@@ -475,7 +478,7 @@ function Results() {
                   icon={<CloseCircleOutlined />}
                   color="error"
                   className="pl-8 bg-gray-100 flex items-center text-sm"
-                  style={{ width: "450px", height: "35px" }}
+                  style={{ width: "auto", height: "35px" }}
                 >
                   {t("results.verification.error")}
                 </Tag>
@@ -485,8 +488,8 @@ function Results() {
                 <Tag
                   icon={<InfoCircleOutlined />}
                   color="warning"
-                  className="pl-8 bg-gray-100 flex items-center text-sm"
-                  style={{ width: "450px", height: "35px" }}
+                  className="p-4 bg-gray-100 flex items-center text-sm"
+                  style={{ width: "auto", height: "35px" }}
                 >
                   {t("results.verification.invalid")}
                 </Tag>
@@ -516,14 +519,14 @@ function Results() {
               </div>
             </div>
           </div>
-          <div className="flex justify-left p-10 pt-2">
+          <div className="flex flex-col sm:flex-row p-6">
             <Collapse
               className="w-full flex flex-col items-left "
               items={items}
               defaultActiveKey={[]}
             />
           </div>
-          <div className="flex justify-center p-10 pt-2">
+          <div className="flex flex-col justify-center sm:flex-row p-4">
             <Button type="primary" size="large" onClick={() => reset()}>
               {t("results.verify-another")}
             </Button>
