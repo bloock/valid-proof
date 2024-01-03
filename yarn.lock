@@ -66,14 +66,16 @@
   dependencies:
     regenerator-runtime "^0.14.0"
 
-"@bloock/sdk@^2.7.0-beta.4":
-  version "2.7.0-beta.4"
-  resolved "https://registry.yarnpkg.com/@bloock/sdk/-/sdk-2.7.0-beta.4.tgz#aa57e15cf8ac1906e9ce8d184ac49f281306310e"
-  integrity sha512-cStFXArvOMByoxsm1wdWLlKkgE/LhQDZMAjv5E3uOheyxQngjMO+iccFKI3RzaZxTdhURmChzRHnyEYBsu70sw==
+"@bloock/sdk@^2.7.0-beta.7":
+  version "2.7.0-beta.7"
+  resolved "https://registry.yarnpkg.com/@bloock/sdk/-/sdk-2.7.0-beta.7.tgz#8e189b2388a92e2224221a2833f1d01cffe5c934"
+  integrity sha512-GPdTpmh/nHZK7Ohwf2oBGBmtGMtMAzuHFqP1Yf0OZheEFWVEr4o1j7Sj1cuG5UQ/TLA7BW4O0bidQv7l0QU0tQ==
   dependencies:
+    base64-url "^2.3.3"
     node-fetch "^2.6.1"
     protobufjs "^7.2.2"
     url "^0.11.0"
+    urlsafe-base64 "^1.0.0"
     util "^0.12.4"
 
 "@ctrl/tinycolor@^3.4.0", "@ctrl/tinycolor@^3.6.0", "@ctrl/tinycolor@^3.6.1":
@@ -585,6 +587,11 @@
     rc-resize-observer "^1.3.1"
     rc-util "^5.38.0"
 
+"@remix-run/router@1.14.0":
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.14.0.tgz#9bc39a5a3a71b81bdb310eba6def5bc3966695b7"
+  integrity sha512-WOHih+ClN7N8oHk9N4JUiMxQJmRVaOxcg8w7F/oHUXzJt920ekASLI/7cYX8XkntDWRhLZtsk6LbGrkgOAvi5A==
+
 "@rollup/plugin-virtual@^3.0.1":
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-virtual/-/plugin-virtual-3.0.2.tgz#17e17eeecb4c9fa1c0a6e72c9e5f66382fddbb82"
@@ -1086,6 +1093,11 @@ base64-js@^1.3.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
+
+base64-url@^2.3.3:
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/base64-url/-/base64-url-2.3.3.tgz#645b71455c75109511f27d98450327e455f488ec"
+  integrity sha512-dLMhIsK7OplcDauDH/tZLvK7JmUZK3A7KiQpjNzsBrM6Etw7hzNI1tLEywqJk9NnwkgWuFKSlx/IUO7vF6Mo8Q==
 
 binary-extensions@^2.0.0:
   version "2.2.0"
@@ -2118,6 +2130,11 @@ i18next@^23.5.1, i18next@^23.7.7:
   integrity sha512-peTvdT+Lma+o0LfLFD7IC2M37N9DJ04dH0IJYOyOHRhDfLo6nK36v7LkrQH35C2l8NHiiXZqGirhKESlEb/5PA==
   dependencies:
     "@babel/runtime" "^7.23.2"
+
+iconoir-react@^7.1.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/iconoir-react/-/iconoir-react-7.1.0.tgz#5765203386bf6f56fc63ee52a53a860625c48127"
+  integrity sha512-I3t5tgL7BxLnY+q/2GC7Vt+dVXtfZmrh7E4ifIL75+5wewUnVJf3k+gpaH4sJNKAswU9Wv/fHhzvMlrIPnAo+w==
 
 iconv-lite@^0.6.3:
   version "0.6.3"
@@ -3238,6 +3255,21 @@ react-pdf@7.5.0:
     tiny-invariant "^1.0.0"
     tiny-warning "^1.0.0"
 
+react-router-dom@^6.21.0:
+  version "6.21.0"
+  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-6.21.0.tgz#aa4c6bc046a8e8723095bc09b3c0ab2254532712"
+  integrity sha512-1dUdVj3cwc1npzJaf23gulB562ESNvxf7E4x8upNJycqyUm5BRRZ6dd3LrlzhtLaMrwOCO8R0zoiYxdaJx4LlQ==
+  dependencies:
+    "@remix-run/router" "1.14.0"
+    react-router "6.21.0"
+
+react-router@6.21.0:
+  version "6.21.0"
+  resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.21.0.tgz#6fe3e59877aca3dccceec1801d26991ddf42d12b"
+  integrity sha512-hGZ0HXbwz3zw52pLZV3j3+ec+m/PQ9cTpBvqjFQmy2XVUWGn5MD+31oXHb6dVTxYzmAeaiUBYjkoNz66n3RGCg==
+  dependencies:
+    "@remix-run/router" "1.14.0"
+
 react@^18.2.0:
   version "18.2.0"
   resolved "https://registry.npmjs.org/react/-/react-18.2.0.tgz"
@@ -3788,6 +3820,11 @@ url@^0.11.0:
   dependencies:
     punycode "^1.4.1"
     qs "^6.11.2"
+
+urlsafe-base64@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/urlsafe-base64/-/urlsafe-base64-1.0.0.tgz#23f89069a6c62f46cf3a1d3b00169cefb90be0c6"
+  integrity sha512-RtuPeMy7c1UrHwproMZN9gN6kiZ0SvJwRaEzwZY0j9MypEkFqyBaKv176jvlPtg58Zh36bOkS0NFABXMHvvGCA==
 
 util-deprecate@^1.0.1, util-deprecate@^1.0.2, util-deprecate@~1.0.1:
   version "1.0.2"

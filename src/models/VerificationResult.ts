@@ -38,6 +38,8 @@ export type AuthenticityDetails = {
 
 export type EncryptionDetails = {
   enabled: boolean;
+  type?: "SYMMETRIC" | "ASYMMETRIC";
+  mode?: "LOCAL" | "MANAGED";
   alg?: string;
   key?: string;
   subject?: string;

@@ -1,7 +1,19 @@
-import { BloockClient, Record, Encrypter, KeyType } from "@bloock/sdk";
+import {
+  BloockClient,
+  Record,
+  Encrypter,
+  KeyType,
+  LocalCertificate,
+  LocalKey,
+  ManagedCertificate,
+  ManagedKey,
+} from "@bloock/sdk";
 import {
   convertAnchorNetworkToNetwork,
+  getAlgType,
+  getEncryptionMode,
   parseCertificateSubject,
+  readBlob,
   waitRandomTime,
 } from "../utils/utils";
 import {
@@ -12,6 +24,7 @@ import {
   AvailabilityDetails,
 } from "../models/VerificationResult";
 import { RecordDetails } from "@bloock/sdk/dist/entity/record/record-details";
+import { RcFile } from "antd/es/upload";
 
 export default class BloockService {
   private bloockClient: BloockClient;
@@ -148,9 +161,12 @@ export default class BloockService {
 
     try {
       const recordDetails = await this.getDetails(bytes);
+      console.log(recordDetails);
       return {
         ...details,
         enabled: !!recordDetails.encryption,
+        type: getAlgType(recordDetails.encryption?.alg),
+        mode: getEncryptionMode(recordDetails.encryption?.alg),
         alg: recordDetails.encryption?.alg?.toString(),
         key: recordDetails.encryption?.key,
         subject: recordDetails.encryption?.subject,
@@ -169,19 +185,34 @@ export default class BloockService {
 
   public async decryptFile(
     bytes: Uint8Array,
-    key: string
+    key: LocalKey | LocalCertificate | ManagedKey | ManagedCertificate
   ): Promise<Uint8Array> {
     await waitRandomTime(500, 800);
 
-    let aesKey = await this.bloockClient.KeyClient.loadLocalKey(
-      KeyType.Aes256,
-      key
-    );
-
     let record = await this.bloockClient.RecordClient.fromFile(bytes)
-      .withDecrypter(new Encrypter(aesKey))
+      .withDecrypter(new Encrypter(key))
       .build();
     return record.retrieve();
+  }
+
+  public async loadLocalKey(key: string): Promise<LocalKey> {
+    return await this.bloockClient.KeyClient.loadLocalKey(KeyType.Aes256, key);
+  }
+
+  public async loadLocalCertificate(
+    file: RcFile,
+    password?: string
+  ): Promise<LocalCertificate> {
+    let certificate = await readBlob(file);
+    console.log(certificate);
+    return await this.bloockClient.KeyClient.loadLocalCertificate(
+      certificate,
+      password || ""
+    );
+  }
+
+  public async loadManagedKey(keyId: string): Promise<ManagedKey> {
+    return await this.bloockClient.KeyClient.loadManagedKey(keyId);
   }
 
   public async readFile(file: File): Promise<AvailabilityDetails> {
@@ -214,12 +245,20 @@ export default class BloockService {
 
     const response = await fetch(url);
     if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+      return {
+        buffer: new Uint8Array(),
+        error: "Couldn't retrieve file from provided URL",
+      };
+    }
+
+    let filename = url.pathname.split("/").pop();
+    if (!filename) {
+      filename = url.pathname;
     }
 
     const buffer = new Uint8Array(await response.arrayBuffer());
     return this.readBuffer(buffer, {
-      filename: url.pathname,
+      filename: filename,
       link: url.toString(),
     });
   }

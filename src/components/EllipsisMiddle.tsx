@@ -1,14 +1,19 @@
 import { Typography } from "antd";
 
 export const EllipsisMiddle: React.FC<{
-  lenght: number;
+  length: number;
+  value?: string;
   children?: string;
-}> = ({ lenght, children }) => {
+}> = ({ length, value, children }) => {
   const separator = "...";
 
-  if (children && children.length > lenght) {
+  if (!value) {
+    value = children;
+  }
+
+  if (children && children.length > length) {
     const sepLen = separator.length,
-      charsToShow = lenght - sepLen,
+      charsToShow = length - sepLen,
       frontChars = Math.ceil(charsToShow / 2),
       backChars = Math.floor(charsToShow / 2);
 
@@ -19,7 +24,7 @@ export const EllipsisMiddle: React.FC<{
   }
 
   return (
-    <Typography.Text copyable style={{ maxWidth: "100%" }}>
+    <Typography.Text copyable={{ text: value }} style={{ maxWidth: "100%" }}>
       {children}
     </Typography.Text>
   );

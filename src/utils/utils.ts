@@ -1,4 +1,9 @@
-import { AnchorNetwork, Network } from "@bloock/sdk";
+import {
+  AnchorNetwork,
+  EncryptionAlg,
+  Network,
+  SignatureAlg,
+} from "@bloock/sdk";
 import { IntegrityNetwork } from "../models/VerificationResult";
 
 export async function waitRandomTime(min: number, max: number) {
@@ -22,6 +27,9 @@ export function getNetworkTranslation(network: IntegrityNetwork): string {
     case "bloock_chain":
       // t('results.integrity.networks.bloock_chain')
       return `${base}.bloock_chain`;
+    case "ethereum_goerli":
+      // t('results.integrity.networks.ethereum_goerli')
+      return `${base}.ethereum_goerli`;
     default:
       // t('results.integrity.networks.unknown')
       return `${base}.unknown`;
@@ -87,4 +95,61 @@ export function getTxHashURL(
     case "bloock_chain":
       return undefined;
   }
+}
+
+export function getAlgType(
+  alg?: string
+): "SYMMETRIC" | "ASYMMETRIC" | undefined {
+  switch (alg) {
+    case "ES256K":
+    case "ES256K_M":
+    case "ENS":
+    case "ENS_M":
+    case "BJJ":
+    case "BJJ_M":
+    case "RSA":
+    case "RSA_M":
+      return `ASYMMETRIC`;
+    case "A256GCM":
+    case "A256GCM_M":
+      return `SYMMETRIC`;
+    default:
+      return undefined;
+  }
+}
+
+export function getEncryptionMode(
+  alg?: string
+): "LOCAL" | "MANAGED" | undefined {
+  switch (alg) {
+    case "A256GCM":
+    case "RSA":
+      return `LOCAL`;
+    case "A256GCM_M":
+    case "RSA_M":
+      return `MANAGED`;
+    default:
+      return undefined;
+  }
+}
+
+export function readBlob(file: Blob): Promise<Uint8Array> {
+  return new Promise<Uint8Array>((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      if (reader.result instanceof ArrayBuffer) {
+        const uint8Array = new Uint8Array(reader.result);
+        resolve(uint8Array);
+      } else {
+        reject(new Error("Failed to read file."));
+      }
+    };
+
+    reader.onerror = () => {
+      reject(new Error("Error reading file."));
+    };
+
+    reader.readAsArrayBuffer(file);
+  });
 }

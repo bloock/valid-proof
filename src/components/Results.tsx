@@ -59,13 +59,19 @@ function Results() {
     PropsWithChildren<{ tooltip?: string; label: string }>
   > = (props) => (
     <>
-      <Tooltip placement="leftTop" title={props.tooltip}>
-        <p className="font-bold">
-          <InfoCircleOutlined className="mr-1" />
-          {props.label}:
-        </p>
-      </Tooltip>
-      <p className="w-full pt-2 text-gray-500 text-sm">{props.children}</p>
+      {props.tooltip ? (
+        <Tooltip placement="leftTop" title={props.tooltip}>
+          <p className="font-bold">
+            <InfoCircleOutlined className="mr-1" />
+            {props.label}:
+          </p>
+        </Tooltip>
+      ) : (
+        <p className="font-bold">{props.label}:</p>
+      )}
+      <p className="w-full pt-2 text-gray-500 text-sm break-all">
+        {props.children}
+      </p>
     </>
   );
 
@@ -132,9 +138,10 @@ function Results() {
           label={t("results.integrity.networks.label")}
         >
           <Table
-            className="w-full pt-4"
+            className="w-full pt-4 break-normal"
             columns={networkColumns}
             pagination={{ hideOnSinglePage: true }}
+            scroll={{ x: true }}
             expandable={{
               expandedRowRender: (network) => (
                 <p style={{ margin: 10 }}>
@@ -204,8 +211,7 @@ function Results() {
           ...signature,
           key: index,
           title: `${t("results.authenticity.signature")} ${index + 1}`,
-          commonName:
-            authenticityDetails?.subject?.CN || t("results.not-available"),
+          commonName: signature.subject?.CN || t("results.not-available"),
         };
       }
     );
@@ -217,19 +223,13 @@ function Results() {
           label={t("results.authenticity.signatures")}
         >
           <Table
-            className="w-full pt-4"
+            className="w-full pt-4 break-normal"
             columns={signatureColumns}
             pagination={{ hideOnSinglePage: true }}
+            scroll={{ x: true }}
             expandable={{
               expandedRowRender: (signature) => (
                 <div className="flex flex-col items-start p-6">
-                  <Field
-                    tooltip={t("results.tooltip.subject")}
-                    label={t("results.authenticity.subject")}
-                  >
-                    {signature.commonName}
-                  </Field>
-                  <Divider />
                   <Field
                     tooltip={t("results.tooltip.algorithm")}
                     label={t("results.authenticity.algorithm")}
@@ -241,7 +241,7 @@ function Results() {
                     tooltip={t("results.tooltip.signature")}
                     label={t("results.authenticity.signature")}
                   >
-                    <EllipsisMiddle lenght={40}>
+                    <EllipsisMiddle length={40}>
                       {signature.signature}
                     </EllipsisMiddle>
                   </Field>
@@ -250,12 +250,62 @@ function Results() {
                     tooltip={t("results.tooltip.public-key")}
                     label={t("results.authenticity.public-key")}
                   >
-                    <EllipsisMiddle lenght={30}>
+                    <EllipsisMiddle length={30} value={signature.kid}>
                       {signature.kid
                         ? t("results.authenticity.copy-key")
                         : t("results.not-available")}
                     </EllipsisMiddle>
                   </Field>
+                  {signature.subject?.CN && (
+                    <>
+                      <Divider />
+                      <Field label={t("results.authenticity.common-name")}>
+                        {signature.subject?.CN}
+                      </Field>
+                    </>
+                  )}
+                  {signature.subject?.OU && (
+                    <>
+                      <Divider />
+                      <Field
+                        label={t("results.authenticity.organization-unit")}
+                      >
+                        {signature.subject?.OU}
+                      </Field>
+                    </>
+                  )}
+                  {signature.subject?.O && (
+                    <>
+                      <Divider />
+                      <Field label={t("results.authenticity.organization")}>
+                        {signature.subject?.O}
+                      </Field>
+                    </>
+                  )}
+                  {signature.subject?.L && (
+                    <>
+                      <Divider />
+                      <Field label={t("results.authenticity.location")}>
+                        {signature.subject?.L}
+                      </Field>
+                    </>
+                  )}
+                  {signature.subject?.S && (
+                    <>
+                      <Divider />
+                      <Field label={t("results.authenticity.state")}>
+                        {signature.subject?.S}
+                      </Field>
+                    </>
+                  )}
+                  {signature.subject?.C && (
+                    <>
+                      <Divider />
+                      <Field label={t("results.authenticity.country")}>
+                        {signature.subject?.C}
+                      </Field>
+                    </>
+                  )}
                 </div>
               ),
             }}
@@ -405,12 +455,10 @@ function Results() {
 
   return (
     <Wrapper>
-      <div className="flex justify-center py-24 sm:py-12 md:py-16 lg:py-24">
+      <div className="w-11/12 md:w-2/3 flex justify-center py-24">
         <Card
-          className="w-full h-full flex flex-col p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12"
+          className="h-full flex flex-col p-0 md:p-4"
           style={{
-            width: "90%",
-            minHeight: "100vh",
             backgroundColor: "rgba(255, 255, 255, 0.9)",
           }}
           bordered={false}
@@ -422,8 +470,8 @@ function Results() {
             icon={<CloseOutlined />}
             onClick={() => reset()}
           />
-          <div className="flex flex-col sm:flex-row p-4">
-            <div className="flex flex-col items-center sm:items-start sm:mr-12 mb-6 sm:mb-2">
+          <div className="flex flex-col md:flex-row p-4">
+            <div className="flex flex-col items-center md:items-start md:mr-12 mb-6 md:mb-2">
               {availabilityDetails && (
                 <DocViewer
                   documents={[
@@ -461,7 +509,7 @@ function Results() {
                 />
               )}
             </div>
-            <div className="flex flex-col items-center sm:items-start">
+            <div className="flex flex-col items-center md:items-start">
               {isFileValid === true && (
                 <Tag
                   icon={<CheckCircleOutlined />}
@@ -494,7 +542,7 @@ function Results() {
                   {t("results.verification.invalid")}
                 </Tag>
               )}
-              <div className="p-4">
+              <div className="w-full p-4">
                 <p className="font-bold">{t("results.general.name")}</p>
                 <p className="text-gray-500 text-sm">
                   {availabilityDetails?.filename}
@@ -519,14 +567,14 @@ function Results() {
               </div>
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row p-6">
+          <div className="flex flex-row p-6">
             <Collapse
               className="w-full flex flex-col items-left "
               items={items}
               defaultActiveKey={[]}
             />
           </div>
-          <div className="flex flex-col justify-center sm:flex-row p-4">
+          <div className="flex flex-row justify-center p-4">
             <Button type="primary" size="large" onClick={() => reset()}>
               {t("results.verify-another")}
             </Button>

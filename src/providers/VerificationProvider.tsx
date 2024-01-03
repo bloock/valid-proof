@@ -16,10 +16,19 @@ import {
   IntegrityDetails,
 } from "../models/VerificationResult";
 import BloockService from "../services/BloockService";
+import { useSearchParams } from "react-router-dom";
+import {
+  LocalCertificate,
+  LocalKey,
+  ManagedCertificate,
+  ManagedKey,
+} from "@bloock/sdk";
 
 export type VerificationState = {
   onInputChange: (input: File | URL) => void;
-  onDecryptFile: (key: string) => Promise<boolean>;
+  onDecryptFile: (
+    key: LocalKey | LocalCertificate | ManagedKey | ManagedCertificate
+  ) => Promise<boolean>;
   isFileValid: boolean | undefined;
   integrityDetails: IntegrityDetails | undefined;
   authenticityDetails: AuthenticityDetails | undefined;
@@ -60,7 +69,8 @@ export const steps = {
 };
 
 export const VerificationProvider: React.FC = () => {
-  // Inputs
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [isFileValid, setIsFileValid] = useState<boolean | undefined>();
   const [integrityDetails, setIntegrityDetails] = useState<
     IntegrityDetails | undefined
@@ -109,6 +119,11 @@ export const VerificationProvider: React.FC = () => {
     return bloockService
       .checkEncryption(availabilityDetails.buffer)
       .then((_encryptionDetails) => {
+        if (_encryptionDetails.error) {
+          setComponent(steps.details);
+          return;
+        }
+
         if (encryptionDetails?.enabled !== true) {
           setEncryptionDetails(_encryptionDetails);
         }
@@ -122,18 +137,31 @@ export const VerificationProvider: React.FC = () => {
       .then((authenticityDetails) => {
         if (authenticityDetails) {
           setAuthenticityDetails(authenticityDetails);
+
+          if (authenticityDetails.error) {
+            setComponent(steps.details);
+            return;
+          }
+
           return bloockService.checkIntegrity(availabilityDetails.buffer);
         }
       })
       .then((integrityDetails) => {
         if (integrityDetails) {
+          if (integrityDetails.error) {
+            setComponent(steps.details);
+            return;
+          }
+
           setIntegrityDetails(integrityDetails);
           setComponent(steps.details);
         }
       });
   };
 
-  const onDecryptFile = (key: string): Promise<boolean> => {
+  const onDecryptFile = (
+    key: LocalKey | LocalCertificate | ManagedKey | ManagedCertificate
+  ): Promise<boolean> => {
     if (!availabilityDetails) {
       throw new Error("Unknown error");
     }
@@ -169,12 +197,19 @@ export const VerificationProvider: React.FC = () => {
   };
 
   const reset = () => {
+    if (searchParams.has("url")) {
+      searchParams.delete("url");
+      setSearchParams(searchParams);
+    }
+
     setIsFileValid(undefined);
     setIntegrityDetails(undefined);
     setAuthenticityDetails(undefined);
     setEncryptionDetails(undefined);
     setAvailabilityDetails(undefined);
     setComponent(steps.loader);
+
+    window.scrollTo(0, 0);
   };
 
   const value: VerificationState = {
