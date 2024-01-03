@@ -1,28 +1,45 @@
-import React, { Fragment } from "react";
-import { Route, Routes } from "react-router-dom";
-import Footer from "./components/elements/Footer";
-import Header from "./components/elements/Header";
-import Home from "./pages/Home";
+import { ConfigProvider, Layout } from "antd";
+import { Content, Header } from "antd/es/layout/layout";
+import backgroundImage from "./assets/images/fondoVP.svg";
+import validProofLogo from "./assets/images/logo-ValidProf.svg";
+import { AliasToken } from "antd/es/theme/interface";
+import { VerificationProvider } from "./providers/VerificationProvider";
 
 function App() {
-  var r = document.querySelector(":root");
+  const styleToken: Partial<AliasToken> = {
+    colorPrimary: import.meta.env.VITE_PRIMARY_COLOR || "#0084B8",
+    fontFamily: import.meta.env.VITE_FONT_FAMILY || "Montserrat, sans-serif",
+  };
 
-  (r as any).style.setProperty(
-    "--primary-bg-color",
-    (window as any).env.PRIMARY_COLOR
-      ? (window as any).env.PRIMARY_COLOR
-      : "#06d7be"
-  );
+  const componentToken = {
+    Steps: {},
+  };
 
   return (
-    <Fragment>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="*" element={<Home />} />
-      </Routes>
-      <Footer />
-    </Fragment>
+    <ConfigProvider
+      theme={{
+        token: styleToken,
+        components: componentToken,
+      }}
+    >
+      <Layout
+        className="relative flex flex-col bg-cover bg-fixed"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        <Header
+          className="absolute w-full bg-transparent"
+          style={{ height: 64, paddingInline: 50 }}
+        >
+          <img className="py-8 px-4 z-0" src={validProofLogo} />
+        </Header>
+        <Content className="min-h-screen bg-transparent">
+          <VerificationProvider />
+        </Content>
+      </Layout>
+    </ConfigProvider>
   );
 }
 

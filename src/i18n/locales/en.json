@@ -1,0 +1,153 @@
+{
+  "decrypt": {
+    "error": {
+      "invalid-key": "Invalid key provided",
+      "no-certificate-selected": "No certificate selected"
+    },
+    "local-key": {
+      "title": "Decrypt File",
+      "subtitle": "Please, introduce your password to decrypt the file and continue with the validation process.",
+      "label": "Password"
+    },
+    "local-certificate": {
+      "title": "Decrypt File",
+      "subtitle": "Please, import your certificate to decrypt the file and continue with the validation process.",
+      "label": "Certificate",
+      "password": "Password (optional)",
+      "select-file": "Select certificate"
+    },
+    "managed-key": {
+      "title": "Decrypt File",
+      "subtitle": "Please, introduce your Managed Key ID to decrypt the file and continue with the validation process.",
+      "label": "Key ID"
+    },
+    "submit": "Submit"
+  },
+  "home": {
+    "drop": {
+      "drop-here": "Drop files here",
+      "select-file": "Select or drag your file"
+    },
+    "error": {
+      "no-files": "No files selected",
+      "only-one": "Only one file is supported"
+    },
+    "information": {
+      "check-results": {
+        "second-title-icon": "Invalid Proof",
+        "subtitle": "Check if the document is valid and get the evidence report.",
+        "title": "Check the results",
+        "title-icon": "Valid Proof"
+      },
+      "second-title": "Tampered document",
+      "title": "Valid document",
+      "try-out": {
+        "subtitle": "Download the demo documents to see how it works.",
+        "title": "Try out with demo documents"
+      },
+      "verify-documents": {
+        "subtitle": "Drag and drop each document into the tool or click on the tool to open your file browser.",
+        "title": "Verify the documents",
+        "title-icon": "Select or drag your document"
+      }
+    },
+    "subtitle-enhance-security": "Enhance security with access control",
+    "subtitle-ensure-document": "Ensure document availability across distributed systems",
+    "subtitle-validate-digital": "Validate digital signatures",
+    "subtitle-verify-independently": "Verify independently your files on blockchain",
+    "title": "Verify your document's integrity and authenticity"
+  },
+  "results": {
+    "authenticity": {
+      "algorithm": "Algorithm",
+      "common-name": "Common name",
+      "copy-key": "Copy key",
+      "country": "Country",
+      "location": "Location",
+      "organization": "Organization",
+      "organization-unit": "Organization Unit",
+      "public-key": "Public key",
+      "signature": "Signature",
+      "signatures": "Signatures",
+      "state": "State",
+      "subject": "Subject",
+      "title": "Authenticity details"
+    },
+    "availability": {
+      "content-type": "Content type",
+      "filename": "File name",
+      "link": "Link",
+      "size": "Size",
+      "title": "Availability details"
+    },
+    "encryption": {
+      "algorithm": "Algorithm",
+      "public-key": "Public key",
+      "subject": "Subject",
+      "title": "Encryption details"
+    },
+    "general": {
+      "date": "Date",
+      "issuer": "Issuer",
+      "name": "Name"
+    },
+    "integrity": {
+      "anchor-id": "Anchor ID",
+      "hash": "Hash",
+      "network": "Network",
+      "networks": {
+        "bloock_chain": "Bloock Chain",
+        "ethereum_goerli": "Ethereum Goerli",
+        "ethereum_mainnet": "Ethereum",
+        "gnosis_chain": "Gnosis",
+        "label": "Networks",
+        "polygon_chain": "Polygon",
+        "unknown": "Unknown"
+      },
+      "root": "Root",
+      "status": "Status",
+      "timestamp": "Timestamp",
+      "title": "Integrity details",
+      "tx-hash": "Transaction Hash"
+    },
+    "not-available": "Not available",
+    "preview": {
+      "not-available": "Preview not available"
+    },
+    "tooltip": {
+      "algorithm": "The cryptographic algorithm utilized to generate a digital signature.",
+      "anchor-id": "Identifier of the BLOOCK state transition the document has been included in.",
+      "common-name": "",
+      "content-type": "Document content type mime",
+      "country": "",
+      "filename": "Document name",
+      "hash": "Digital Fingerprint of the document.",
+      "link": "Refers to the specific location where a file is allocated and is available for consumption",
+      "location": "",
+      "networks": "Networks where document fingerprint was recorded.",
+      "organization": "",
+      "organization-unit": "",
+      "public-key": "Cryptographic key employed to produce a digital signature",
+      "root": "Digital fingerprint representing all records included in BLOOCK state since inception.",
+      "signature": "Cryptographic representation of the digital signature",
+      "signatures": "",
+      "size": "Space consumed by a file on a storage medium",
+      "state": "",
+      "subject": "Digital certificate subject refers to the entity or object to which the certificate is issued, providing information about the identity or attributes of that specific entity",
+      "tx-hash": "The unique address of a transaction in a blockchain serves as proof that the transaction has occurred."
+    },
+    "verification": {
+      "error": "Your document is not valid",
+      "invalid": "Your document couldn't be verified",
+      "success": "Your document has been verified"
+    },
+    "verify-another": "Verify another file"
+  },
+  "stepper": {
+    "check-encryption": "Checking Access control",
+    "retrieving-file": "Retrieving file",
+    "title": "Please, wait for your file to be verified...",
+    "verify-authenticity": "Verifying Authenticity",
+    "verify-integrity": "Verifying Integrity"
+  }
+}

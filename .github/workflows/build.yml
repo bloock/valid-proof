@@ -3,78 +3,66 @@ name: build
 on:
   push:
     branches:
-      - 'master'
+      - "master"
     tags:
-      - 'v*'
+      - "v*"
   pull_request:
     branches:
-      - 'master'
+      - "master"
 
 jobs:
-  version: 
+  version:
     name: Version
     uses: bloock/actions/.github/workflows/version.yml@master
   build:
     name: Build
     needs: [version]
-    uses: bloock/actions/.github/workflows/build.yml@master
-    with: 
-      image: enchainte/valid-proof
-      tag: ${{ needs.version.outputs.tag }}
-    secrets:
-      GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
-      DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: yarn
+      - run: yarn run build
+
+  create_release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: [version, build]
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ needs.version.outputs.tag }}
+          prerelease: ${{ contains(needs.version.outputs.tag, 'beta') }}
+          generate_release_notes: true
+
   deploy-dev:
-    name: Deploy to development
-    uses: bloock/actions/.github/workflows/deployer.yml@master
-    if: github.ref == 'refs/heads/master'
-    needs: [version, build]
-    with:
-      service: valid-proof
-      container: valid-proof
-      image: enchainte/valid-proof
-      tag: ${{ needs.version.outputs.tag }}
-    secrets:
-      DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
-      KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_DEV }}
-  deploy-dev-test:
-    name: Deploy test to development
-    uses: bloock/actions/.github/workflows/deployer.yml@master
-    if: github.ref == 'refs/heads/master'
-    needs: [version, build]
-    with:
-      service: valid-proof-test
-      container: valid-proof-test
-      image: enchainte/valid-proof
-      tag: ${{ needs.version.outputs.tag }}
-    secrets:
-      DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
-      KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_DEV }}
-  deploy-pro: 
-    name: Deploy to production
-    uses: bloock/actions/.github/workflows/deployer.yml@master
-    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
-    needs: [version, build]
-    with:
-      service: valid-proof
-      container: valid-proof
-      image: enchainte/valid-proof
-      tag: ${{ needs.version.outputs.tag }}
-    secrets:
-      DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
-      KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_PRO }}
-  deploy-pro-test: 
-    name: Deploy to production
-    uses: bloock/actions/.github/workflows/deployer.yml@master
-    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
-    needs: [version, build]
-    with:
-      service: valid-proof-test
-      container: valid-proof-test
-      image: enchainte/valid-proof
-      tag: ${{ needs.version.outputs.tag }}
-    secrets:
-      DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
-      KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_PRO }}
+    name: Deploy DEV
+    runs-on: ubuntu-latest
+    needs: [version, create_release]
+    steps:
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.repo_api_token }}
+          repository: bloock/managed-services-actions
+          event-type: deploy_valid_proof_dev
+          client-payload: '{"version": "${{ needs.version.outputs.tag }}"}'
+
+  deploy-pro:
+    name: Deploy PRO
+    runs-on: ubuntu-latest
+    needs: [version, create_release]
+    if: contains(needs.version.outputs.tag, 'beta') == false
+    steps:
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.repo_api_token }}
+          repository: bloock/managed-services-actions
+          event-type: deploy_valid_proof_pro
+          client-payload: '{"version": "${{ needs.version.outputs.tag }}"}'

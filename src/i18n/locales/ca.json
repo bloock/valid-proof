@@ -1,0 +1,138 @@
+{
+  "decrypt": {
+    "error": {
+      "invalid-key": ""
+    },
+    "password": "",
+    "submit": "",
+    "subtitle": "",
+    "title": ""
+  },
+  "home": {
+    "drop": {
+      "drop-here": "",
+      "select-file": ""
+    },
+    "error": {
+      "no-files": "",
+      "only-one": ""
+    },
+    "information": {
+      "check-results": {
+        "second-title-icon": "",
+        "subtitle": "",
+        "title": "",
+        "title-icon": ""
+      },
+      "second-title": "",
+      "title": "",
+      "try-out": {
+        "subtitle": "",
+        "title": ""
+      },
+      "verify-documents": {
+        "subtitle": "",
+        "title": "",
+        "title-icon": ""
+      }
+    },
+    "subtitle-enhance-security": "",
+    "subtitle-ensure-document": "",
+    "subtitle-validate-digital": "",
+    "subtitle-verify-independently": "",
+    "title": ""
+  },
+  "results": {
+    "authenticity": {
+      "algorithm": "",
+      "common-name": "",
+      "copy-key": "",
+      "country": "",
+      "location": "",
+      "organization": "",
+      "organization-unit": "",
+      "public-key": "",
+      "signature": "",
+      "signatures": "",
+      "state": "",
+      "subject": "",
+      "title": ""
+    },
+    "availability": {
+      "content-type": "",
+      "filename": "",
+      "link": "",
+      "size": "",
+      "title": ""
+    },
+    "encryption": {
+      "algorithm": "",
+      "public-key": "",
+      "subject": "",
+      "title": ""
+    },
+    "general": {
+      "date": "",
+      "issuer": "",
+      "name": ""
+    },
+    "integrity": {
+      "anchor-id": "",
+      "hash": "",
+      "network": "",
+      "networks": {
+        "bloock_chain": "",
+        "ethereum_goerli": "",
+        "ethereum_mainnet": "",
+        "gnosis_chain": "",
+        "label": "",
+        "polygon_chain": "",
+        "unknown": ""
+      },
+      "root": "",
+      "status": "",
+      "timestamp": "",
+      "title": "",
+      "tx-hash": ""
+    },
+    "not-available": "",
+    "preview": {
+      "not-available": ""
+    },
+    "tooltip": {
+      "algorithm": "",
+      "anchor-id": "",
+      "common-name": "",
+      "content-type": "",
+      "country": "",
+      "filename": "",
+      "hash": "",
+      "link": "",
+      "location": "",
+      "networks": "",
+      "organization": "",
+      "organization-unit": "",
+      "public-key": "",
+      "root": "",
+      "signature": "",
+      "signatures": "",
+      "size": "",
+      "state": "",
+      "subject": "",
+      "tx-hash": ""
+    },
+    "verification": {
+      "error": "",
+      "invalid": "",
+      "success": ""
+    },
+    "verify-another": ""
+  },
+  "stepper": {
+    "check-encryption": "",
+    "retrieving-file": "",
+    "title": "",
+    "verify-authenticity": "",
+    "verify-integrity": ""
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "decrypt": {
+    "error": {
+      "invalid-key": "La clave proporcionada no es válida"
+    },
+    "password": "Contraseña",
+    "submit": "Enviar",
+    "subtitle": "Por favor, introduzca su contraseña para desencriptar el archivo y continuar con el proceso de validación.",
+    "title": "Desencriptar archivo"
+  },
+  "home": {
+    "drop": {
+      "drop-here": "Suelte los archivos aquí",
+      "select-file": "Seleccione o arrastre su archivo"
+    },
+    "error": {
+      "no-files": "Ningún archivo seleccionado",
+      "only-one": "Solo se admite un archivo"
+    },
+    "information": {
+      "check-results": {
+        "second-title-icon": "Prueba no válida",
+        "subtitle": "Compruebe si el documento es válido y obtenga el informe de evidencia.",
+        "title": "Verificar los resultados",
+        "title-icon": "Prueba válida"
+      },
+      "second-title": "Documento manipulado",
+      "title": "Documento válido",
+      "try-out": {
+        "subtitle": "Descargue los documentos de prueba para ver cómo funciona.",
+        "title": "Pruebe con documentos de prueba"
+      },
+      "verify-documents": {
+        "subtitle": "Arrastre y suelte cada documento o haga clic en el botón para agregar un archivo desde su dispositivo.",
+        "title": "Verificar documentos",
+        "title-icon": "Seleccione o arrastre su documento"
+      }
+    },
+    "subtitle-enhance-security": "Refuerce la privacidad con control de acceso",
+    "subtitle-ensure-document": "Asegure la disponibilidad del documento en sistemas distribuidos",
+    "subtitle-validate-digital": "Valide las firmas digitales",
+    "subtitle-verify-independently": "Verifique de forma independiente sus archivos en redes blockchain",
+    "title": "Verificar la integridad y autenticidad de su documento"
+  },
+  "results": {
+    "authenticity": {
+      "algorithm": "Algoritmo",
+      "common-name": "Nombre común",
+      "copy-key": "Copiar clave",
+      "country": "País",
+      "location": "Ciudad",
+      "organization": "Organización",
+      "organization-unit": "Unidad organizativa",
+      "public-key": "Clave pública",
+      "signature": "Firma",
+      "signatures": "Firmas",
+      "state": "Estado / Província",
+      "subject": "Sujeto",
+      "title": "Detalles de autenticidad"
+    },
+    "availability": {
+      "content-type": "Tipo de contenido",
+      "filename": "Nombre del archivo",
+      "link": "Enlace",
+      "size": "Tamaño",
+      "title": "Detalles de disponibilidad"
+    },
+    "encryption": {
+      "algorithm": "Algoritmo",
+      "public-key": "Clave pública",
+      "subject": "Sujeto",
+      "title": "Detalles de cifrado"
+    },
+    "general": {
+      "date": "Fecha",
+      "issuer": "Emisor",
+      "name": "Nombre"
+    },
+    "integrity": {
+      "anchor-id": "ID de anclaje",
+      "hash": "Hash",
+      "network": "Red",
+      "networks": {
+        "bloock_chain": "Bloock Chain",
+        "ethereum_goerli": "",
+        "ethereum_mainnet": "Ethereum",
+        "gnosis_chain": "Gnosis",
+        "label": "Redes",
+        "polygon_chain": "Polygon",
+        "unknown": "Desconocida"
+      },
+      "root": "Root",
+      "status": "Estado",
+      "timestamp": "Sello de tiempo",
+      "title": "Detalles de integridad",
+      "tx-hash": "Hash de transacción"
+    },
+    "not-available": "No disponible",
+    "preview": {
+      "not-available": "Vista previa no disponible"
+    },
+    "tooltip": {
+      "algorithm": "El algoritmo criptográfico utilizado para generar una firma digital.",
+      "anchor-id": "Identificador de la transición de estado en la que el documento ha sido incluido.",
+      "common-name": "",
+      "content-type": "Tipo de contenido del documento (tipo mime).",
+      "country": "",
+      "filename": "Nombre del documento.",
+      "hash": "Huella digital del documento.",
+      "link": "Se refiere a la ubicación específica donde se asigna un archivo y está disponible para su consumo.",
+      "location": "",
+      "networks": "Redes donde se registró la huella digital del documento.",
+      "organization": "",
+      "organization-unit": "",
+      "public-key": "Clave criptográfica utilizada para producir una firma digital.",
+      "root": "Huella digital que representa todos los registros incluidos en el estado desde el inicio.",
+      "signature": "Representación criptográfica de la firma digital.",
+      "signatures": "",
+      "size": "Espacio consumido por un archivo en un medio de almacenamiento.",
+      "state": "",
+      "subject": "El sujeto del certificado digital se refiere a la entidad u objeto al que se emite el certificado, proporcionando información sobre la identidad o atributos de esa entidad específica.",
+      "tx-hash": "La dirección única de una transacción en una red blockchain sirve como prueba de que la transacción se ha realizado."
+    },
+    "verification": {
+      "error": "Su documento no es válido",
+      "invalid": "No se pudo verificar su documento",
+      "success": "Su documento ha sido verificado"
+    },
+    "verify-another": "Verificar otro archivo"
+  },
+  "stepper": {
+    "check-encryption": "Verificando control de acceso",
+    "retrieving-file": "Recuperando archivo",
+    "title": "Por favor, espere a que su archivo sea verificado...",
+    "verify-authenticity": "Verificando autenticidad",
+    "verify-integrity": "Verificando integridad"
+  }
+}
