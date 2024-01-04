@@ -40,6 +40,8 @@ export function convertAnchorNetworkToNetwork(network: AnchorNetwork): Network {
   switch (network.name) {
     case "ethereum_mainnet":
       return Network.ETHEREUM_MAINNET;
+    case "ethereum_goerli":
+      return Network.ETHEREUM_GOERLI;
     case "gnosis_chain":
       return Network.GNOSIS_CHAIN;
     case "polygon_chain":
