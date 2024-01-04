@@ -90,6 +90,8 @@ export function getTxHashURL(
   switch (network) {
     case "ethereum_mainnet":
       return `https://etherscan.io/tx/${txHash}`;
+    case "ethereum_goerli":
+      return `https://goerli.etherscan.io/tx/${txHash}`;
     case "polygon_chain":
       return `https://polygonscan.com/tx/${txHash}`;
     case "gnosis_chain":
