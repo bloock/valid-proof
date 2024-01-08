@@ -68,7 +68,7 @@ function Results() {
       ) : (
         <p className="font-bold">{props.label}:</p>
       )}
-      <p className="w-full pt-2 text-gray-500 text-sm break-all">
+      <p className="w-full pt-2 text-gray-500 text-sm break-all truncate">
         {props.children}
       </p>
     </>
@@ -507,40 +507,6 @@ function Results() {
                   name={availabilityDetails.filename}
                   type={availabilityDetails.type || "empty"}
                 />
-                // <DocViewer
-                //   documents={[
-                //     {
-                //       uri: URL.createObjectURL(
-                //         new Blob(
-                //           [
-                //             availabilityDetails!.payload ||
-                //               availabilityDetails.buffer,
-                //           ],
-                //           {
-                //             type: availabilityDetails!.type,
-                //           }
-                //         )
-                //       ),
-                //       fileName: availabilityDetails.filename,
-                //       fileType: availabilityDetails.type || "empty",
-                //     },
-                //   ]}
-                //   pluginRenderers={DocViewerRenderers}
-                //   style={{
-                //     backgroundColor: "",
-                //     width: "auto",
-                //     height: "auto",
-                //     maxWidth: "350px",
-                //   }}
-                //   config={{
-                //     header: {
-                //       disableHeader: true,
-                //     },
-                //     noRenderer: {
-                //       overrideComponent: NoPreviewAvailable,
-                //     },
-                //   }}
-                // />
               )}
             </Col>
             <Col lg={16} span={24}>

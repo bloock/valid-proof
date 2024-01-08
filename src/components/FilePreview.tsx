@@ -64,19 +64,21 @@ const FilePreview: React.FC<FilePreviewProps> = ({ payload, name, type }) => {
             <div className="flex flex-row items-center justify-center mt-2">
               <Button
                 type="text"
-                hidden={pageNumber > 1}
+                style={{
+                  visibility: pageNumber > 1 ? "visible" : "hidden",
+                }}
                 onClick={() => setPageNumber(pageNumber - 1)}
               >
                 &lt;
               </Button>
-              <div>
-                <small>
-                  {pageNumber} of {numPages}
-                </small>
-              </div>
+              <small className="px-2">
+                {pageNumber} of {numPages}
+              </small>
               <Button
                 type="text"
-                hidden={numPages > pageNumber}
+                style={{
+                  visibility: numPages > pageNumber ? "visible" : "hidden",
+                }}
                 onClick={() => setPageNumber(pageNumber + 1)}
               >
                 &gt;
