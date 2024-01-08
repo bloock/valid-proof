@@ -1,17 +1,16 @@
-import { Card, Flex, Upload, UploadProps } from "antd";
-import { Button, Form, Input } from "antd";
-import Wrapper from "./Wrapper";
-import { useVerification } from "../providers/VerificationProvider";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
 import { UploadOutlined } from "@ant-design/icons";
 import {
-  LocalKey,
   LocalCertificate,
-  ManagedKey,
+  LocalKey,
   ManagedCertificate,
+  ManagedKey,
 } from "@bloock/sdk";
+import { Button, Card, Flex, Form, Input, Upload, UploadProps } from "antd";
 import { RcFile } from "antd/es/upload";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useVerification } from "../providers/VerificationProvider";
+import Wrapper from "./Wrapper";
 
 function DecryptFile() {
   const { t } = useTranslation();

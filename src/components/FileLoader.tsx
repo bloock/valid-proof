@@ -1,19 +1,6 @@
-import {
-  CheckCircleOutlined,
-  CloseCircleOutlined,
-  DownOutlined,
-  DownloadOutlined,
-  FileProtectOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
-import { Divider, theme, message, Card, Row, Col } from "antd";
-import { useCallback, useEffect } from "react";
-import { DropzoneOptions, useDropzone } from "react-dropzone";
-import { useVerification } from "../providers/VerificationProvider";
-import Wrapper from "./Wrapper";
-import { useTranslation } from "react-i18next";
-import invalidDocument from "../assets/images/icon-invalid-document.svg";
-import validDocument from "../assets/images/icon-valid-document.svg";
+import { DownOutlined, UploadOutlined } from "@ant-design/icons";
+import { Card, Col, Divider, Row, message, theme } from "antd";
+import Link from "antd/es/typography/Link";
 import {
   CheckCircle,
   CloudUpload,
@@ -24,7 +11,11 @@ import {
   ShieldCheck,
   XmarkCircle,
 } from "iconoir-react";
-import Link from "antd/es/typography/Link";
+import { useCallback, useEffect } from "react";
+import { DropzoneOptions, useDropzone } from "react-dropzone";
+import { useTranslation } from "react-i18next";
+import { useVerification } from "../providers/VerificationProvider";
+import Wrapper from "./Wrapper";
 
 const { useToken } = theme;
 

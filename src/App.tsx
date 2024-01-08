@@ -1,8 +1,8 @@
 import { ConfigProvider, Layout } from "antd";
 import { Content, Header } from "antd/es/layout/layout";
+import { AliasToken } from "antd/es/theme/interface";
 import backgroundImage from "./assets/images/fondoVP.svg";
 import validProofLogo from "./assets/images/logo-ValidProf.svg";
-import { AliasToken } from "antd/es/theme/interface";
 import { VerificationProvider } from "./providers/VerificationProvider";
 
 function App() {

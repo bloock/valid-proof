@@ -1,9 +1,4 @@
-import {
-  AnchorNetwork,
-  EncryptionAlg,
-  Network,
-  SignatureAlg,
-} from "@bloock/sdk";
+import { AnchorNetwork, Network } from "@bloock/sdk";
 import { IntegrityNetwork } from "../models/VerificationResult";
 
 export async function waitRandomTime(min: number, max: number) {

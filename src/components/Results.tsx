@@ -8,31 +8,30 @@ import {
 import {
   Button,
   Card,
+  Col,
   Collapse,
   CollapseProps,
   Divider,
-  Skeleton,
+  Row,
   Table,
   Tag,
   Tooltip,
   theme,
 } from "antd";
-import Wrapper from "./Wrapper";
-import { useVerification } from "../providers/VerificationProvider";
+import Link from "antd/es/typography/Link";
 import moment from "moment";
+import { PropsWithChildren } from "react";
+import { useTranslation } from "react-i18next";
+import { useVerification } from "../providers/VerificationProvider";
 import {
   formatBytes,
   getNetworkTranslation,
   getTxHashURL,
 } from "../utils/utils";
-import DocViewer, {
-  DocViewerRenderers,
-  IDocument,
-} from "@cyntler/react-doc-viewer";
-import { ComponentType, PropsWithChildren } from "react";
-import Link from "antd/es/typography/Link";
 import { EllipsisMiddle } from "./EllipsisMiddle";
-import { useTranslation } from "react-i18next";
+import FilePreview from "./FilePreview";
+import Wrapper from "./Wrapper";
+
 const { useToken } = theme;
 
 function Results() {
@@ -117,7 +116,7 @@ function Results() {
           </Tag>
         ),
         timestamp: network.timestamp
-          ? moment.unix(network.timestamp).format("DD-MM-YYYY hh:mm:ss")
+          ? moment.unix(network.timestamp).format("DD-MM-YYYY HH:mm:ss")
           : t("results.not-available"),
         url: getTxHashURL(network.name, network.txHash),
         key: index,
@@ -144,44 +143,42 @@ function Results() {
             scroll={{ x: true }}
             expandable={{
               expandedRowRender: (network) => (
-                <p style={{ margin: 10 }}>
-                  {
-                    <div className="flex flex-col items-start">
-                      <Field
-                        tooltip={t("results.tooltip.tx-hash")}
-                        label={t("results.integrity.tx-hash")}
-                      >
-                        {network.url ? (
-                          <Link
-                            className="text-gray-500 text-sm"
-                            href={network.url}
-                            target="_blank"
-                          >
-                            {network.txHash || t("results.not-available")}
-                          </Link>
-                        ) : (
-                          <p className="text-gray-500 text-sm">
-                            {network.txHash}
-                          </p>
-                        )}
-                      </Field>
-                      <Divider />
-                      <Field
-                        tooltip={t("results.tooltip.anchor-id")}
-                        label={t("results.integrity.anchor-id")}
-                      >
-                        {network.anchorId}
-                      </Field>
-                      <Divider />
-                      <Field
-                        tooltip={t("results.tooltip.root")}
-                        label={t("results.integrity.root")}
-                      >
-                        {network.root || t("results.not-available")}
-                      </Field>
-                    </div>
-                  }
-                </p>
+                <div style={{ margin: 10 }}>
+                  <div className="flex flex-col items-start">
+                    <Field
+                      tooltip={t("results.tooltip.tx-hash")}
+                      label={t("results.integrity.tx-hash")}
+                    >
+                      {network.url ? (
+                        <Link
+                          className="text-gray-500 text-sm"
+                          href={network.url}
+                          target="_blank"
+                        >
+                          {network.txHash || t("results.not-available")}
+                        </Link>
+                      ) : (
+                        <p className="text-gray-500 text-sm">
+                          {network.txHash}
+                        </p>
+                      )}
+                    </Field>
+                    <Divider />
+                    <Field
+                      tooltip={t("results.tooltip.anchor-id")}
+                      label={t("results.integrity.anchor-id")}
+                    >
+                      {network.anchorId}
+                    </Field>
+                    <Divider />
+                    <Field
+                      tooltip={t("results.tooltip.root")}
+                      label={t("results.integrity.root")}
+                    >
+                      {network.root || t("results.not-available")}
+                    </Field>
+                  </div>
+                </div>
               ),
             }}
             dataSource={networkData}
@@ -331,17 +328,61 @@ function Results() {
           tooltip={t("results.tooltip.public-key")}
           label={t("results.encryption.public-key")}
         >
-          {encryptionDetails?.key || t("results.not-available")}
+          <EllipsisMiddle length={30} value={encryptionDetails?.key}>
+            {encryptionDetails?.key
+              ? t("results.encryption.copy-key")
+              : t("results.not-available")}
+          </EllipsisMiddle>
         </Field>
 
-        <Divider />
-
-        <Field
-          tooltip={t("results.tooltip.subject")}
-          label={t("results.encryption.subject")}
-        >
-          {encryptionDetails?.subject || t("results.not-available")}
-        </Field>
+        {encryptionDetails?.subject?.CN && (
+          <>
+            <Divider />
+            <Field label={t("results.encryption.common-name")}>
+              {encryptionDetails.subject?.CN}
+            </Field>
+          </>
+        )}
+        {encryptionDetails?.subject?.OU && (
+          <>
+            <Divider />
+            <Field label={t("results.encryption.organization-unit")}>
+              {encryptionDetails.subject?.OU}
+            </Field>
+          </>
+        )}
+        {encryptionDetails?.subject?.O && (
+          <>
+            <Divider />
+            <Field label={t("results.encryption.organization")}>
+              {encryptionDetails.subject?.O}
+            </Field>
+          </>
+        )}
+        {encryptionDetails?.subject?.L && (
+          <>
+            <Divider />
+            <Field label={t("results.encryption.location")}>
+              {encryptionDetails.subject?.L}
+            </Field>
+          </>
+        )}
+        {encryptionDetails?.subject?.S && (
+          <>
+            <Divider />
+            <Field label={t("results.encryption.state")}>
+              {encryptionDetails.subject?.S}
+            </Field>
+          </>
+        )}
+        {encryptionDetails?.subject?.C && (
+          <>
+            <Divider />
+            <Field label={t("results.encryption.country")}>
+              {encryptionDetails.subject?.C}
+            </Field>
+          </>
+        )}
       </div>
     );
   };
@@ -439,20 +480,6 @@ function Results() {
     },
   ];
 
-  const NoPreviewAvailable: ComponentType<{
-    document: IDocument | undefined;
-    fileName: string;
-  }> = () => {
-    return (
-      <div className="w-64 h-48 rounded-md">
-        <Skeleton.Image className="!h-full !w-full" />
-        <p className="-mt-8 text-center text-xs">
-          {t("results.preview.not-available")}
-        </p>
-      </div>
-    );
-  };
-
   return (
     <Wrapper>
       <div className="w-11/12 md:w-2/3 flex justify-center py-24">
@@ -470,46 +497,53 @@ function Results() {
             icon={<CloseOutlined />}
             onClick={() => reset()}
           />
-          <div className="flex flex-col md:flex-row p-4">
-            <div className="flex flex-col items-center md:items-start md:mr-12 mb-6 md:mb-2">
+          <Row gutter={[16, 16]} className="p-6">
+            <Col lg={8} span={24}>
               {availabilityDetails && (
-                <DocViewer
-                  documents={[
-                    {
-                      uri: URL.createObjectURL(
-                        new Blob(
-                          [
-                            availabilityDetails!.payload ||
-                              availabilityDetails.buffer,
-                          ],
-                          {
-                            type: availabilityDetails!.type,
-                          }
-                        )
-                      ),
-                      fileName: availabilityDetails.filename,
-                      fileType: availabilityDetails.type || "empty",
-                    },
-                  ]}
-                  pluginRenderers={DocViewerRenderers}
-                  style={{
-                    backgroundColor: "",
-                    width: "auto",
-                    height: "auto",
-                    maxWidth: "350px",
-                  }}
-                  config={{
-                    header: {
-                      disableHeader: true,
-                    },
-                    noRenderer: {
-                      overrideComponent: NoPreviewAvailable,
-                    },
-                  }}
+                <FilePreview
+                  payload={
+                    availabilityDetails!.payload || availabilityDetails.buffer
+                  }
+                  name={availabilityDetails.filename}
+                  type={availabilityDetails.type || "empty"}
                 />
+                // <DocViewer
+                //   documents={[
+                //     {
+                //       uri: URL.createObjectURL(
+                //         new Blob(
+                //           [
+                //             availabilityDetails!.payload ||
+                //               availabilityDetails.buffer,
+                //           ],
+                //           {
+                //             type: availabilityDetails!.type,
+                //           }
+                //         )
+                //       ),
+                //       fileName: availabilityDetails.filename,
+                //       fileType: availabilityDetails.type || "empty",
+                //     },
+                //   ]}
+                //   pluginRenderers={DocViewerRenderers}
+                //   style={{
+                //     backgroundColor: "",
+                //     width: "auto",
+                //     height: "auto",
+                //     maxWidth: "350px",
+                //   }}
+                //   config={{
+                //     header: {
+                //       disableHeader: true,
+                //     },
+                //     noRenderer: {
+                //       overrideComponent: NoPreviewAvailable,
+                //     },
+                //   }}
+                // />
               )}
-            </div>
-            <div className="flex flex-col items-center md:items-start">
+            </Col>
+            <Col lg={16} span={24}>
               {isFileValid === true && (
                 <Tag
                   icon={<CheckCircleOutlined />}
@@ -560,13 +594,13 @@ function Results() {
                     <p className="text-gray-500 text-sm">
                       {moment
                         .unix(integrityDetails.timestamp)
-                        .format("DD-MM-YYYY hh:mm:ss")}
+                        .format("DD-MM-YYYY HH:mm:ss")}
                     </p>
                   </>
                 )}
               </div>
-            </div>
-          </div>
+            </Col>
+          </Row>
           <div className="flex flex-row p-6">
             <Collapse
               className="w-full flex flex-col items-left "

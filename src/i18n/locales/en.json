@@ -84,7 +84,16 @@
       "algorithm": "Algorithm",
       "public-key": "Public key",
       "subject": "Subject",
-      "title": "Encryption details"
+      "title": "Encryption details",
+      "common-name": "Common name",
+      "copy-key": "Copy key",
+      "country": "Country",
+      "location": "Location",
+      "organization": "Organization",
+      "organization-unit": "Organization Unit",
+      "signature": "Signature",
+      "signatures": "Signatures",
+      "state": "State"
     },
     "general": {
       "date": "Date",

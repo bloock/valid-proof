@@ -1,11 +1,11 @@
-import "./init.ts";
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import "./i18n";
-import "./styles/reset.css";
+import "./init.ts";
 import "./styles/index.css";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import "./styles/reset.css";
 
 const router = createBrowserRouter([
   {

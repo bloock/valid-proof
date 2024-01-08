@@ -42,7 +42,7 @@ export type EncryptionDetails = {
   mode?: "LOCAL" | "MANAGED";
   alg?: string;
   key?: string;
-  subject?: string;
+  subject?: Record<string, string>;
   error?: string;
 };
 

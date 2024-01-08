@@ -1,9 +1,10 @@
-import { Card, Steps } from "antd";
-import Wrapper from "./Wrapper";
-import { useVerification } from "../providers/VerificationProvider";
-import { useEffect, useState } from "react";
 import { LoadingOutlined } from "@ant-design/icons";
+import { Card, Steps } from "antd";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useVerification } from "../providers/VerificationProvider";
+import Wrapper from "./Wrapper";
+
 const { Step } = Steps;
 
 export enum VerificationStep {

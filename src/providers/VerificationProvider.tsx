@@ -1,3 +1,9 @@
+import {
+  LocalCertificate,
+  LocalKey,
+  ManagedCertificate,
+  ManagedKey,
+} from "@bloock/sdk";
 import React, {
   createContext,
   useContext,
@@ -5,10 +11,11 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import FileLoader from "../components/FileLoader";
+import { useSearchParams } from "react-router-dom";
 import DecryptFile from "../components/DecryptFile";
-import Stepper from "../components/Stepper";
+import FileLoader from "../components/FileLoader";
 import Results from "../components/Results";
+import Stepper from "../components/Stepper";
 import {
   AuthenticityDetails,
   AvailabilityDetails,
@@ -16,13 +23,6 @@ import {
   IntegrityDetails,
 } from "../models/VerificationResult";
 import BloockService from "../services/BloockService";
-import { useSearchParams } from "react-router-dom";
-import {
-  LocalCertificate,
-  LocalKey,
-  ManagedCertificate,
-  ManagedKey,
-} from "@bloock/sdk";
 
 export type VerificationState = {
   onInputChange: (input: File | URL) => void;

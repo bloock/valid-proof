@@ -1,15 +1,24 @@
 import {
+  Bloock,
   BloockClient,
-  Record,
   Encrypter,
   KeyType,
   LocalCertificate,
   LocalKey,
   ManagedCertificate,
   ManagedKey,
-  Bloock,
   Network,
+  Record,
 } from "@bloock/sdk";
+import { RecordDetails } from "@bloock/sdk/dist/entity/record/record-details";
+import { RcFile } from "antd/es/upload";
+import {
+  AuthenticityDetails,
+  AvailabilityDetails,
+  EncryptionDetails,
+  IntegrityDetails,
+  IntegrityNetwork,
+} from "../models/VerificationResult";
 import {
   convertAnchorNetworkToNetwork,
   getAlgType,
@@ -18,15 +27,6 @@ import {
   readBlob,
   waitRandomTime,
 } from "../utils/utils";
-import {
-  IntegrityDetails,
-  AuthenticityDetails,
-  EncryptionDetails,
-  IntegrityNetwork,
-  AvailabilityDetails,
-} from "../models/VerificationResult";
-import { RecordDetails } from "@bloock/sdk/dist/entity/record/record-details";
-import { RcFile } from "antd/es/upload";
 
 export default class BloockService {
   private bloockClient: BloockClient;
@@ -188,7 +188,9 @@ export default class BloockService {
         mode: getEncryptionMode(recordDetails.encryption?.alg),
         alg: recordDetails.encryption?.alg?.toString(),
         key: recordDetails.encryption?.key,
-        subject: recordDetails.encryption?.subject,
+        subject: recordDetails.encryption?.subject
+          ? parseCertificateSubject(recordDetails.encryption?.subject)
+          : undefined,
       };
     } catch (err) {
       let error = this.parseError(err);

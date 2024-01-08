@@ -14,7 +14,6 @@
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
     "@bloock/sdk": "^2.7.0-beta.7",
-    "@cyntler/react-doc-viewer": "^1.14.1",
     "antd": "^5.11.0",
     "date-fns": "^2.30.0",
     "i18next": "^23.7.7",
@@ -27,6 +26,7 @@
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
     "react-i18next": "^13.5.0",
+    "react-pdf": "^7.6.0",
     "react-router-dom": "^6.21.0"
   },
   "devDependencies": {
