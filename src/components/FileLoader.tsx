@@ -32,7 +32,7 @@ function FileLoader() {
       return urlSearchParams.get(name);
     };
 
-    const idParam = getQueryParam("url");
+    const idParam = getQueryParam("url") || getQueryParam("record");
     if (idParam) {
       const url = new URL(idParam);
       onInputChange(url);
