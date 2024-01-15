@@ -17,10 +17,26 @@ const FilePreview: React.FC<FilePreviewProps> = ({ payload, name, type }) => {
   const { t } = useTranslation();
   const [numPages, setNumPage] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState(1);
+  const [containerWidth, setContainerWidth] = useState(0);
 
   const ref = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    console.log("width", ref.current ? ref.current.clientWidth : 0);
+    if (!ref.current) {
+      return;
+    }
+
+    const resizeObserver = new ResizeObserver(() => {
+      if (ref.current?.offsetWidth !== containerWidth) {
+        setContainerWidth(ref.current?.offsetWidth || 0);
+      }
+    });
+
+    resizeObserver.observe(ref.current);
+
+    return function cleanup() {
+      resizeObserver.disconnect();
+    };
   }, [ref.current]);
 
   function onDocumentLoadSuccess(pdfInfo: any) {
@@ -46,7 +62,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({ payload, name, type }) => {
       case "image/svg+xml":
         return (
           <img
-            width={ref.current?.offsetWidth}
+            width={containerWidth}
             src={URL.createObjectURL(
               new Blob([payload], {
                 type,
