@@ -484,7 +484,7 @@ function Results() {
     <Wrapper>
       <div className="w-11/12 md:w-2/3 flex justify-center py-24">
         <Card
-          className="h-full flex flex-col p-0 md:p-4"
+          className="h-full w-full flex flex-col p-0 md:p-4"
           style={{
             backgroundColor: "rgba(255, 255, 255, 0.9)",
           }}
@@ -498,7 +498,7 @@ function Results() {
             onClick={() => reset()}
           />
           <Row gutter={[16, 16]} className="p-6">
-            <Col lg={8} span={24}>
+            <Col lg={10} span={24}>
               {availabilityDetails && (
                 <FilePreview
                   payload={
@@ -509,7 +509,7 @@ function Results() {
                 />
               )}
             </Col>
-            <Col lg={16} span={24}>
+            <Col lg={14} span={24}>
               {isFileValid === true && (
                 <Tag
                   icon={<CheckCircleOutlined />}
@@ -545,7 +545,9 @@ function Results() {
               <div className="w-full p-4">
                 <p className="font-bold">{t("results.general.name")}</p>
                 <p className="text-gray-500 text-sm">
-                  {availabilityDetails?.filename}
+                  <EllipsisMiddle length={30}>
+                    {availabilityDetails?.filename}
+                  </EllipsisMiddle>
                 </p>
                 <br />
                 <p className="font-bold">{t("results.general.issuer")}</p>

@@ -11,6 +11,8 @@ export const EllipsisMiddle: React.FC<{
     value = children;
   }
 
+  const copyable = value != children || (children && children.length > length);
+
   if (children && children.length > length) {
     const sepLen = separator.length,
       charsToShow = length - sepLen,
@@ -24,7 +26,10 @@ export const EllipsisMiddle: React.FC<{
   }
 
   return (
-    <Typography.Text copyable={{ text: value }} style={{ maxWidth: "100%" }}>
+    <Typography.Text
+      copyable={copyable ? { text: value } : false}
+      style={{ maxWidth: "100%" }}
+    >
       {children}
     </Typography.Text>
   );
