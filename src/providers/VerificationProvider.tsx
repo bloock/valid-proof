@@ -1,4 +1,5 @@
 import {
+  AccessControl,
   LocalCertificate,
   LocalKey,
   ManagedCertificate,
@@ -27,7 +28,8 @@ import BloockService from "../services/BloockService";
 export type VerificationState = {
   onInputChange: (input: File | URL) => void;
   onDecryptFile: (
-    key: LocalKey | LocalCertificate | ManagedKey | ManagedCertificate
+    key: LocalKey | LocalCertificate | ManagedKey | ManagedCertificate,
+    accessControl?: AccessControl
   ) => Promise<boolean>;
   isFileValid: boolean | undefined;
   integrityDetails: IntegrityDetails | undefined;
@@ -160,14 +162,15 @@ export const VerificationProvider: React.FC = () => {
   };
 
   const onDecryptFile = (
-    key: LocalKey | LocalCertificate | ManagedKey | ManagedCertificate
+    key: LocalKey | LocalCertificate | ManagedKey | ManagedCertificate,
+    accessControl?: AccessControl
   ): Promise<boolean> => {
     if (!availabilityDetails) {
       throw new Error("Unknown error");
     }
 
     return bloockService
-      .decryptFile(availabilityDetails.buffer, key)
+      .decryptFile(availabilityDetails.buffer, key, accessControl)
       .then((decryptedFile) => {
         onInputChange(decryptedFile);
         return true;

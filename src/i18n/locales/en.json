@@ -21,6 +21,16 @@
       "subtitle": "Please, introduce your Managed Key ID to decrypt the file and continue with the validation process.",
       "label": "Key ID"
     },
+    "access-control": {
+      "totp": {
+        "description": "This key has TOTP access control enabled. In order to use it, add the TOTP code below.",
+        "label": "Code"
+      },
+      "secret": {
+        "description": "This key has Secret access control enabled. In order to use it, add the secret below.",
+        "label": "Secret"
+      }
+    },
     "submit": "Submit"
   },
   "home": {
