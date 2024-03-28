@@ -1,4 +1,5 @@
 import {
+  AccessControl,
   Bloock,
   BloockClient,
   Encrypter,
@@ -206,12 +207,13 @@ export default class BloockService {
 
   public async decryptFile(
     bytes: Uint8Array,
-    key: LocalKey | LocalCertificate | ManagedKey | ManagedCertificate
+    key: LocalKey | LocalCertificate | ManagedKey | ManagedCertificate,
+    accessControl?: AccessControl
   ): Promise<Uint8Array> {
     await waitRandomTime(500, 800);
 
     let record = await this.bloockClient.RecordClient.fromFile(bytes)
-      .withDecrypter(new Encrypter(key))
+      .withDecrypter(new Encrypter(key, accessControl))
       .build();
     return record.retrieve();
   }

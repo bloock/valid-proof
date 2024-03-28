@@ -1,5 +1,9 @@
-import { UploadOutlined } from "@ant-design/icons";
+import { LoadingOutlined, UploadOutlined } from "@ant-design/icons";
 import {
+  AccessControl,
+  AccessControlSecret,
+  AccessControlTotp,
+  AccessControlType,
   LocalCertificate,
   LocalKey,
   ManagedCertificate,
@@ -22,10 +26,11 @@ function DecryptFile() {
   const [form] = Form.useForm();
 
   const submit = (
-    key: LocalKey | LocalCertificate | ManagedKey | ManagedCertificate
+    key: LocalKey | LocalCertificate | ManagedKey | ManagedCertificate,
+    accessControl?: AccessControl
   ): Promise<boolean> => {
     setLoading(true);
-    return onDecryptFile(key).finally(() => {
+    return onDecryptFile(key, accessControl).finally(() => {
       setLoading(false);
     });
   };
@@ -45,13 +50,50 @@ function DecryptFile() {
   };
 
   const managedKeyInput = (): React.ReactNode => {
-    const onFinish = (values: any) => {
-      let keyId = values["key-id"];
+    const [keyLoading, setKeyLoading] = useState<boolean>(false);
+    const [managedKey, setManagedKey] = useState<ManagedKey | undefined>();
+
+    const onKeyChange = (e: any) => {
+      setKeyLoading(true);
+      const keyId = e.target.value;
       service
         .loadManagedKey(keyId)
         .then((key) => {
-          return submit(key);
+          setManagedKey(key);
         })
+        .catch(() => {
+          setManagedKey(undefined);
+          form.setFields([
+            {
+              name: "key-id",
+              errors: [t("decrypt.error.invalid-key")],
+            },
+          ]);
+        })
+        .finally(() => setKeyLoading(false));
+    };
+
+    const onFinish = (values: any) => {
+      if (!managedKey) return;
+
+      let accessControl: AccessControl | undefined;
+      switch (managedKey.accessControlType) {
+        case AccessControlType.NONE:
+          accessControl = undefined;
+          break;
+        case AccessControlType.TOTP:
+          const totpCode = values["totp-code"];
+          accessControl = new AccessControl(new AccessControlTotp(totpCode));
+          break;
+        case AccessControlType.SECRET:
+          const secretCode = values["secret-code"];
+          accessControl = new AccessControl(
+            new AccessControlSecret(secretCode)
+          );
+          break;
+      }
+
+      submit(managedKey, accessControl)
         .then((ok) => {
           if (!ok) {
             form.setFields([
@@ -88,20 +130,29 @@ function DecryptFile() {
           layout="vertical"
           autoComplete="off"
         >
-          <div className="flex w-full">
-            <Form.Item
-              name="key-id"
-              label={t("decrypt.managed-key.label")}
-              className="w-full"
-              rules={[{ required: true }]}
-            >
-              <Flex vertical={false} gap="small">
-                <Input />
-                <Button type="primary" htmlType="submit" loading={loading}>
-                  {t("decrypt.submit")}
-                </Button>
-              </Flex>
-            </Form.Item>
+          <div className="w-full">
+            <Flex className="w-full" vertical={true} gap="small">
+              <Form.Item
+                name="key-id"
+                label={t("decrypt.managed-key.label")}
+                rules={[{ required: true }]}
+              >
+                <Input
+                  onChange={onKeyChange}
+                  suffix={keyLoading ? <LoadingOutlined /> : <span />}
+                />
+              </Form.Item>
+              {managedKey && renderAccessControl(managedKey)}
+              <Button
+                className="w-fit"
+                type="primary"
+                htmlType="submit"
+                loading={loading}
+                disabled={!managedKey}
+              >
+                {t("decrypt.submit")}
+              </Button>
+            </Flex>
           </div>
         </Form>
       </div>
@@ -208,8 +259,6 @@ function DecryptFile() {
         return;
       }
 
-      console.log(certificateFile, password);
-
       service
         .loadLocalCertificate(certificateFile, password)
         .then((key) => {
@@ -299,6 +348,43 @@ function DecryptFile() {
         </Form>
       </div>
     );
+  };
+
+  const renderAccessControl = (key: ManagedKey | ManagedCertificate) => {
+    switch (key.accessControlType) {
+      case AccessControlType.TOTP:
+        return (
+          <>
+            <p className="text-left text-md text-gray-400">
+              {t("decrypt.access-control.totp.description")}
+            </p>
+            <Form.Item
+              name="totp-code"
+              label={t("decrypt.access-control.totp.label")}
+              rules={[{ required: true }]}
+            >
+              <Input />
+            </Form.Item>
+          </>
+        );
+      case AccessControlType.SECRET:
+        return (
+          <>
+            <p className="text-left text-md text-gray-400">
+              {t("decrypt.access-control.secret.description")}
+            </p>
+            <Form.Item
+              name="secret-code"
+              label={t("decrypt.access-control.secret.label")}
+              rules={[{ required: true }]}
+            >
+              <Input.Password />
+            </Form.Item>
+          </>
+        );
+      default:
+        return <></>;
+    }
   };
 
   return (
