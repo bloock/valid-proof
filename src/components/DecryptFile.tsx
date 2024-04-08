@@ -104,13 +104,50 @@ function DecryptFile() {
             ]);
           }
         })
-        .catch(() => {
-          form.setFields([
-            {
-              name: "key-id",
-              errors: [t("decrypt.error.invalid-key")],
-            },
-          ]);
+        .catch((err: any) => {
+          const errorMsg: string | undefined = err?.message;
+          if (errorMsg?.includes("Input length unexpected")) {
+            form.setFields([
+              {
+                name: "totp-code",
+                errors: [t("decrypt.error.invalid-totp-code")],
+              },
+            ]);
+          } else if (errorMsg?.includes("invalid access control")) {
+            switch (managedKey.accessControlType) {
+              case AccessControlType.TOTP:
+                form.setFields([
+                  {
+                    name: "totp-code",
+                    errors: [t("decrypt.error.invalid-totp-code")],
+                  },
+                ]);
+                break;
+              case AccessControlType.SECRET:
+                form.setFields([
+                  {
+                    name: "secret-code",
+                    errors: [t("decrypt.error.invalid-secret-code")],
+                  },
+                ]);
+                break;
+              default:
+                form.setFields([
+                  {
+                    name: "key-id",
+                    errors: [t("decrypt.error.invalid-key")],
+                  },
+                ]);
+                break;
+            }
+          } else {
+            form.setFields([
+              {
+                name: "key-id",
+                errors: [t("decrypt.error.invalid-key")],
+              },
+            ]);
+          }
         });
     };
 
