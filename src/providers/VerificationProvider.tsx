@@ -174,8 +174,7 @@ export const VerificationProvider: React.FC = () => {
       .then((decryptedFile) => {
         onInputChange(decryptedFile);
         return true;
-      })
-      .catch(() => false);
+      });
   };
 
   const onInputChange = (input: File | URL | Uint8Array) => {

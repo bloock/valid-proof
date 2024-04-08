@@ -1,12 +1,39 @@
 {
   "decrypt": {
     "error": {
-      "invalid-key": "La clave proporcionada no es válida"
+      "invalid-key": "La clave proporcionada no es válida",
+      "no-certificate-selected": "No se ha seleccionado ningún certificado",
+      "invalid-totp-code": "Código incorrecto",
+      "invalid-secret-code": "Contraseña incorrecta"
     },
-    "password": "Contraseña",
-    "submit": "Enviar",
-    "subtitle": "Por favor, introduzca su contraseña para desencriptar el archivo y continuar con el proceso de validación.",
-    "title": "Desencriptar archivo"
+    "local-key": {
+      "title": "Descifrar archivo",
+      "subtitle": "Por favor, introduce tu contraseña para descifrar el archivo y continuar con el proceso de validación.",
+      "label": "Contraseña"
+    },
+    "local-certificate": {
+      "title": "Descifrar archivo",
+      "subtitle": "Por favor, importe su certificado para descifrar el archivo y continuar con el proceso de validación.",
+      "label": "Certificado",
+      "password": "Contraseña (opcional)",
+      "select-file": "Seleccionar certificado"
+    },
+    "managed-key": {
+      "title": "Descifrar archivo",
+      "subtitle": "Por favor, introduzca su ID de clave administrada para descifrar el archivo y continuar con el proceso de validación.",
+      "label": "ID de clave"
+    },
+    "access-control": {
+      "totp": {
+        "description": "Esta clave tiene habilitado el control de acceso TOTP. Para usarlo, agregue el código TOTP a continuación.",
+        "label": "Código"
+      },
+      "secret": {
+        "description": "This key has Secret access control enabled. In order to use it, add the secret below.",
+        "label": "Secreto"
+      }
+    },
+    "submit": "Enviar"
   },
   "home": {
     "drop": {
@@ -69,7 +96,16 @@
       "algorithm": "Algoritmo",
       "public-key": "Clave pública",
       "subject": "Sujeto",
-      "title": "Detalles de cifrado"
+      "title": "Detalles de cifrado",
+      "common-name": "Nombre común",
+      "copy-key": "Copiar clave",
+      "country": "País",
+      "location": "Ciudad",
+      "organization": "Organización",
+      "organization-unit": "Unidad organizativa",
+      "signature": "Firma",
+      "signatures": "Firmas",
+      "state": "Estado / Província"
     },
     "general": {
       "date": "Fecha",
@@ -102,22 +138,16 @@
     "tooltip": {
       "algorithm": "El algoritmo criptográfico utilizado para generar una firma digital.",
       "anchor-id": "Identificador de la transición de estado en la que el documento ha sido incluido.",
-      "common-name": "",
       "content-type": "Tipo de contenido del documento (tipo mime).",
-      "country": "",
       "filename": "Nombre del documento.",
       "hash": "Huella digital del documento.",
       "link": "Se refiere a la ubicación específica donde se asigna un archivo y está disponible para su consumo.",
-      "location": "",
       "networks": "Redes donde se registró la huella digital del documento.",
-      "organization": "",
-      "organization-unit": "",
       "public-key": "Clave criptográfica utilizada para producir una firma digital.",
       "root": "Huella digital que representa todos los registros incluidos en el estado desde el inicio.",
       "signature": "Representación criptográfica de la firma digital.",
-      "signatures": "",
+      "signatures": "Listado de firmas digitales encontradas en el documento.",
       "size": "Espacio consumido por un archivo en un medio de almacenamiento.",
-      "state": "",
       "subject": "El sujeto del certificado digital se refiere a la entidad u objeto al que se emite el certificado, proporcionando información sobre la identidad o atributos de esa entidad específica.",
       "tx-hash": "La dirección única de una transacción en una red blockchain sirve como prueba de que la transacción se ha realizado."
     },

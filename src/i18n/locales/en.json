@@ -2,7 +2,9 @@
   "decrypt": {
     "error": {
       "invalid-key": "Invalid key provided",
-      "no-certificate-selected": "No certificate selected"
+      "no-certificate-selected": "No certificate selected",
+      "invalid-totp-code": "Invalid code provided",
+      "invalid-secret-code": "Invalid secret provided"
     },
     "local-key": {
       "title": "Decrypt File",
@@ -136,22 +138,16 @@
     "tooltip": {
       "algorithm": "The cryptographic algorithm utilized to generate a digital signature.",
       "anchor-id": "Identifier of the BLOOCK state transition the document has been included in.",
-      "common-name": "",
       "content-type": "Document content type mime",
-      "country": "",
       "filename": "Document name",
       "hash": "Digital Fingerprint of the document.",
       "link": "Refers to the specific location where a file is allocated and is available for consumption",
-      "location": "",
       "networks": "Networks where document fingerprint was recorded.",
-      "organization": "",
-      "organization-unit": "",
       "public-key": "Cryptographic key employed to produce a digital signature",
       "root": "Digital fingerprint representing all records included in BLOOCK state since inception.",
       "signature": "Cryptographic representation of the digital signature",
-      "signatures": "",
+      "signatures": "List of digital signatures found in the document.",
       "size": "Space consumed by a file on a storage medium",
-      "state": "",
       "subject": "Digital certificate subject refers to the entity or object to which the certificate is issued, providing information about the identity or attributes of that specific entity",
       "tx-hash": "The unique address of a transaction in a blockchain serves as proof that the transaction has occurred."
     },
