@@ -50,7 +50,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: bloock/managed-api
+          images: bloock/valid-proof
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -74,7 +74,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          repository: bloock/managed-api
+          repository: bloock/valid-proof
 
   deploy-dev:
     name: Deploy DEV

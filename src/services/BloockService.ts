@@ -3,6 +3,7 @@ import {
   Bloock,
   BloockClient,
   Encrypter,
+  IpfsLoader,
   KeyType,
   LocalCertificate,
   LocalKey,
@@ -28,6 +29,7 @@ import {
   readBlob,
   waitRandomTime,
 } from "../utils/utils";
+import { IPFSCid } from "../models/ReadDirectory";
 
 export default class BloockService {
   private bloockClient: BloockClient;
@@ -36,18 +38,6 @@ export default class BloockService {
     const apiHost = import.meta.env.VITE_API_HOST;
     if (apiHost && apiHost.includes("api.bloock.dev")) {
       Bloock.setApiHost(apiHost);
-
-      Bloock.setProvider(Network.BLOOCK_CHAIN, "https://ganache.bloock.dev");
-      Bloock.setContractAddress(
-        Network.BLOOCK_CHAIN,
-        "d2d1BBcbee7741f8C846826F55b7c17fc5cf969a"
-      );
-
-      Bloock.setProvider(Network.ETHEREUM_GOERLI, "https://goerli.bloock.dev");
-      Bloock.setContractAddress(
-        Network.ETHEREUM_GOERLI,
-        "C8a9f5D79f94cbE4DA1171783F03976594b60c95"
-      );
     }
 
     this.bloockClient = new BloockClient(import.meta.env.VITE_API_KEY);
@@ -59,6 +49,14 @@ export default class BloockService {
 
   public async getDetails(bytes: Uint8Array): Promise<RecordDetails> {
     return this.bloockClient.RecordClient.fromFile(bytes).getDetails();
+  }
+
+  public async readCID(input: IPFSCid): Promise<AvailabilityDetails> {
+    return this.bloockClient.RecordClient.fromLoader(
+      new IpfsLoader(input.cidString)
+    )
+      .build()
+      .then((cidData: any) => this.readBuffer(cidData.payload));
   }
 
   public async checkIntegrity(bytes: Uint8Array): Promise<IntegrityDetails> {

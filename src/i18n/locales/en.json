@@ -35,6 +35,10 @@
     },
     "submit": "Submit"
   },
+  "directory": {
+    "title": "Select a file to verify",
+    "error": "An error occurred while loading the directory"
+  },
   "home": {
     "drop": {
       "drop-here": "Drop files here",

@@ -29,11 +29,15 @@
         "label": "Código"
       },
       "secret": {
-        "description": "This key has Secret access control enabled. In order to use it, add the secret below.",
+        "description": "Esta clave tiene control de acceso habilitado para Secreto. Para usarla, añade el secreto a continuación.",
         "label": "Secreto"
       }
     },
     "submit": "Enviar"
+  },
+  "directory": {
+    "title": "Seleccione un archivo para verificar",
+    "error": "Se ha producido un error al cargar el directorio"
   },
   "home": {
     "drop": {
@@ -48,7 +52,7 @@
       "check-results": {
         "second-title-icon": "Prueba no válida",
         "subtitle": "Compruebe si el documento es válido y obtenga el informe de evidencia.",
-        "title": "Verificar los resultados",
+        "title": "Verifique los resultados",
         "title-icon": "Prueba válida"
       },
       "second-title": "Documento manipulado",
@@ -59,15 +63,15 @@
       },
       "verify-documents": {
         "subtitle": "Arrastre y suelte cada documento o haga clic en el botón para agregar un archivo desde su dispositivo.",
-        "title": "Verificar documentos",
+        "title": "Verifique documentos",
         "title-icon": "Seleccione o arrastre su documento"
       }
     },
     "subtitle-enhance-security": "Refuerce la privacidad con control de acceso",
-    "subtitle-ensure-document": "Asegure la disponibilidad del documento en sistemas distribuidos",
+    "subtitle-ensure-document": "Garantice la disponibilidad del documento en sistemas distribuidos",
     "subtitle-validate-digital": "Valide las firmas digitales",
-    "subtitle-verify-independently": "Verifique de forma independiente sus archivos en redes blockchain",
-    "title": "Verificar la integridad y autenticidad de su documento"
+    "subtitle-verify-independently": "Verifique sus archivos en redes blockchain",
+    "title": "Verifique la integridad y autenticidad de su documento"
   },
   "results": {
     "authenticity": {
@@ -120,6 +124,7 @@
         "bloock_chain": "Bloock Chain",
         "ethereum_goerli": "",
         "ethereum_mainnet": "Ethereum",
+        "ethereum_sepolia": "Ethereum Sepolia",
         "gnosis_chain": "Gnosis",
         "label": "Redes",
         "polygon_chain": "Polygon",

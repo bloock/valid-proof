@@ -19,12 +19,10 @@ export function getNetworkTranslation(network: IntegrityNetwork): string {
     case "polygon_chain":
       // t('results.integrity.networks.polygon_chain')
       return `${base}.polygon_chain`;
-    case "bloock_chain":
-      // t('results.integrity.networks.bloock_chain')
-      return `${base}.bloock_chain`;
-    case "ethereum_goerli":
+
+    case "ethereum_sepolia":
       // t('results.integrity.networks.ethereum_goerli')
-      return `${base}.ethereum_goerli`;
+      return `${base}.ethereum_sepolia`;
     default:
       // t('results.integrity.networks.unknown')
       return `${base}.unknown`;
@@ -35,14 +33,12 @@ export function convertAnchorNetworkToNetwork(network: AnchorNetwork): Network {
   switch (network.name) {
     case "ethereum_mainnet":
       return Network.ETHEREUM_MAINNET;
-    case "ethereum_goerli":
-      return Network.ETHEREUM_GOERLI;
+    case "ethereum_sepolia":
+      return Network.ETHEREUM_SEPOLIA;
     case "gnosis_chain":
       return Network.GNOSIS_CHAIN;
     case "polygon_chain":
       return Network.POLYGON_CHAIN;
-    case "bloock_chain":
-      return Network.BLOOCK_CHAIN;
     default:
       return Network.ETHEREUM_MAINNET;
   }
@@ -152,3 +148,9 @@ export function readBlob(file: Blob): Promise<Uint8Array> {
     reader.readAsArrayBuffer(file);
   });
 }
+
+export const decodeString = (encodedStr?: string) => {
+  if (encodedStr) {
+    return decodeURIComponent(escape(encodedStr));
+  }
+};
