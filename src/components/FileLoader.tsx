@@ -11,11 +11,12 @@ import {
   ShieldCheck,
   XmarkCircle,
 } from "iconoir-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { DropzoneOptions, useDropzone } from "react-dropzone";
 import { useTranslation } from "react-i18next";
 import { useVerification } from "../providers/VerificationProvider";
 import Wrapper from "./Wrapper";
+import redesLogo from "/logos-redes.png";
 
 const { useToken } = theme;
 
@@ -331,6 +332,9 @@ function FileLoader() {
                   </p>
                 </div>
               </Card>
+            </div>
+            <div className="pt-10 w-full flex items-center justify-center">
+              <img className="w-2/4" src={redesLogo} />
             </div>
           </div>
         </Wrapper>

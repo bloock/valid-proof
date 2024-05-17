@@ -55,3 +55,7 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) for deta
 ## Contact
 
 For questions or feedback, please contact us at [support@bloock.com].
+
+## Acknowledgements
+
+![RED.ES](/public/logos-redes.png)
