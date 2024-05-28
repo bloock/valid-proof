@@ -14,6 +14,7 @@ export default defineConfig({
   optimizeDeps: {
     include: ["@bloock/sdk > protobufjs/minimal"],
     exclude: ["@bloock/sdk"],
+     esbuildOptions: { target: "esnext" } 
   },
 });
 
