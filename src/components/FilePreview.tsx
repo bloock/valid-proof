@@ -4,8 +4,10 @@ import { useTranslation } from "react-i18next";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
+import * as pdfJS from "pdfjs-dist";
+import pdfJSWorkerURL from "pdfjs-dist/build/pdf.worker?url";
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+pdfJS.GlobalWorkerOptions.workerSrc = pdfJSWorkerURL;
 
 type FilePreviewProps = {
   payload: Uint8Array;
