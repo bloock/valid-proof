@@ -37,7 +37,14 @@ function App() {
           className="absolute w-full bg-transparent"
           style={{ height: 64, paddingInline: 50 }}
         >
-          <img className="py-8 px-4 z-0" src={import.meta.env.VITE_LOGO} />
+          <img
+            className="py-8 px-4 z-0"
+            src={
+              import.meta.env.VITE_LOGO
+                ? import.meta.env.VITE_LOGO
+                : validProofLogo
+            }
+          />
         </Header>
         <Content className="min-h-screen bg-transparent">
           <VerificationProvider />
