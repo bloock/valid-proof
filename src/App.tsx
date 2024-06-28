@@ -25,7 +25,11 @@ function App() {
       <Layout
         className="relative flex flex-col bg-cover bg-fixed"
         style={{
-          backgroundImage: `url(${backgroundImage})`,
+          backgroundImage: `url(${
+            import.meta.env.VITE_BACKGROUND_IMAGE
+              ? import.meta.env.VITE_BACKGROUND_IMAGE
+              : backgroundImage
+          })`,
           backgroundRepeat: "no-repeat",
         }}
       >
@@ -33,7 +37,7 @@ function App() {
           className="absolute w-full bg-transparent"
           style={{ height: 64, paddingInline: 50 }}
         >
-          <img className="py-8 px-4 z-0" src={validProofLogo} />
+          <img className="py-8 px-4 z-0" src={import.meta.env.VITE_LOGO} />
         </Header>
         <Content className="min-h-screen bg-transparent">
           <VerificationProvider />
