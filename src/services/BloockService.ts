@@ -3,6 +3,7 @@ import {
   Bloock,
   BloockClient,
   Encrypter,
+  IpfsLoader,
   KeyType,
   LocalCertificate,
   LocalKey,
@@ -24,6 +25,7 @@ import {
   convertAnchorNetworkToNetwork,
   getAlgType,
   getEncryptionMode,
+  IPFSCid,
   parseCertificateSubject,
   readBlob,
   waitRandomTime,
@@ -59,6 +61,14 @@ export default class BloockService {
 
   public async getDetails(bytes: Uint8Array): Promise<RecordDetails> {
     return this.bloockClient.RecordClient.fromFile(bytes).getDetails();
+  }
+
+  public async readCID(input: IPFSCid): Promise<any> {
+    return this.bloockClient.RecordClient.fromLoader(
+      new IpfsLoader(input.cidString)
+    )
+      .build()
+      .then((cidData: any) => this.readBuffer(cidData.payload));
   }
 
   public async checkIntegrity(bytes: Uint8Array): Promise<IntegrityDetails> {

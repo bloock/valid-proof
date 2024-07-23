@@ -1,17 +1,17 @@
-interface DirectoryResponse {
+export type DirectoryResponse = {
   Data: Data;
   Links: Link[];
-}
-interface Data {
+};
+export type Data = {
   "/": {
     bytes: string;
   };
-}
+};
 
-interface Link {
+export type Link = {
   Hash: {
     "/": string;
   };
   Name: string;
   Tsize: number;
-}
+};

@@ -180,3 +180,18 @@ export function fileTypeImage(type: string) {
     }
   }
 }
+
+export class IPFSCid {
+  cidString: string;
+  constructor(cidString: string) {
+    this.cidString = cidString;
+  }
+
+  // isValidCid(cidString: string) {
+  //   return typeof cidString === 'string' && cidString.length > 0;
+  // }
+
+  toString() {
+    return this.cidString;
+  }
+}

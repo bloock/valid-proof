@@ -27,9 +27,11 @@ import {
 } from "../models/VerificationResult";
 import BloockService from "../services/BloockService";
 import DirectoryPreview from "../components/DirectoryPreview";
+import { DirectoryResponse } from "../models/ReadDirectory";
+import { IPFSCid } from "../utils/utils";
 
 export type VerificationState = {
-  onInputChange: (input: File | URL | string) => void;
+  onInputChange: (input: File | URL | IPFSCid) => void;
   onDirectory: (directory: URL) => void;
   onDecryptFile: (
     key: LocalKey | LocalCertificate | ManagedKey | ManagedCertificate,
@@ -188,13 +190,7 @@ export const VerificationProvider: React.FC = () => {
       });
   };
 
-  const recordClient = new RecordClient();
-
-  const cidLoader = async (input: string): Promise<any> => {
-    return await recordClient.fromLoader(new IpfsLoader(input)).build();
-  };
-
-  const onInputChange = (input: File | URL | Uint8Array | string) => {
+  const onInputChange = (input: File | URL | Uint8Array | IPFSCid) => {
     let readPromise: Promise<AvailabilityDetails>;
     if (input instanceof URL) {
       readPromise = bloockService.readUrl(input);
@@ -202,10 +198,8 @@ export const VerificationProvider: React.FC = () => {
       readPromise = bloockService.readFile(input);
     } else if (input instanceof Uint8Array) {
       readPromise = bloockService.readBuffer(input, availabilityDetails);
-    } else if (typeof input === "string") {
-      readPromise = cidLoader(input).then((cidData) =>
-        bloockService.readBuffer(cidData.payload)
-      );
+    } else if (input instanceof IPFSCid) {
+      readPromise = readPromise = bloockService.readCID(input);
     } else {
       return;
     }

@@ -2,7 +2,7 @@ import { Card, List } from "antd";
 import Wrapper from "./Wrapper";
 import { useVerification } from "../providers/VerificationProvider";
 import { useTranslation } from "react-i18next";
-import { fileTypeImage } from "../utils/utils";
+import { fileTypeImage, IPFSCid } from "../utils/utils";
 import { ArrowDownRightCircle, ArrowRightCircle } from "iconoir-react";
 
 function DirectoryPreview() {
@@ -26,7 +26,7 @@ function DirectoryPreview() {
             <List>
               {directoryResponse?.Links.map((item, key) => (
                 <List.Item
-                  onClick={() => onInputChange(item.Hash["/"])}
+                  onClick={() => onInputChange(new IPFSCid(item.Hash["/"]))}
                   key={key}
                 >
                   <Card
