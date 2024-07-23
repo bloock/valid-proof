@@ -15,3 +15,14 @@ export type Link = {
   Name: string;
   Tsize: number;
 };
+
+export class IPFSCid {
+  cidString: string;
+  constructor(cidString: string) {
+    this.cidString = cidString;
+  }
+
+  toString() {
+    return this.cidString;
+  }
+}

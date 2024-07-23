@@ -25,11 +25,11 @@ import {
   convertAnchorNetworkToNetwork,
   getAlgType,
   getEncryptionMode,
-  IPFSCid,
   parseCertificateSubject,
   readBlob,
   waitRandomTime,
 } from "../utils/utils";
+import { IPFSCid } from "../models/ReadDirectory";
 
 export default class BloockService {
   private bloockClient: BloockClient;
@@ -51,7 +51,7 @@ export default class BloockService {
     return this.bloockClient.RecordClient.fromFile(bytes).getDetails();
   }
 
-  public async readCID(input: IPFSCid): Promise<any> {
+  public async readCID(input: IPFSCid): Promise<AvailabilityDetails> {
     return this.bloockClient.RecordClient.fromLoader(
       new IpfsLoader(input.cidString)
     )

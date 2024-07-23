@@ -28,7 +28,7 @@ import {
 import BloockService from "../services/BloockService";
 import DirectoryPreview from "../components/DirectoryPreview";
 import { DirectoryResponse } from "../models/ReadDirectory";
-import { IPFSCid } from "../utils/utils";
+import { IPFSCid } from "../models/ReadDirectory";
 
 export type VerificationState = {
   onInputChange: (input: File | URL | IPFSCid) => void;
@@ -199,7 +199,7 @@ export const VerificationProvider: React.FC = () => {
     } else if (input instanceof Uint8Array) {
       readPromise = bloockService.readBuffer(input, availabilityDetails);
     } else if (input instanceof IPFSCid) {
-      readPromise = readPromise = bloockService.readCID(input);
+      readPromise = bloockService.readCID(input);
     } else {
       return;
     }

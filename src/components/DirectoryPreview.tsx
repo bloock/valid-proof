@@ -2,7 +2,7 @@ import { Card, List } from "antd";
 import Wrapper from "./Wrapper";
 import { useVerification } from "../providers/VerificationProvider";
 import { useTranslation } from "react-i18next";
-import { IPFSCid } from "../utils/utils";
+import { IPFSCid } from "../models/ReadDirectory";
 import { ArrowRightCircle } from "iconoir-react";
 import { Icon } from "react-extension-icons";
 
