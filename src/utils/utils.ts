@@ -153,43 +153,11 @@ export function readBlob(file: Blob): Promise<Uint8Array> {
   });
 }
 
-export function fileTypeImage(type: string) {
-  const fileArray: string[] = [
-    "avi",
-    "doc",
-    "eps",
-    "file",
-    "html",
-    "mov",
-    "mp3",
-    "pdf",
-    "raw",
-    "svg",
-    "txt",
-    "xls",
-    "xml",
-    "png",
-  ];
-
-  if (type) {
-    const filterType = fileArray.filter((file) => file === type);
-    if (filterType.length) {
-      return filterType[0];
-    } else {
-      return "file";
-    }
-  }
-}
-
 export class IPFSCid {
   cidString: string;
   constructor(cidString: string) {
     this.cidString = cidString;
   }
-
-  // isValidCid(cidString: string) {
-  //   return typeof cidString === 'string' && cidString.length > 0;
-  // }
 
   toString() {
     return this.cidString;

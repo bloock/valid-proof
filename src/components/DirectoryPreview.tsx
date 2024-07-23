@@ -2,8 +2,9 @@ import { Card, List } from "antd";
 import Wrapper from "./Wrapper";
 import { useVerification } from "../providers/VerificationProvider";
 import { useTranslation } from "react-i18next";
-import { fileTypeImage, IPFSCid } from "../utils/utils";
-import { ArrowDownRightCircle, ArrowRightCircle } from "iconoir-react";
+import { IPFSCid } from "../utils/utils";
+import { ArrowRightCircle } from "iconoir-react";
+import { Icon } from "react-extension-icons";
 
 function DirectoryPreview() {
   const { t } = useTranslation();
@@ -34,13 +35,11 @@ function DirectoryPreview() {
                     className="w-full"
                     bodyStyle={{ padding: 12 }}
                   >
-                    <div className="flex">
-                      <img
-                        width={20}
-                        className="mr-4"
-                        src={`src/assets/images/file-types/${fileTypeImage(
-                          item.Name.split(".", -1)[1]
-                        )}.png`}
+                    <div className="flex items-center">
+                      <Icon
+                        className="mr-3"
+                        extension={item.Name.split(".", -1)[1]}
+                        size={32}
                       />
                       <div className="w-full flex justify-between">
                         <p className="p-0 text-ellipsis overflow-hidden ">
