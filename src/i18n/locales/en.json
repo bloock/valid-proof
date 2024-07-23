@@ -35,6 +35,9 @@
     },
     "submit": "Submit"
   },
+  "directory": {
+    "title": "Select a file to verify"
+  },
   "home": {
     "drop": {
       "drop-here": "Drop files here",
