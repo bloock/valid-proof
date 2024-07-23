@@ -11,7 +11,7 @@ import {
   ShieldCheck,
   XmarkCircle,
 } from "iconoir-react";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { DropzoneOptions, useDropzone } from "react-dropzone";
 import { useTranslation } from "react-i18next";
 import { useVerification } from "../providers/VerificationProvider";
@@ -24,20 +24,24 @@ function FileLoader() {
   const { token } = useToken();
   const [messageApi, contextHolder] = message.useMessage();
 
-  const { onInputChange } = useVerification();
+  const { onInputChange, onDirectory } = useVerification();
+  const getQueryParam = (name: string) => {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    return urlSearchParams.get(name);
+  };
+
+  const idParam = getQueryParam("url") || getQueryParam("record");
+  const dirParam = getQueryParam("dir");
 
   useEffect(() => {
-    const getQueryParam = (name: string) => {
-      const urlSearchParams = new URLSearchParams(window.location.search);
-      return urlSearchParams.get(name);
-    };
-
-    const idParam = getQueryParam("url") || getQueryParam("record");
     if (idParam) {
       const url = new URL(idParam);
       onInputChange(url);
+    } else if (dirParam) {
+      const url = new URL(dirParam);
+      onDirectory(url);
     }
-  });
+  }, [idParam, dirParam]);
 
   const onDrop = useCallback((files: File[]) => {
     if (files.length === 1) {

@@ -152,3 +152,31 @@ export function readBlob(file: Blob): Promise<Uint8Array> {
     reader.readAsArrayBuffer(file);
   });
 }
+
+export function fileTypeImage(type: string) {
+  const fileArray: string[] = [
+    "avi",
+    "doc",
+    "eps",
+    "file",
+    "html",
+    "mov",
+    "mp3",
+    "pdf",
+    "raw",
+    "svg",
+    "txt",
+    "xls",
+    "xml",
+    "png",
+  ];
+
+  if (type) {
+    const filterType = fileArray.filter((file) => file === type);
+    if (filterType.length) {
+      return filterType[0];
+    } else {
+      return "file";
+    }
+  }
+}

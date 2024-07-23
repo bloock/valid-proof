@@ -1,9 +1,11 @@
 import {
   AccessControl,
+  IpfsLoader,
   LocalCertificate,
   LocalKey,
   ManagedCertificate,
   ManagedKey,
+  RecordClient,
 } from "@bloock/sdk";
 import React, {
   createContext,
@@ -24,9 +26,11 @@ import {
   IntegrityDetails,
 } from "../models/VerificationResult";
 import BloockService from "../services/BloockService";
+import DirectoryPreview from "../components/DirectoryPreview";
 
 export type VerificationState = {
-  onInputChange: (input: File | URL) => void;
+  onInputChange: (input: File | URL | string) => void;
+  onDirectory: (directory: URL) => void;
   onDecryptFile: (
     key: LocalKey | LocalCertificate | ManagedKey | ManagedCertificate,
     accessControl?: AccessControl
@@ -37,6 +41,7 @@ export type VerificationState = {
   encryptionDetails: EncryptionDetails | undefined;
   availabilityDetails: AvailabilityDetails | undefined;
   service: BloockService;
+  directoryResponse: DirectoryResponse | undefined;
   reset: () => void;
 };
 
@@ -58,6 +63,9 @@ export const useVerification = () => {
 export const steps = {
   loader: {
     Contents: FileLoader,
+  },
+  directory: {
+    Contents: DirectoryPreview,
   },
   decrypt: {
     Contents: DecryptFile,
@@ -88,6 +96,9 @@ export const VerificationProvider: React.FC = () => {
   >();
 
   const [component, setComponent] = useState(steps.loader);
+
+  const [directoryResponse, setDirectoryResponse] =
+    useState<DirectoryResponse>();
 
   const bloockService = useMemo(() => {
     return new BloockService();
@@ -177,7 +188,13 @@ export const VerificationProvider: React.FC = () => {
       });
   };
 
-  const onInputChange = (input: File | URL | Uint8Array) => {
+  const recordClient = new RecordClient();
+
+  const cidLoader = async (input: string): Promise<any> => {
+    return await recordClient.fromLoader(new IpfsLoader(input)).build();
+  };
+
+  const onInputChange = (input: File | URL | Uint8Array | string) => {
     let readPromise: Promise<AvailabilityDetails>;
     if (input instanceof URL) {
       readPromise = bloockService.readUrl(input);
@@ -185,6 +202,10 @@ export const VerificationProvider: React.FC = () => {
       readPromise = bloockService.readFile(input);
     } else if (input instanceof Uint8Array) {
       readPromise = bloockService.readBuffer(input, availabilityDetails);
+    } else if (typeof input === "string") {
+      readPromise = cidLoader(input).then((cidData) =>
+        bloockService.readBuffer(cidData.payload)
+      );
     } else {
       return;
     }
@@ -198,25 +219,42 @@ export const VerificationProvider: React.FC = () => {
       .catch(console.error);
   };
 
-  const reset = () => {
-    if (searchParams.has("url")) {
-      searchParams.delete("url");
-      setSearchParams(searchParams);
+  const onDirectory = async (directory: URL) => {
+    let readDirectory: DirectoryResponse;
+    setComponent(steps.directory);
+
+    if (directory) {
+      readDirectory = await fetch(directory.href).then((response) => {
+        return response.json();
+      });
+      setDirectoryResponse(readDirectory);
     }
+  };
+
+  const reset = () => {
+    ["url", "dir"].forEach((param) => {
+      if (searchParams.has(param)) {
+        searchParams.delete(param);
+        setSearchParams(searchParams);
+      }
+    });
 
     setIsFileValid(undefined);
     setIntegrityDetails(undefined);
     setAuthenticityDetails(undefined);
     setEncryptionDetails(undefined);
     setAvailabilityDetails(undefined);
+    setDirectoryResponse(undefined);
     setComponent(steps.loader);
 
     window.scrollTo(0, 0);
   };
 
   const value: VerificationState = {
+    onDirectory,
     onInputChange,
     onDecryptFile,
+    directoryResponse,
     isFileValid,
     integrityDetails,
     authenticityDetails,

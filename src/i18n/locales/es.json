@@ -35,6 +35,9 @@
     },
     "submit": "Enviar"
   },
+  "directory": {
+    "title": "Seleccione un archivo para verificar"
+  },
   "home": {
     "drop": {
       "drop-here": "Suelte los archivos aquí",
