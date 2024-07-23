@@ -152,14 +152,3 @@ export function readBlob(file: Blob): Promise<Uint8Array> {
     reader.readAsArrayBuffer(file);
   });
 }
-
-export class IPFSCid {
-  cidString: string;
-  constructor(cidString: string) {
-    this.cidString = cidString;
-  }
-
-  toString() {
-    return this.cidString;
-  }
-}
