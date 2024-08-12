@@ -218,9 +218,11 @@ export const VerificationProvider: React.FC = () => {
     setComponent(steps.directory);
 
     if (directory) {
-      readDirectory = await fetch(directory.href).then((response) => {
-        return response.json();
-      });
+      readDirectory = await fetch(`${directory.href}?format=dag-json`).then(
+        (response) => {
+          return response.json();
+        }
+      );
       setDirectoryResponse(readDirectory);
     }
   };
