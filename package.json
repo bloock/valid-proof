@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.4.0",
-    "@bloock/sdk": "^2.9.3",
+    "@bloock/sdk": "^2.9.4",
     "antd": "^5.20.0",
     "date-fns": "^3.6.0",
     "i18next": "^23.12.2",
@@ -30,7 +30,6 @@
     "react-pdf": "^9.1.0",
     "react-router-dom": "^6.26.0",
     "react-extension-icons": "^1.1.6"
-
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
