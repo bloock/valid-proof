@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.4.0",
-    "@bloock/sdk": "^2.9.3",
+    "@bloock/sdk": "^2.9.4",
     "antd": "^5.20.0",
     "date-fns": "^3.6.0",
     "i18next": "^23.12.2",
