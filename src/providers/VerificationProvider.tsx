@@ -44,6 +44,8 @@ export type VerificationState = {
   availabilityDetails: AvailabilityDetails | undefined;
   service: BloockService;
   directoryResponse: DirectoryResponse | undefined;
+  isLoading: boolean;
+  error: boolean;
   reset: () => void;
 };
 
@@ -82,6 +84,8 @@ export const steps = {
 
 export const VerificationProvider: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
 
   const [isFileValid, setIsFileValid] = useState<boolean | undefined>();
   const [integrityDetails, setIntegrityDetails] = useState<
@@ -218,12 +222,16 @@ export const VerificationProvider: React.FC = () => {
     setComponent(steps.directory);
 
     if (directory) {
-      readDirectory = await fetch(`${directory.href}?format=dag-json`).then(
-        (response) => {
+      setIsLoading(true);
+      readDirectory = await fetch(`${directory.href}?format=dag-json`)
+        .then((response) => {
           return response.json();
-        }
-      );
+        })
+        .catch(() => {
+          return setError(true);
+        });
       setDirectoryResponse(readDirectory);
+      setIsLoading(false);
     }
   };
 
@@ -257,6 +265,9 @@ export const VerificationProvider: React.FC = () => {
     encryptionDetails,
     availabilityDetails,
     service: bloockService,
+    isLoading,
+    error,
+
     reset,
   };
 
