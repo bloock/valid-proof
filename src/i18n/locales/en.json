@@ -36,7 +36,8 @@
     "submit": "Submit"
   },
   "directory": {
-    "title": "Select a file to verify"
+    "title": "Select a file to verify",
+    "error": "An error occurred while loading the directory"
   },
   "home": {
     "drop": {
