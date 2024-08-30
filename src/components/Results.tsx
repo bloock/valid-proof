@@ -24,6 +24,7 @@ import { PropsWithChildren } from "react";
 import { useTranslation } from "react-i18next";
 import { useVerification } from "../providers/VerificationProvider";
 import {
+  decodeString,
   formatBytes,
   getNetworkTranslation,
   getTxHashURL,
@@ -257,7 +258,7 @@ function Results() {
                     <>
                       <Divider />
                       <Field label={t("results.authenticity.common-name")}>
-                        {signature.subject?.CN}
+                        {decodeString(signature.subject?.CN)}
                       </Field>
                     </>
                   )}
@@ -267,7 +268,7 @@ function Results() {
                       <Field
                         label={t("results.authenticity.organization-unit")}
                       >
-                        {signature.subject?.OU}
+                        {decodeString(signature.subject?.OU)}
                       </Field>
                     </>
                   )}
@@ -275,7 +276,7 @@ function Results() {
                     <>
                       <Divider />
                       <Field label={t("results.authenticity.organization")}>
-                        {signature.subject?.O}
+                        {decodeString(signature.subject?.O)}
                       </Field>
                     </>
                   )}
@@ -283,15 +284,15 @@ function Results() {
                     <>
                       <Divider />
                       <Field label={t("results.authenticity.location")}>
-                        {signature.subject?.L}
+                        {decodeString(signature.subject?.L)}
                       </Field>
                     </>
                   )}
-                  {signature.subject?.S && (
+                  {signature.subject?.ST && (
                     <>
                       <Divider />
                       <Field label={t("results.authenticity.state")}>
-                        {signature.subject?.S}
+                        {decodeString(signature.subject?.ST)}
                       </Field>
                     </>
                   )}
@@ -299,7 +300,7 @@ function Results() {
                     <>
                       <Divider />
                       <Field label={t("results.authenticity.country")}>
-                        {signature.subject?.C}
+                        {decodeString(signature.subject?.C)}
                       </Field>
                     </>
                   )}
@@ -339,7 +340,7 @@ function Results() {
           <>
             <Divider />
             <Field label={t("results.encryption.common-name")}>
-              {encryptionDetails.subject?.CN}
+              {decodeString(encryptionDetails.subject?.CN)}
             </Field>
           </>
         )}
@@ -347,7 +348,7 @@ function Results() {
           <>
             <Divider />
             <Field label={t("results.encryption.organization-unit")}>
-              {encryptionDetails.subject?.OU}
+              {decodeString(encryptionDetails.subject?.OU)}
             </Field>
           </>
         )}
@@ -355,7 +356,7 @@ function Results() {
           <>
             <Divider />
             <Field label={t("results.encryption.organization")}>
-              {encryptionDetails.subject?.O}
+              {decodeString(encryptionDetails.subject?.O)}
             </Field>
           </>
         )}
@@ -363,15 +364,15 @@ function Results() {
           <>
             <Divider />
             <Field label={t("results.encryption.location")}>
-              {encryptionDetails.subject?.L}
+              {decodeString(encryptionDetails.subject?.L)}
             </Field>
           </>
         )}
-        {encryptionDetails?.subject?.S && (
+        {encryptionDetails?.subject?.ST && (
           <>
             <Divider />
             <Field label={t("results.encryption.state")}>
-              {encryptionDetails.subject?.S}
+              {decodeString(encryptionDetails.subject?.ST)}
             </Field>
           </>
         )}
@@ -379,7 +380,7 @@ function Results() {
           <>
             <Divider />
             <Field label={t("results.encryption.country")}>
-              {encryptionDetails.subject?.C}
+              {decodeString(encryptionDetails.subject?.C)}
             </Field>
           </>
         )}
@@ -552,7 +553,7 @@ function Results() {
                 <br />
                 <p className="font-bold">{t("results.general.issuer")}</p>
                 <p className="text-gray-500 text-sm">
-                  {authenticityDetails?.subject?.CN ||
+                  {decodeString(authenticityDetails?.subject?.CN) ||
                     t("results.not-available")}
                 </p>
                 <br />

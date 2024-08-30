@@ -1,15 +1,16 @@
-import { Card, List } from "antd";
+import { Button, Card, List } from "antd";
 import Wrapper from "./Wrapper";
 import { useVerification } from "../providers/VerificationProvider";
 import { useTranslation } from "react-i18next";
 import { IPFSCid } from "../models/ReadDirectory";
 import { ArrowRightCircle } from "iconoir-react";
 import { Icon } from "react-extension-icons";
+import { CloseOutlined } from "@ant-design/icons";
 
 function DirectoryPreview() {
   const { t } = useTranslation();
 
-  const { directoryResponse, onInputChange, isLoading, error } =
+  const { directoryResponse, onInputChange, isLoading, error, reset } =
     useVerification();
 
   return (
@@ -23,6 +24,14 @@ function DirectoryPreview() {
               backgroundColor: "rgba(255, 255, 255, 0.9)",
             }}
             bordered={false}
+            extra={
+              <Button
+                type="text"
+                shape="circle"
+                icon={<CloseOutlined />}
+                onClick={() => reset()}
+              />
+            }
           >
             <h2 className="text-center mb-4">{t("directory.title")}</h2>
             <List loading={isLoading}>

@@ -29,7 +29,7 @@
         "label": "Código"
       },
       "secret": {
-        "description": "This key has Secret access control enabled. In order to use it, add the secret below.",
+        "description": "Esta clave tiene control de acceso habilitado para Secreto. Para usarla, añade el secreto a continuación.",
         "label": "Secreto"
       }
     },
@@ -124,6 +124,7 @@
         "bloock_chain": "Bloock Chain",
         "ethereum_goerli": "",
         "ethereum_mainnet": "Ethereum",
+        "ethereum_sepolia": "Ethereum Sepolia",
         "gnosis_chain": "Gnosis",
         "label": "Redes",
         "polygon_chain": "Polygon",
