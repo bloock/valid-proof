@@ -148,3 +148,9 @@ export function readBlob(file: Blob): Promise<Uint8Array> {
     reader.readAsArrayBuffer(file);
   });
 }
+
+export const decodeString = (encodedStr?: string) => {
+  if (encodedStr) {
+    return decodeURIComponent(escape(encodedStr));
+  }
+};
