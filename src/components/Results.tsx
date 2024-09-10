@@ -200,6 +200,7 @@ function Results() {
         title: t("results.authenticity.subject"),
         dataIndex: "commonName",
         key: "commonName",
+        render: (_: any, rest: any) => decodeString(rest.commonName),
       },
     ];
 
