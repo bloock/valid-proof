@@ -1,9 +1,26 @@
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 import react from "@vitejs/plugin-react-swc";
 import { defineConfig } from "vite";
 
+const plugins = [react()];
+if (process.env.SENTRY_AUTH_TOKEN) {
+  plugins.push(
+    sentryVitePlugin({
+      org: "bloock",
+      project: "valid-proof",
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      release: {
+        deploy: {
+          env: process.env.NODE_ENV,
+        },
+      },
+    })
+  );
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins,
   resolve: {
     alias: {
       "node-fetch": "isomorphic-fetch",
@@ -18,6 +35,7 @@ export default defineConfig({
   },
   build: {
     target: "esnext",
+    sourcemap: true,
   },
 });
 
