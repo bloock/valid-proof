@@ -114,7 +114,9 @@
     "general": {
       "date": "Fecha",
       "issuer": "Emisor",
-      "name": "Nombre"
+      "name": "Nombre",
+      "download": "Descargar archivo",
+      "download-link": "Clica aquí para descargar el archivo"
     },
     "integrity": {
       "anchor-id": "ID de anclaje",

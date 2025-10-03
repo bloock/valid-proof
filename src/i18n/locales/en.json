@@ -114,7 +114,9 @@
     "general": {
       "date": "Date",
       "issuer": "Issuer",
-      "name": "Name"
+      "name": "Name",
+      "download": "Download file",
+      "download-link": "Click here to download the file"
     },
     "integrity": {
       "anchor-id": "Anchor ID",
