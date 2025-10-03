@@ -256,10 +256,10 @@
     "@babel/helper-validator-identifier" "^7.24.7"
     to-fast-properties "^2.0.0"
 
-"@bloock/sdk@^2.9.4":
-  version "2.9.4"
-  resolved "https://registry.npmjs.org/@bloock/sdk/-/sdk-2.9.4.tgz"
-  integrity sha512-ZXPe7QVDRqLpLkWtxi3G/UxoC2tbjvijqajzgq1GF9GC1XUy6eILAnlcNZIU86qHPH1EpyCJbCSpMCoXsBl4Og==
+"@bloock/sdk@^2.9.8":
+  version "2.9.8"
+  resolved "https://registry.yarnpkg.com/@bloock/sdk/-/sdk-2.9.8.tgz#d5b93f0400dd85fcb8e82ad4af177d26f1005af5"
+  integrity sha512-c2YXiECltmLlAqTnL/WFciHEYgnmBxzjofBhXbjdHqRxHrPFi0Q3rPzGmfmMZJyN83qDWYs7Ffm8mOWzVCwOcw==
   dependencies:
     base64-url "^2.3.3"
     node-fetch "^2.6.1"
