@@ -568,6 +568,26 @@ function Results() {
                     </p>
                   </>
                 )}
+                <br />
+                {availabilityDetails?.payload && (
+                  <>
+                    <p className="font-bold">{t("results.general.download")}</p>
+                    <a
+                      href={URL.createObjectURL(
+                        new Blob(
+                          [new Uint8Array(availabilityDetails.payload.buffer as ArrayBuffer)],
+                          {
+                            type: availabilityDetails.type || "application/octet-stream",
+                          }
+                        )
+                      )}
+                      download={availabilityDetails.filename || "archivo.bin"}
+                      className="text-blue-500 underline text-sm"
+                    >
+                      {t("results.general.download-link")}
+                    </a>
+                  </>
+                )}
               </div>
             </Col>
           </Row>
