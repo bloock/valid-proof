@@ -116,7 +116,7 @@
       "issuer": "Emisor",
       "name": "Nombre",
       "download": "Descargar archivo",
-      "download-link": "Clica aquí para descargar el archivo"
+      "download-link": "Haz clic aquí para descargar el archivo"
     },
     "integrity": {
       "anchor-id": "ID de anclaje",
