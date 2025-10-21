@@ -1,11 +1,11 @@
 import { Button, Skeleton } from "antd";
+import * as pdfJS from "pdfjs-dist";
+import pdfJSWorkerURL from "pdfjs-dist/build/pdf.worker?url";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
-import * as pdfJS from "pdfjs-dist";
-import pdfJSWorkerURL from "pdfjs-dist/build/pdf.worker?url";
 
 pdfJS.GlobalWorkerOptions.workerSrc = pdfJSWorkerURL;
 
@@ -66,7 +66,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({ payload, name, type }) => {
           <img
             width={containerWidth}
             src={URL.createObjectURL(
-              new Blob([payload], {
+              new Blob([payload as BlobPart], {
                 type,
               })
             )}
