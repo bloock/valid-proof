@@ -34,6 +34,22 @@ yarn start
 
 5. Open your web browser and visit `http://localhost:3000` to view the website.
 
+## API key
+
+To access Bloock services, you need to set up an API key. You can do this by following [this guide](https://docs.bloock.com/guides/platform/create-api-key/).
+
+In your project directory, create a `.env` file. This file will store the environment variables required for the service. Each variable should be defined using the following format:
+
+```
+VARIABLE_NAME=VALUE
+```
+
+In this case, the environment variable for the API key should be named `VITE_API_KEY`. Here's an example of how your `.env` file might look:
+
+```
+VITE_API_KEY=[YOUR API KEY]
+```
+
 ## Deployment
 
 To deploy the website, follow these steps:
