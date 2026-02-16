@@ -1,3 +1,7 @@
+interface Window {
+  global: any;
+}
+
 declare module '*.svg' {
   const content: string
   export default content
